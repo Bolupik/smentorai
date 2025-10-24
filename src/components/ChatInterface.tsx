@@ -2,9 +2,10 @@ import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { Send, Loader2 } from "lucide-react";
+import { Send, Loader2, Sparkles } from "lucide-react";
 import { useToast } from "./ui/use-toast";
 import ChatMessage from "./ChatMessage";
+import TopicCards from "./TopicCards";
 
 interface Message {
   role: "user" | "assistant";
@@ -115,16 +116,21 @@ const ChatInterface = () => {
     }
   };
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+  const handleSend = async (messageText?: string) => {
+    const textToSend = messageText || input.trim();
+    if (!textToSend || isLoading) return;
 
-    const userMessage: Message = { role: "user", content: input.trim() };
+    const userMessage: Message = { role: "user", content: textToSend };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
 
     await streamChat(userMessage);
     setIsLoading(false);
+  };
+
+  const handleTopicClick = (prompt: string) => {
+    handleSend(prompt);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -138,18 +144,28 @@ const ChatInterface = () => {
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
         {messages.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center py-12"
-          >
-            <p className="text-muted-foreground text-lg mb-2">
-              Ready to explore DeFi on Stacks?
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Ask me anything about the Stacks ecosystem!
-            </p>
-          </motion.div>
+          <>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-8"
+            >
+              <div className="inline-flex items-center gap-2 mb-4">
+                <Sparkles className="w-6 h-6 text-primary animate-pulse" />
+                <h2 className="text-2xl font-bold gradient-text">
+                  Choose a Topic to Begin
+                </h2>
+                <Sparkles className="w-6 h-6 text-accent animate-pulse" />
+              </div>
+              <p className="text-muted-foreground mb-2">
+                Select a topic below or ask me anything about Stacks DeFi
+              </p>
+              <p className="text-sm text-muted-foreground">
+                💡 Voice narration available on all responses
+              </p>
+            </motion.div>
+            <TopicCards onTopicClick={handleTopicClick} />
+          </>
         )}
         {messages.map((msg, idx) => (
           <ChatMessage key={idx} role={msg.role} content={msg.content} />
@@ -178,7 +194,7 @@ const ChatInterface = () => {
             rows={2}
           />
           <Button
-            onClick={handleSend}
+            onClick={() => handleSend()}
             disabled={!input.trim() || isLoading}
             size="icon"
             className="h-auto aspect-square bg-primary hover:bg-primary/90 animate-pulse-glow"
