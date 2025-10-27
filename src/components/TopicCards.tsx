@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
-import { Card } from "./ui/card";
-import { BookOpen, Code, Coins, Lock, Wallet, TrendingUp } from "lucide-react";
+import { Card, CardContent } from "./ui/card";
 
 interface TopicCardsProps {
   onTopicClick: (topic: string) => void;
@@ -8,70 +7,89 @@ interface TopicCardsProps {
 
 const topics = [
   {
-    icon: BookOpen,
-    title: "Getting Started",
-    description: "Learn the basics of Stacks and DeFi",
-    prompt: "I'm new to Stacks. Can you give me a comprehensive introduction to the Stacks blockchain and how it works with Bitcoin?",
+    icon: "👻",
+    title: "Stacks Architecture",
+    description: "Bitcoin-secured Layer 1 with smart contracts",
+    prompt: "Explain the Stacks blockchain architecture and how it connects to Bitcoin"
   },
   {
-    icon: Code,
-    title: "Clarity Smart Contracts",
-    description: "Write secure contracts in Clarity",
-    prompt: "Teach me about Clarity smart contracts. Show me examples and explain the key differences from other smart contract languages.",
-  },
-  {
-    icon: Coins,
-    title: "STX Stacking",
-    description: "Earn Bitcoin by stacking STX",
-    prompt: "Explain how STX stacking works and walk me through the process step-by-step. What are the requirements and risks?",
-  },
-  {
-    icon: Lock,
+    icon: "💀",
     title: "DeFi Protocols",
-    description: "Explore ALEX, Arkadiko, and more",
-    prompt: "Give me an overview of the major DeFi protocols on Stacks like ALEX and Arkadiko. How do I use them safely?",
+    description: "ALEX, Arkadiko, Velar - haunted halls of finance",
+    prompt: "What are the main DeFi protocols on Stacks and how do they work?"
   },
   {
-    icon: Wallet,
-    title: "Wallet Setup",
-    description: "Secure your assets properly",
-    prompt: "Help me set up a Stacks wallet securely. What are the best practices and which wallet should I use?",
+    icon: "🎃",
+    title: "NFTs & Collections",
+    description: "Digital spirits: Monkeys, Puppets & more",
+    prompt: "Tell me about NFTs on Stacks - marketplaces and top collections"
   },
   {
-    icon: TrendingUp,
-    title: "Trading & Liquidity",
-    description: "Swaps, pools, and yield farming",
-    prompt: "Teach me about providing liquidity and yield farming on Stacks. What is impermanent loss and how do I manage risk?",
+    icon: "🔮",
+    title: "Memecoins",
+    description: "WELSH, RYDER, BOOM - the spooky speculation",
+    prompt: "What memecoins exist on Stacks? How do I trade them safely?"
   },
+  {
+    icon: "⚡",
+    title: "GameFi",
+    description: "Play-to-earn in the blockchain underworld",
+    prompt: "Explain GameFi on Stacks - what gaming projects exist?"
+  },
+  {
+    icon: "🪙",
+    title: "STX Stacking",
+    description: "Earn Bitcoin by stacking your ghostly tokens",
+    prompt: "How does STX stacking work? How can I earn Bitcoin rewards?"
+  },
+  {
+    icon: "🧟",
+    title: "sBTC Integration",
+    description: "Unleash Bitcoin in DeFi with sBTC",
+    prompt: "What is sBTC and how will it change DeFi on Stacks?"
+  },
+  {
+    icon: "🕷️",
+    title: "Security & Wallets",
+    description: "Protect yourself from crypto ghouls",
+    prompt: "What are security best practices and which wallets should I use?"
+  }
 ];
 
 const TopicCards = ({ onTopicClick }: TopicCardsProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       {topics.map((topic, idx) => (
         <motion.div
-          key={topic.title}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: idx * 0.1, duration: 0.4 }}
+          key={idx}
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ delay: idx * 0.1, type: "spring" }}
+          whileHover={{ scale: 1.05, y: -5 }}
         >
-          <Card
-            className="p-6 cursor-pointer hover:border-primary/50 transition-all duration-300 hover:shadow-lg bg-card/50 backdrop-blur-sm group"
+          <Card 
+            className="cursor-pointer border-2 border-primary/30 hover:border-primary transition-all duration-300 bg-card/60 backdrop-blur-md hover:bg-card/80 group"
             onClick={() => onTopicClick(topic.prompt)}
+            style={{ 
+              boxShadow: "0 4px 20px hsl(25 100% 50% / 0.2)",
+              transition: "all 0.3s ease"
+            }}
           >
-            <div className="flex items-start gap-4">
-              <div className="p-3 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                <topic.icon className="w-6 h-6 text-primary" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
-                  {topic.title}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {topic.description}
-                </p>
-              </div>
-            </div>
+            <CardContent className="p-5">
+              <motion.div 
+                className="text-4xl mb-3 group-hover:scale-110 transition-transform"
+                animate={{ rotate: [0, 5, -5, 0] }}
+                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+              >
+                {topic.icon}
+              </motion.div>
+              <h3 className="text-base font-bold mb-2 text-primary glow-text group-hover:text-accent transition-colors">
+                {topic.title}
+              </h3>
+              <p className="text-xs text-muted-foreground group-hover:text-foreground/80 transition-colors">
+                {topic.description}
+              </p>
+            </CardContent>
           </Card>
         </motion.div>
       ))}

@@ -150,18 +150,28 @@ const ChatInterface = () => {
               animate={{ opacity: 1, scale: 1 }}
               className="text-center py-8"
             >
-              <div className="inline-flex items-center gap-2 mb-4">
-                <Sparkles className="w-6 h-6 text-primary animate-pulse" />
-                <h2 className="text-2xl font-bold gradient-text">
-                  Choose a Topic to Begin
+              <div className="inline-flex items-center gap-3 mb-4">
+                <motion.span
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  ⚡
+                </motion.span>
+                <h2 className="text-3xl font-bold gradient-text glow-text">
+                  Enter the Crypt
                 </h2>
-                <Sparkles className="w-6 h-6 text-accent animate-pulse" />
+                <motion.span
+                  animate={{ rotate: [0, -10, 10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  👻
+                </motion.span>
               </div>
-              <p className="text-muted-foreground mb-2">
-                Select a topic below or ask me anything about Stacks DeFi
+              <p className="text-foreground/80 mb-2 text-lg">
+                Choose your path through the <span className="text-primary font-semibold">haunted blockchain</span> 🎃
               </p>
-              <p className="text-sm text-muted-foreground">
-                💡 Voice narration available on all responses
+              <p className="text-sm text-accent">
+                🔊 Spectral voice narration on all responses
               </p>
             </motion.div>
             <TopicCards onTopicClick={handleTopicClick} />
@@ -172,32 +182,32 @@ const ChatInterface = () => {
         ))}
         {isLoading && messages[messages.length - 1]?.role === "user" && (
           <div className="flex gap-4 mb-6">
-            <div className="w-12 h-12 rounded-full border-2 border-primary animate-pulse-glow flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full border-3 border-primary toxic-glow flex items-center justify-center">
               <Loader2 className="w-6 h-6 animate-spin text-primary" />
             </div>
-            <div className="bg-card border border-primary/30 rounded-2xl px-6 py-4">
-              <p className="text-muted-foreground">Thinking...</p>
+            <div className="bg-card/80 border-2 border-primary/40 rounded-2xl px-6 py-4 backdrop-blur-sm" style={{ boxShadow: "0 4px 15px hsl(25 100% 50% / 0.2)" }}>
+              <p className="text-foreground/80">Summoning knowledge from the crypt... 👻</p>
             </div>
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="border-t border-border bg-card/50 backdrop-blur-sm p-4">
+      <div className="border-t-2 border-primary/50 bg-card/70 backdrop-blur-md p-4" style={{ boxShadow: "0 -4px 20px hsl(25 100% 50% / 0.2)" }}>
         <div className="flex gap-2">
           <Textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask about DeFi on Stacks..."
-            className="resize-none bg-background border-primary/30 focus:border-primary"
+            placeholder="Ask about DeFi, NFTs, GameFi, Memecoins... 👻"
+            className="resize-none bg-background border-2 border-primary/30 focus:border-primary focus:border-2 text-foreground placeholder:text-muted-foreground"
             rows={2}
           />
           <Button
             onClick={() => handleSend()}
             disabled={!input.trim() || isLoading}
             size="icon"
-            className="h-auto aspect-square bg-primary hover:bg-primary/90 animate-pulse-glow"
+            className="h-auto aspect-square bg-primary hover:bg-primary/90 border-2 border-primary-foreground/20 animate-pulse-glow"
           >
             {isLoading ? (
               <Loader2 className="w-5 h-5 animate-spin" />
