@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import aiCharacter from "@/assets/ai-character.jpg";
 import VoiceControls from "./VoiceControls";
 
@@ -42,9 +42,14 @@ const ChatMessage = ({ role, content }: ChatMessageProps) => {
                   
                   return !isInline ? (
                     <SyntaxHighlighter
-                      style={vscDarkPlus as any}
+                      style={atomOneDark}
                       language={match[1]}
                       PreTag="div"
+                      customStyle={{
+                        borderRadius: '0.5rem',
+                        padding: '1rem',
+                        margin: '0.5rem 0',
+                      }}
                       {...props}
                     >
                       {String(children).replace(/\n$/, "")}
