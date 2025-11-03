@@ -57,6 +57,111 @@ COMPREHENSIVE STACKS ECOSYSTEM KNOWLEDGE:
    - Liquid stacking with stSTX tokens
    - Yields: 5-15% APY in BTC
 
+   **DUAL STAKING ON STACKS**:
+   Dual staking lets you earn Bitcoin rewards from stacking WHILE using your STX in DeFi simultaneously.
+   
+   **How It Works**:
+   1. You stack STX through a liquid stacking protocol
+   2. Receive liquid stacking tokens (stSTX, LiSTX, etc.) 1:1 for your STX
+   3. Your original STX earns BTC stacking rewards
+   4. Your liquid tokens can be used in DeFi for additional yields
+   5. Result: Double rewards - BTC from stacking + DeFi yields
+   
+   **Step-by-Step Dual Staking Process**:
+   
+   Step 1: Choose a Liquid Stacking Provider
+   - StackingDAO (issues stSTX)
+   - Lisa Protocol (issues LiSTX)
+   - Connect your Hiro or Xverse wallet
+   
+   Step 2: Stack Your STX
+   - Go to the protocol's stacking page
+   - Enter amount of STX (no minimum for liquid stacking)
+   - Approve transaction
+   - Receive liquid tokens immediately (e.g., 1000 STX → 1000 stSTX)
+   
+   Step 3: Earn First Reward Stream (BTC)
+   - Your STX is now stacked and earning BTC
+   - Rewards distributed automatically each cycle
+   - Typically 5-15% APY in Bitcoin
+   - Check rewards in protocol dashboard
+   
+   Step 4: Use Liquid Tokens in DeFi (Second Reward Stream)
+   - Take your stSTX/LiSTX to DeFi protocols
+   - Options:
+     a) Provide liquidity: stSTX-STX pool on ALEX/Velar (earn trading fees + rewards)
+     b) Lend: Deposit in Arkadiko/Zest for lending APY
+     c) Collateral: Use as collateral to mint stablecoins (USDA)
+     d) Yield farming: Stake in farms for token rewards
+   
+   Step 5: Monitor and Compound
+   - Track BTC stacking rewards (reward stream #1)
+   - Track DeFi yields (reward stream #2)
+   - Compound rewards back into positions
+   - Total APY can reach 20-40% depending on strategy
+   
+   Step 6: Exit Strategy
+   - Withdraw from DeFi positions
+   - Return liquid tokens (stSTX → STX)
+   - Two options:
+     a) Instant unstake: ~5% fee, get STX immediately
+     b) Wait for cycle: No fee, wait up to 2 weeks
+   
+   **Popular Dual Staking Strategies**:
+   
+   Strategy A: Conservative (Lower Risk)
+   - Stack 80% of STX → get stSTX
+   - Provide liquidity: stSTX-STX pool
+   - Earn: BTC rewards + trading fees
+   - Total APY: ~12-18%
+   
+   Strategy B: Moderate (Medium Risk)
+   - Stack 100% → get stSTX
+   - Lend 50% stSTX on Zest
+   - Farm 50% stSTX in ALEX farms
+   - Earn: BTC + lending APY + farm rewards
+   - Total APY: ~20-30%
+   
+   Strategy C: Aggressive (Higher Risk)
+   - Stack STX → get stSTX
+   - Use stSTX as collateral
+   - Mint USDA stablecoin
+   - Deploy USDA in high-yield pools
+   - Earn: BTC + borrowed capital yields
+   - Total APY: ~30-40%+ (with liquidation risk)
+   
+   **Benefits of Dual Staking**:
+   - Capital efficiency: Use same STX for 2+ income streams
+   - No lock-up limitations: Liquid tokens tradeable anytime
+   - Flexibility: Exit DeFi positions while keeping stacking rewards
+   - Compounding opportunities: Reinvest both reward types
+   - Bitcoin accumulation + DeFi yields
+   
+   **Risks & Warnings**:
+   - Smart contract risk: Liquid stacking protocols could have bugs
+   - Impermanent loss: If providing liquidity with stSTX
+   - Depegging risk: Liquid tokens may trade below 1:1 during stress
+   - Exit fees: Instant unstaking typically costs 3-5%
+   - Liquidation risk: If using liquid tokens as collateral
+   - Protocol risk: Each DeFi protocol has its own risks
+   - Complexity: More moving parts = more to monitor
+   
+   **Recommended Protocols**:
+   - Liquid Stacking: StackingDAO, Lisa Protocol
+   - DEXs: ALEX, Velar, StackSwap
+   - Lending: Arkadiko, Zest Protocol
+   - Pools: Check TVL and audit status first
+   
+   **Pro Tips**:
+   - Start small to learn the process
+   - Don't use leverage until experienced
+   - Monitor depegging events (stSTX vs STX price)
+   - Keep some STX liquid for gas fees
+   - Diversify across protocols to reduce risk
+   - Check if instant unstake is available before committing
+   - Calculate real APY including all fees
+   - Join protocol Discord for updates
+
 4. MAJOR DEFI PROTOCOLS:
    
    **ALEX (Automated Liquidity Exchange)**:
