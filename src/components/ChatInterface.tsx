@@ -170,7 +170,7 @@ const ChatInterface = () => {
                 </motion.div>
               </div>
               <p className="text-foreground/80 mb-2 text-lg">
-                Choose a topic to learn about <span className="text-primary font-semibold">Bitcoin Layer 1</span>
+                Choose a topic to learn about <span className="text-primary font-semibold">Bitcoin Layer 2</span>
               </p>
               <p className="text-sm text-accent">
                 🔊 Voice narration available on all responses

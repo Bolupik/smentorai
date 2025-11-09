@@ -9,7 +9,7 @@ const topics = [
   {
     icon: "🏗️",
     title: "Stacks Architecture",
-    description: "Bitcoin-secured Layer 1 with smart contracts",
+    description: "Bitcoin-secured Layer 2 with smart contracts",
     prompt: "Explain the Stacks blockchain architecture and how it connects to Bitcoin"
   },
   {

@@ -39,7 +39,7 @@ const Index = () => {
                 Stacks AI Assistant
               </motion.h1>
               <p className="text-foreground/90 text-lg">
-                Your <span className="text-primary glow-text font-semibold">intelligent guide</span> to DeFi, NFTs, GameFi & More on Bitcoin Layer 1
+                Your <span className="text-primary glow-text font-semibold">intelligent guide</span> to DeFi, NFTs, GameFi & More on Bitcoin Layer 2
               </p>
             </div>
           </div>
