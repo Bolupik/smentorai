@@ -9,8 +9,8 @@ const topics = [
   {
     icon: "🏗️",
     title: "Stacks Architecture",
-    description: "Bitcoin-secured Layer 2 with smart contracts",
-    prompt: "Explain the Stacks blockchain architecture and how it connects to Bitcoin"
+    description: "Proof of Transfer (PoX) consensus on Bitcoin L2",
+    prompt: "Explain the Stacks blockchain architecture, the Proof of Transfer (PoX) consensus mechanism, and how it connects to Bitcoin"
   },
   {
     icon: "💰",
