@@ -146,34 +146,18 @@ const ChatInterface = () => {
         {messages.length === 0 && (
           <>
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               className="text-center py-8"
             >
-              <div className="inline-flex items-center gap-3 mb-4">
-                <motion.div
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="text-3xl"
-                >
-                  🏗️
-                </motion.div>
-                <h2 className="text-3xl font-bold gradient-text glow-text">
-                  Explore Stacks Ecosystem
-                </h2>
-                <motion.div
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
-                  className="text-3xl"
-                >
-                  ₿
-                </motion.div>
-              </div>
-              <p className="text-foreground/80 mb-2 text-lg">
-                Choose a topic to learn about <span className="text-primary font-semibold">Bitcoin Layer 2</span>
+              <h2 className="text-2xl font-light tracking-wide text-foreground mb-2">
+                EXPLORE STACKS
+              </h2>
+              <p className="text-xs tracking-[0.2em] text-muted-foreground mb-1">
+                SELECT A TOPIC TO BEGIN
               </p>
-              <p className="text-sm text-accent">
-                🔊 Voice narration available on all responses
+              <p className="text-[10px] text-muted-foreground/60">
+                Voice narration available on all responses
               </p>
             </motion.div>
             <TopicCards onTopicClick={handleTopicClick} />
@@ -183,38 +167,39 @@ const ChatInterface = () => {
           <ChatMessage key={idx} role={msg.role} content={msg.content} />
         ))}
         {isLoading && messages[messages.length - 1]?.role === "user" && (
-          <div className="flex gap-4 mb-6">
-            <div className="w-12 h-12 rounded-full border-3 border-primary brand-glow flex items-center justify-center">
-              <Loader2 className="w-6 h-6 animate-spin text-primary" />
+          <div className="flex gap-3 mb-6">
+            <div className="w-8 h-8 border border-border flex items-center justify-center">
+              <Loader2 className="w-4 h-4 animate-spin text-foreground" />
             </div>
-            <div className="bg-card/80 border-2 border-primary/40 rounded-2xl px-6 py-4 backdrop-blur-sm brand-glow">
-              <p className="text-foreground/80">Analyzing blockchain data...</p>
+            <div className="bg-card border border-border px-4 py-3">
+              <p className="text-xs text-muted-foreground tracking-wide">ANALYZING...</p>
             </div>
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="border-t-2 border-primary/50 bg-card/70 backdrop-blur-md p-4 brand-glow">
+      <div className="border-t border-border bg-background/80 backdrop-blur-sm p-4">
         <div className="flex gap-2">
           <Textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Ask about DeFi, NFTs, STX Stacking, sBTC..."
-            className="resize-none bg-background border-2 border-primary/30 focus:border-primary focus:border-2 text-foreground placeholder:text-muted-foreground"
+            className="resize-none bg-background border border-border focus:border-foreground/30 text-foreground placeholder:text-muted-foreground text-sm"
             rows={2}
           />
           <Button
             onClick={() => handleSend()}
             disabled={!input.trim() || isLoading}
             size="icon"
-            className="h-auto aspect-square bg-primary hover:bg-primary/90 border-2 border-primary-foreground/20 animate-pulse-glow"
+            variant="outline"
+            className="h-auto aspect-square border-foreground/20 hover:bg-foreground hover:text-background transition-colors"
           >
             {isLoading ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
+              <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              <Send className="w-5 h-5" />
+              <Send className="w-4 h-4" />
             )}
           </Button>
         </div>

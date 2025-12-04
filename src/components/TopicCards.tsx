@@ -13,6 +13,12 @@ const topics = [
     prompt: "Explain the Stacks blockchain architecture, the Proof of Transfer (PoX) consensus mechanism, and how it connects to Bitcoin"
   },
   {
+    icon: "📜",
+    title: "Clarity Language",
+    description: "Decidable smart contracts for Bitcoin",
+    prompt: "Explain Clarity, the smart contract language for Stacks. What makes it unique and how does its decidability improve security?"
+  },
+  {
     icon: "💰",
     title: "DeFi Protocols",
     description: "ALEX, Arkadiko, Velar - decentralized finance",
@@ -29,12 +35,6 @@ const topics = [
     title: "Memecoins",
     description: "WELSH, RYDER, BOOM - community tokens",
     prompt: "What memecoins exist on Stacks? How do I trade them safely?"
-  },
-  {
-    icon: "🎮",
-    title: "GameFi",
-    description: "Play-to-earn blockchain gaming ecosystem",
-    prompt: "Explain GameFi on Stacks - what gaming projects exist?"
   },
   {
     icon: "₿",
@@ -58,31 +58,25 @@ const topics = [
 
 const TopicCards = ({ onTopicClick }: TopicCardsProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
       {topics.map((topic, idx) => (
         <motion.div
           key={idx}
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ delay: idx * 0.1, type: "spring" }}
-          whileHover={{ scale: 1.05, y: -5 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: idx * 0.05 }}
+          whileHover={{ y: -2 }}
         >
           <Card 
-            className="cursor-pointer border-2 border-primary/30 hover:border-primary transition-all duration-300 bg-card/60 backdrop-blur-md hover:bg-card/80 group brand-glow"
+            className="cursor-pointer border border-border/50 hover:border-foreground/30 transition-all duration-300 bg-card/60 backdrop-blur-sm group"
             onClick={() => onTopicClick(topic.prompt)}
           >
-            <CardContent className="p-5">
-              <motion.div 
-                className="text-4xl mb-3 group-hover:scale-110 transition-transform"
-                animate={{ rotate: [0, 5, -5, 0] }}
-                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-              >
-                {topic.icon}
-              </motion.div>
-              <h3 className="text-base font-bold mb-2 text-primary glow-text group-hover:text-accent transition-colors">
+            <CardContent className="p-4">
+              <div className="text-2xl mb-2">{topic.icon}</div>
+              <h3 className="text-xs tracking-wide font-medium mb-1 text-foreground group-hover:text-primary transition-colors">
                 {topic.title}
               </h3>
-              <p className="text-xs text-muted-foreground group-hover:text-foreground/80 transition-colors">
+              <p className="text-[10px] text-muted-foreground leading-relaxed">
                 {topic.description}
               </p>
             </CardContent>

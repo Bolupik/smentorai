@@ -13,26 +13,25 @@ const ChatMessage = ({ role, content }: ChatMessageProps) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className={`flex gap-4 mb-6 ${isAssistant ? "justify-start" : "justify-end"}`}
+      transition={{ duration: 0.3 }}
+      className={`flex gap-3 mb-4 ${isAssistant ? "justify-start" : "justify-end"}`}
     >
       {isAssistant && (
-        <div className="w-12 h-12 rounded-full overflow-hidden border-3 border-primary toxic-glow flex-shrink-0">
-          <img src={aiCharacter} alt="Cyberpunk AI Guide" className="w-full h-full object-cover" />
+        <div className="w-8 h-8 rounded-full overflow-hidden border border-border flex-shrink-0">
+          <img src={aiCharacter} alt="Stacks AI Guide" className="w-full h-full object-cover" />
         </div>
       )}
       <div
-        className={`max-w-[70%] rounded-2xl px-6 py-4 ${
+        className={`max-w-[75%] px-4 py-3 ${
           isAssistant
-            ? "bg-card/80 border-2 border-primary/40 text-card-foreground backdrop-blur-sm"
-            : "bg-primary text-primary-foreground border-2 border-primary-foreground/20"
+            ? "bg-card border border-border text-card-foreground"
+            : "bg-foreground text-background"
         }`}
-        style={isAssistant ? { boxShadow: "0 4px 15px hsl(25 100% 50% / 0.2)" } : {}}
       >
         {isAssistant ? (
-          <div className="prose prose-invert prose-sm max-w-none">
+          <div className="prose prose-sm max-w-none text-foreground">
             <ReactMarkdown
               components={{
                 code({ className, children, ...props }: any) {
@@ -40,13 +39,13 @@ const ChatMessage = ({ role, content }: ChatMessageProps) => {
                   const isInline = !match;
                   
                   return !isInline ? (
-                    <pre className="bg-gray-900 rounded-lg p-4 overflow-x-auto my-2">
+                    <pre className="bg-muted rounded p-3 overflow-x-auto my-2 text-xs">
                       <code className={className} {...props}>
                         {children}
                       </code>
                     </pre>
                   ) : (
-                    <code className="bg-gray-800 px-1.5 py-0.5 rounded text-sm" {...props}>
+                    <code className="bg-muted px-1 py-0.5 rounded text-xs" {...props}>
                       {children}
                     </code>
                   );
@@ -57,17 +56,17 @@ const ChatMessage = ({ role, content }: ChatMessageProps) => {
             </ReactMarkdown>
           </div>
         ) : (
-          <p className="whitespace-pre-wrap leading-relaxed">{content}</p>
+          <p className="whitespace-pre-wrap leading-relaxed text-sm">{content}</p>
         )}
         {isAssistant && content.length > 20 && (
-          <div className="mt-3 pt-3 border-t border-primary/20 flex justify-end">
+          <div className="mt-2 pt-2 border-t border-border flex justify-end">
             <VoiceControls text={content} />
           </div>
         )}
       </div>
       {!isAssistant && (
-        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center flex-shrink-0 border-3 border-accent/50 toxic-glow">
-          <span className="text-xl font-bold">🧙</span>
+        <div className="w-8 h-8 border border-foreground/20 flex items-center justify-center flex-shrink-0 bg-background">
+          <span className="text-sm">👤</span>
         </div>
       )}
     </motion.div>
