@@ -1,17 +1,38 @@
-import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import aiCharacter from "@/assets/ai-character.jpg";
 import ChatInterface from "@/components/ChatInterface";
+
+const pageVariants = {
+  initial: { opacity: 0, scale: 0.98 },
+  animate: { opacity: 1, scale: 1 },
+  exit: { opacity: 0, scale: 1.02 }
+};
+
+const pageTransition = {
+  type: "tween" as const,
+  ease: "easeInOut" as const,
+  duration: 0.4
+};
 
 const Index = () => {
   const [showChat, setShowChat] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      {!showChat ? (
-        <>
-          {/* Split Navigation Header */}
-          <motion.header
+      <AnimatePresence mode="wait">
+        {!showChat ? (
+          <motion.div
+            key="landing"
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={pageTransition}
+            className="flex-1 flex flex-col"
+          >
+            {/* Split Navigation Header */}
+            <motion.header
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
@@ -95,56 +116,57 @@ const Index = () => {
             </motion.p>
           </main>
 
-          {/* Explore Button */}
-          <motion.footer
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9, duration: 0.6 }}
-            className="fixed bottom-8 left-1/2 -translate-x-1/2"
-          >
-            <button
-              onClick={() => setShowChat(true)}
-              className="group flex items-center gap-4 px-8 py-3 border border-foreground/20 hover:border-foreground/40 bg-background/80 backdrop-blur-sm transition-all duration-300"
+            {/* Explore Button */}
+            <motion.footer
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9, duration: 0.6 }}
+              className="fixed bottom-8 left-1/2 -translate-x-1/2"
             >
-              <span className="w-3 h-3 bg-foreground" />
-              <span className="text-sm tracking-[0.3em] font-light">EXPLORE</span>
-              <span className="text-muted-foreground group-hover:translate-x-1 transition-transform">···</span>
-            </button>
-          </motion.footer>
-        </>
-      ) : (
-        <>
-          {/* Chat Header */}
-          <motion.header
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="border-b border-border/50 bg-background/80 backdrop-blur-sm"
-          >
-            <div className="container mx-auto px-4 py-4 flex items-center justify-between">
               <button
-                onClick={() => setShowChat(false)}
-                className="text-xs tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors"
+                onClick={() => setShowChat(true)}
+                className="group flex items-center gap-4 px-8 py-3 border border-foreground/20 hover:border-foreground/40 bg-background/80 backdrop-blur-sm transition-all duration-300"
               >
-                ← BACK
+                <span className="w-3 h-3 bg-foreground" />
+                <span className="text-sm tracking-[0.3em] font-light">EXPLORE</span>
+                <span className="text-muted-foreground group-hover:translate-x-1 transition-transform">···</span>
               </button>
-              <h1 className="text-sm tracking-[0.3em] font-light">STACKS AI</h1>
-              <div className="w-12" />
-            </div>
-          </motion.header>
-
-          {/* Chat Interface */}
-          <motion.main
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.4 }}
-            className="flex-1 container mx-auto max-w-5xl flex flex-col"
-            style={{ height: "calc(100vh - 60px)" }}
+            </motion.footer>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="chat"
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={pageTransition}
+            className="flex-1 flex flex-col"
           >
-            <ChatInterface />
-          </motion.main>
-        </>
-      )}
+            {/* Chat Header */}
+            <header className="border-b border-border/50 bg-background/80 backdrop-blur-sm">
+              <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+                <button
+                  onClick={() => setShowChat(false)}
+                  className="text-xs tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  ← BACK
+                </button>
+                <h1 className="text-sm tracking-[0.3em] font-light">STACKS AI</h1>
+                <div className="w-12" />
+              </div>
+            </header>
+
+            {/* Chat Interface */}
+            <main
+              className="flex-1 container mx-auto max-w-5xl flex flex-col"
+              style={{ height: "calc(100vh - 60px)" }}
+            >
+              <ChatInterface />
+            </main>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
