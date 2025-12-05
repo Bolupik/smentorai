@@ -67,33 +67,48 @@ const topics = [
 
 const TopicCards = ({ onTopicClick }: TopicCardsProps) => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
       {topics.map((topic, idx) => (
         <motion.div
           key={idx}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: idx * 0.05 }}
-          whileHover={{ y: -2 }}
+          whileHover={{ y: -3, scale: 1.02 }}
         >
           <Card 
-            className="cursor-pointer border border-border/50 hover:border-primary/50 transition-all duration-300 bg-card/80 backdrop-blur-sm group overflow-hidden"
+            className="cursor-pointer border border-border/30 hover:border-primary/40 transition-all duration-300 bg-card/60 backdrop-blur-sm group overflow-hidden relative"
             onClick={() => onTopicClick(topic.prompt)}
           >
-            <CardContent className="p-3">
-              <div className="w-10 h-10 mb-2 rounded overflow-hidden">
+            <CardContent className="p-0">
+              {/* Image section */}
+              <div className="relative h-24 overflow-hidden">
                 <img 
                   src={topic.image} 
                   alt={topic.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-500"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent" />
+                {/* Scene number */}
+                <span className="absolute top-2 left-2 text-[9px] tracking-[0.3em] text-muted-foreground/60 font-mono">
+                  {String(idx + 1).padStart(2, "0")}
+                </span>
               </div>
-              <h3 className="text-xs tracking-wide font-medium mb-1 text-foreground group-hover:text-primary transition-colors">
-                {topic.title}
-              </h3>
-              <p className="text-[10px] text-muted-foreground leading-relaxed">
-                {topic.description}
-              </p>
+              
+              {/* Text section - screenplay style */}
+              <div className="p-3 pt-1">
+                <h3 className="text-[11px] uppercase tracking-[0.15em] font-medium text-foreground group-hover:text-primary transition-colors mb-1">
+                  {topic.title}
+                </h3>
+                <p className="text-[9px] text-muted-foreground leading-relaxed italic">
+                  {topic.description}
+                </p>
+                {/* Action indicator */}
+                <div className="mt-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="w-3 h-[1px] bg-primary" />
+                  <span className="text-[8px] tracking-[0.2em] text-primary uppercase">Enter</span>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </motion.div>
