@@ -83,7 +83,53 @@ const Index = () => {
               transition={{ duration: 0.8, type: "spring" }}
               className="relative mb-8"
             >
-              <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border border-border/50 shadow-lg">
+              {/* Floating particles */}
+              {[...Array(8)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-1 h-1 rounded-full bg-primary/40"
+                  style={{
+                    left: `${20 + Math.random() * 60}%`,
+                    top: `${20 + Math.random() * 60}%`,
+                  }}
+                  animate={{
+                    y: [0, -15, 0],
+                    x: [0, Math.random() > 0.5 ? 8 : -8, 0],
+                    opacity: [0.2, 0.6, 0.2],
+                    scale: [1, 1.5, 1],
+                  }}
+                  transition={{
+                    duration: 3 + Math.random() * 2,
+                    repeat: Infinity,
+                    delay: i * 0.4,
+                    ease: "easeInOut",
+                  }}
+                />
+              ))}
+              
+              {/* Larger floating orbs */}
+              {[...Array(4)].map((_, i) => (
+                <motion.div
+                  key={`orb-${i}`}
+                  className="absolute w-2 h-2 rounded-full bg-primary/20 blur-sm"
+                  style={{
+                    left: `${10 + i * 25}%`,
+                    top: `${15 + (i % 2) * 70}%`,
+                  }}
+                  animate={{
+                    y: [0, -20, 0],
+                    opacity: [0.1, 0.4, 0.1],
+                  }}
+                  transition={{
+                    duration: 4 + i,
+                    repeat: Infinity,
+                    delay: i * 0.8,
+                    ease: "easeInOut",
+                  }}
+                />
+              ))}
+              
+              <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border border-border/50 shadow-lg relative z-10">
                 <img 
                   src={aiCharacter} 
                   alt="Stacks DeFi AI Assistant" 
