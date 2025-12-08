@@ -5,8 +5,9 @@ import { Textarea } from "./ui/textarea";
 import { Send, Loader2, Sparkles } from "lucide-react";
 import { useToast } from "./ui/use-toast";
 import ChatMessage from "./ChatMessage";
-import TopicCards from "./TopicCards";
+import TopicCards, { topicsList } from "./TopicCards";
 import aiCharacter from "@/assets/ai-character.png";
+import { useTopicProgress } from "@/hooks/useTopicProgress";
 
 interface Message {
   role: "user" | "assistant";
@@ -19,6 +20,7 @@ const ChatInterface = () => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const { markExplored, isExplored, exploredCount } = useTopicProgress();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -130,9 +132,14 @@ const ChatInterface = () => {
     setIsLoading(false);
   };
 
-  const handleTopicClick = (prompt: string) => {
+  const handleTopicClick = (prompt: string, title: string) => {
+    markExplored(title);
     handleSend(prompt);
   };
+
+  const exploredTopics = new Set(
+    topicsList.filter((t) => isExplored(t.title)).map((t) => t.title)
+  );
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -188,7 +195,12 @@ const ChatInterface = () => {
                 Voice narration available on all responses
               </motion.p>
             </motion.div>
-            <TopicCards onTopicClick={handleTopicClick} />
+            <TopicCards 
+              onTopicClick={handleTopicClick} 
+              exploredTopics={exploredTopics}
+              totalTopics={topicsList.length}
+              exploredCount={exploredCount}
+            />
           </>
         )}
         {messages.map((msg, idx) => (
