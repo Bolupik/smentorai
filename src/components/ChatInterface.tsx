@@ -209,6 +209,9 @@ const ChatInterface = () => {
               achievements={achievements}
               unlockedCount={unlockedCount}
               totalAchievements={totalAchievements}
+              exploredCount={exploredCount}
+              totalTopics={topicsList.length}
+              allCompleted={allCompleted}
             />
             <GetStartedCTA 
               allCompleted={allCompleted}

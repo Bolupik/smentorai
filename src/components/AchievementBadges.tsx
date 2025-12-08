@@ -1,14 +1,25 @@
 import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
 import { Achievement } from "@/hooks/useAchievements";
+import ShareAchievement from "./ShareAchievement";
 
 interface AchievementBadgesProps {
   achievements: Achievement[];
   unlockedCount: number;
   totalAchievements: number;
+  exploredCount: number;
+  totalTopics: number;
+  allCompleted: boolean;
 }
 
-const AchievementBadges = ({ achievements, unlockedCount, totalAchievements }: AchievementBadgesProps) => {
+const AchievementBadges = ({ 
+  achievements, 
+  unlockedCount, 
+  totalAchievements,
+  exploredCount,
+  totalTopics,
+  allCompleted
+}: AchievementBadgesProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -70,6 +81,14 @@ const AchievementBadges = ({ achievements, unlockedCount, totalAchievements }: A
           </motion.div>
         ))}
       </div>
+
+      <ShareAchievement
+        unlockedCount={unlockedCount}
+        totalAchievements={totalAchievements}
+        exploredCount={exploredCount}
+        totalTopics={totalTopics}
+        allCompleted={allCompleted}
+      />
     </motion.div>
   );
 };
