@@ -6,8 +6,11 @@ import { Send, Loader2, Sparkles } from "lucide-react";
 import { useToast } from "./ui/use-toast";
 import ChatMessage from "./ChatMessage";
 import TopicCards, { topicsList } from "./TopicCards";
+import AchievementBadges from "./AchievementBadges";
+import GetStartedCTA from "./GetStartedCTA";
 import aiCharacter from "@/assets/ai-character.png";
 import { useTopicProgress } from "@/hooks/useTopicProgress";
+import { useAchievements } from "@/hooks/useAchievements";
 
 interface Message {
   role: "user" | "assistant";
@@ -20,7 +23,8 @@ const ChatInterface = () => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { markExplored, isExplored, exploredCount } = useTopicProgress();
+  const { progress, markExplored, isExplored, exploredCount } = useTopicProgress();
+  const { achievements, unlockedCount, totalAchievements, allCompleted } = useAchievements(progress);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -199,6 +203,15 @@ const ChatInterface = () => {
               onTopicClick={handleTopicClick} 
               exploredTopics={exploredTopics}
               totalTopics={topicsList.length}
+              exploredCount={exploredCount}
+            />
+            <AchievementBadges 
+              achievements={achievements}
+              unlockedCount={unlockedCount}
+              totalAchievements={totalAchievements}
+            />
+            <GetStartedCTA 
+              allCompleted={allCompleted}
               exploredCount={exploredCount}
             />
           </>
