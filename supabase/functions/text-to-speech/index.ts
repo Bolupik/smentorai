@@ -22,6 +22,12 @@ serve(async (req) => {
       throw new Error('ELEVENLABS_API_KEY not configured');
     }
 
+    // Log key info for debugging (only first/last few chars for security)
+    const keyPreview = ELEVENLABS_API_KEY.length > 8 
+      ? `${ELEVENLABS_API_KEY.substring(0, 4)}...${ELEVENLABS_API_KEY.substring(ELEVENLABS_API_KEY.length - 4)} (length: ${ELEVENLABS_API_KEY.length})`
+      : `(length: ${ELEVENLABS_API_KEY.length})`;
+    console.log('Using ElevenLabs API key:', keyPreview);
+
     console.log('Generating speech for text length:', text.length);
 
     const response = await fetch(
