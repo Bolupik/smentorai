@@ -1,19 +1,19 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, X, ArrowRight, ExternalLink } from "lucide-react";
+import { Search, X, ExternalLink, Github, Loader2 } from "lucide-react";
 import { Input } from "./ui/input";
-import { Button } from "./ui/button";
 
 interface SearchResult {
   title: string;
   description: string;
   category: string;
   url?: string;
-  action?: string;
+  stars?: number;
+  language?: string;
 }
 
+// Static Stacks dApps as fallback/defaults
 const stacksDapps: SearchResult[] = [
-  // DeFi Protocols
   {
     title: "ALEX",
     description: "Leading DEX on Stacks - swap, stake, farm, and earn yield on Bitcoin DeFi",
@@ -45,43 +45,11 @@ const stacksDapps: SearchResult[] = [
     url: "https://www.velar.co",
   },
   {
-    title: "Bitflow Finance",
-    description: "Stablecoin-focused DEX - deep liquidity for price-stable asset trading",
-    category: "DEX",
-    url: "https://www.bitflow.finance",
-  },
-  {
-    title: "Hermetica",
-    description: "DeFi vaults protocol - automated yield strategies for stSTX and BTC",
-    category: "Vaults",
-    url: "https://www.hermetica.fi",
-  },
-  {
-    title: "XLink",
-    description: "Cross-chain bridge - bridge assets between Bitcoin L2s and other chains",
-    category: "Bridge",
-    url: "https://www.xlink.network",
-  },
-  {
-    title: "Lisa Protocol",
-    description: "Liquid stacking alternative - earn BTC rewards with LiSTX tokens",
-    category: "Stacking",
-    url: "https://www.lisalab.io",
-  },
-  // NFT Marketplaces
-  {
     title: "Gamma",
     description: "Premier NFT marketplace on Stacks - buy, sell, and create NFTs",
     category: "NFT",
     url: "https://gamma.io",
   },
-  {
-    title: "STXNFT",
-    description: "NFT marketplace with social features - discover and trade Stacks NFTs",
-    category: "NFT",
-    url: "https://stxnft.com",
-  },
-  // Wallets
   {
     title: "Leather Wallet",
     description: "Privacy-focused Bitcoin and Stacks wallet - browser extension",
@@ -94,38 +62,6 @@ const stacksDapps: SearchResult[] = [
     category: "Wallet",
     url: "https://www.xverse.app",
   },
-  // Infrastructure
-  {
-    title: "Stacks Explorer",
-    description: "Official block explorer - track transactions, contracts, and addresses",
-    category: "Tools",
-    url: "https://explorer.hiro.so",
-  },
-  {
-    title: "Hiro Platform",
-    description: "Developer tools and APIs for building on Stacks",
-    category: "Tools",
-    url: "https://www.hiro.so",
-  },
-  // Exchanges
-  {
-    title: "Buy STX on OKX",
-    description: "Major exchange with STX trading pairs",
-    category: "Exchange",
-    url: "https://www.okx.com",
-  },
-  {
-    title: "Buy STX on Binance",
-    description: "World's largest crypto exchange - STX/USDT, STX/BTC pairs",
-    category: "Exchange",
-    url: "https://www.binance.com",
-  },
-  {
-    title: "Buy STX on Coinbase",
-    description: "US-regulated exchange for buying STX",
-    category: "Exchange",
-    url: "https://www.coinbase.com",
-  },
 ];
 
 interface SearchBarProps {
@@ -137,8 +73,11 @@ const SearchBar = ({ onSearch, variant = "landing" }: SearchBarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchMode, setSearchMode] = useState<"local" | "github">("local");
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -157,26 +96,97 @@ const SearchBar = ({ onSearch, variant = "landing" }: SearchBarProps) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    if (query.trim()) {
+  const searchGitHub = useCallback(async (searchQuery: string) => {
+    if (!searchQuery.trim()) {
+      setResults([]);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // Search GitHub for Clarity language repos
+      const response = await fetch(
+        `https://api.github.com/search/repositories?q=${encodeURIComponent(
+          searchQuery + " language:clarity"
+        )}&sort=stars&order=desc&per_page=15`,
+        {
+          headers: {
+            Accept: "application/vnd.github.v3+json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("GitHub API error");
+      }
+
+      const data = await response.json();
+      
+      const githubResults: SearchResult[] = data.items?.map((repo: any) => ({
+        title: repo.full_name,
+        description: repo.description || "No description available",
+        category: "GitHub",
+        url: repo.html_url,
+        stars: repo.stargazers_count,
+        language: repo.language || "Clarity",
+      })) || [];
+
+      setResults(githubResults);
+    } catch (error) {
+      console.error("GitHub search error:", error);
+      // Fall back to local search on error
       const filtered = stacksDapps.filter(
         (item) =>
-          item.title.toLowerCase().includes(query.toLowerCase()) ||
-          item.description.toLowerCase().includes(query.toLowerCase()) ||
-          item.category.toLowerCase().includes(query.toLowerCase())
+          item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.description.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setResults(filtered);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const searchLocal = useCallback((searchQuery: string) => {
+    if (searchQuery.trim()) {
+      const filtered = stacksDapps.filter(
+        (item) =>
+          item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.category.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setResults(filtered);
     } else {
       setResults([]);
     }
-  }, [query]);
+  }, []);
+
+  useEffect(() => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    if (searchMode === "github") {
+      debounceRef.current = setTimeout(() => {
+        searchGitHub(query);
+      }, 400);
+    } else {
+      searchLocal(query);
+    }
+
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, [query, searchMode, searchGitHub, searchLocal]);
 
   const handleResultClick = (result: SearchResult) => {
     if (result.url) {
       window.open(result.url, "_blank", "noopener,noreferrer");
     }
-    if (result.action && onSearch) {
-      onSearch(result.action);
+    if (onSearch) {
+      onSearch(result.title);
     }
     setIsOpen(false);
     setQuery("");
@@ -194,6 +204,7 @@ const SearchBar = ({ onSearch, variant = "landing" }: SearchBarProps) => {
       Wallet: "bg-orange-500/20 text-orange-400",
       Tools: "bg-slate-500/20 text-slate-400",
       Exchange: "bg-yellow-500/20 text-yellow-400",
+      GitHub: "bg-gray-500/20 text-gray-300",
     };
     return colors[category] || "bg-muted text-muted-foreground";
   };
@@ -212,22 +223,26 @@ const SearchBar = ({ onSearch, variant = "landing" }: SearchBarProps) => {
             }`}
           >
             <Search className="w-4 h-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground hidden sm:inline">Search dApps</span>
+            <span className="text-sm text-muted-foreground hidden sm:inline">Search Clarity dApps</span>
           </motion.button>
         ) : (
           <motion.div
             initial={{ opacity: 0, width: 200 }}
-            animate={{ opacity: 1, width: 320 }}
+            animate={{ opacity: 1, width: 380 }}
             exit={{ opacity: 0, width: 200 }}
             className="relative"
           >
             <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/50 bg-background/95 backdrop-blur-sm">
-              <Search className="w-4 h-4 text-primary" />
+              {isLoading ? (
+                <Loader2 className="w-4 h-4 text-primary animate-spin" />
+              ) : (
+                <Search className="w-4 h-4 text-primary" />
+              )}
               <Input
                 ref={inputRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search Stacks dApps..."
+                placeholder="Search Clarity projects on GitHub..."
                 className="border-0 bg-transparent p-0 h-auto focus-visible:ring-0 text-sm placeholder:text-muted-foreground"
               />
               <button
@@ -241,29 +256,59 @@ const SearchBar = ({ onSearch, variant = "landing" }: SearchBarProps) => {
               </button>
             </div>
 
+            {/* Mode Toggle */}
+            <div className="absolute top-full mt-2 left-0 right-0 flex gap-1 px-2">
+              <button
+                onClick={() => setSearchMode("github")}
+                className={`flex-1 text-xs py-1.5 px-3 rounded-t-lg transition-colors ${
+                  searchMode === "github"
+                    ? "bg-card/95 text-foreground border-t border-x border-border/50"
+                    : "bg-muted/30 text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Github className="w-3 h-3 inline mr-1" />
+                GitHub Clarity
+              </button>
+              <button
+                onClick={() => setSearchMode("local")}
+                className={`flex-1 text-xs py-1.5 px-3 rounded-t-lg transition-colors ${
+                  searchMode === "local"
+                    ? "bg-card/95 text-foreground border-t border-x border-border/50"
+                    : "bg-muted/30 text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Stacks dApps
+              </button>
+            </div>
+
             {/* Results dropdown */}
             <AnimatePresence>
-              {(results.length > 0 || query.trim()) && (
+              {(results.length > 0 || query.trim() || isLoading) && (
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-full mt-2 left-0 right-0 bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-xl overflow-hidden z-50 max-h-80 overflow-y-auto"
+                  className="absolute top-full mt-10 left-0 right-0 bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-xl overflow-hidden z-50 max-h-80 overflow-y-auto"
                 >
-                  {results.length > 0 ? (
+                  {isLoading ? (
+                    <div className="px-4 py-6 text-center text-muted-foreground text-sm flex items-center justify-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Searching GitHub...
+                    </div>
+                  ) : results.length > 0 ? (
                     <div className="py-2">
                       {results.map((result, idx) => (
                         <motion.button
                           key={idx}
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: idx * 0.05 }}
+                          transition={{ delay: idx * 0.03 }}
                           onClick={() => handleResultClick(result)}
                           className="w-full flex items-start gap-3 px-4 py-3 hover:bg-muted/50 transition-colors text-left group"
                         >
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="font-medium text-foreground truncate">
+                            <div className="flex items-center gap-2 mb-1 flex-wrap">
+                              <span className="font-medium text-foreground truncate max-w-[200px]">
                                 {result.title}
                               </span>
                               <span
@@ -273,6 +318,11 @@ const SearchBar = ({ onSearch, variant = "landing" }: SearchBarProps) => {
                               >
                                 {result.category}
                               </span>
+                              {result.stars !== undefined && (
+                                <span className="text-[10px] text-yellow-400 flex items-center gap-0.5">
+                                  ⭐ {result.stars.toLocaleString()}
+                                </span>
+                              )}
                             </div>
                             <p className="text-xs text-muted-foreground line-clamp-2">
                               {result.description}
@@ -284,11 +334,11 @@ const SearchBar = ({ onSearch, variant = "landing" }: SearchBarProps) => {
                         </motion.button>
                       ))}
                     </div>
-                  ) : (
+                  ) : query.trim() ? (
                     <div className="px-4 py-6 text-center text-muted-foreground text-sm">
-                      No dApps found for "{query}"
+                      No Clarity projects found for "{query}"
                     </div>
-                  )}
+                  ) : null}
                 </motion.div>
               )}
             </AnimatePresence>
