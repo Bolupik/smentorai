@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { text, voice = "9BWtsMINqrJLrRacOk9x" } = await req.json(); // Default: Aria
+    const { text, voice = "XgIBIfN2yX7nyVpCk8Tf" } = await req.json(); // Custom voice
     
     if (!text) {
       throw new Error('Text is required');

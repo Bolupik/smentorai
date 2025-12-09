@@ -26,13 +26,26 @@ const ChatInterface = () => {
   const { progress, markExplored, isExplored, exploredCount } = useTopicProgress();
   const { achievements, unlockedCount, totalAchievements, allCompleted } = useAchievements(progress);
 
+  const isUserScrolledUp = useRef(false);
+
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (!isUserScrolledUp.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.currentTarget;
+    const isAtBottom = target.scrollHeight - target.scrollTop - target.clientHeight < 100;
+    isUserScrolledUp.current = !isAtBottom;
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    // Only auto-scroll when not loading (i.e., when a complete message is added)
+    if (!isLoading) {
+      scrollToBottom();
+    }
+  }, [messages, isLoading]);
 
   const streamChat = async (userMessage: Message) => {
     const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/defi-chat`;
@@ -154,7 +167,7 @@ const ChatInterface = () => {
 
   return (
     <div className="flex flex-col h-full bg-gradient-to-b from-background to-card/30">
-      <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6 space-y-4">
+      <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6 space-y-4" onScroll={handleScroll}>
         {messages.length === 0 && (
           <>
             <motion.div
