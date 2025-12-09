@@ -3,6 +3,7 @@ import { useState } from "react";
 import aiCharacter from "@/assets/ai-character.png";
 import ChatInterface from "@/components/ChatInterface";
 import PreviewModal from "@/components/PreviewModal";
+import SearchBar from "@/components/SearchBar";
 import { Play, Info } from "lucide-react";
 
 const pageVariants = {
@@ -73,9 +74,9 @@ const Index = () => {
                 >
                   STACKS
                 </motion.div>
-                <div className="flex items-center gap-8">
+                <div className="flex items-center gap-6">
                   <motion.span 
-                    className="text-sm font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors"
+                    className="text-sm font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors hidden md:inline"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.6 }}
@@ -83,7 +84,7 @@ const Index = () => {
                     DeFi
                   </motion.span>
                   <motion.span 
-                    className="text-sm font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors"
+                    className="text-sm font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors hidden md:inline"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.7 }}
@@ -91,7 +92,7 @@ const Index = () => {
                     NFTs
                   </motion.span>
                   <motion.span 
-                    className="text-sm font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors"
+                    className="text-sm font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors hidden md:inline"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.8 }}
@@ -99,13 +100,20 @@ const Index = () => {
                     GameFi
                   </motion.span>
                   <motion.span 
-                    className="text-sm font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors"
+                    className="text-sm font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors hidden lg:inline"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.9 }}
                   >
                     Bitcoin L2
                   </motion.span>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1 }}
+                  >
+                    <SearchBar variant="landing" />
+                  </motion.div>
                 </div>
               </div>
             </motion.header>
@@ -262,7 +270,13 @@ const Index = () => {
                     <p className="text-xs text-muted-foreground">Your DeFi Guide</p>
                   </div>
                 </motion.div>
-                <div className="w-16" />
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <SearchBar variant="chat" />
+                </motion.div>
               </div>
             </motion.header>
 

@@ -435,169 +435,167 @@ COMPREHENSIVE STACKS ECOSYSTEM KNOWLEDGE:
    - Calculate real APY including all fees
    - Join protocol Discord for updates
 
-4. COMPREHENSIVE DEFI PROTOCOLS ON STACKS:
+4. COMPREHENSIVE DEFI PROTOCOLS ON STACKS (OFFICIAL & VERIFIED):
 
-   **DECENTRALIZED EXCHANGES (DEXs)**:
+   **THE TOP 8 DEFI APPS ON STACKS** (Source: stacks.org/defi-apps - Official Stacks Foundation):
    
-   **ALEX (Automated Liquidity Exchange)**:
-   - Leading DEX on Stacks with highest TVL
-   - Hybrid model: AMM + orderbook
-   - Features: Spot trading, limit orders, leverage
-   - Token launchpad for new projects
-   - Bitcoin-Stacks bridge (Alex Bridge)
-   - Liquidity pools with LP token rewards
-   - Governance with ALEX token
-   - Auto-compounding vaults
-   - Trading volume: $10M+ daily
+   These are the most trusted, established DeFi protocols on Stacks - verified by the Stacks Foundation:
+
+   **1. ALEX (Automated Liquidity Exchange)** - https://alexgo.io
+   - Type: Decentralized Exchange, Launchpad, Farming & Staking
+   - The "Super App for Bitcoin" - leading DEX with highest TVL
+   - Features: DEX (AMM + orderbook), swaps, liquidity pools, staking, yield farming
+   - Launchpad for new Bitcoin projects
+   - Bitcoin Oracle for price feeds
+   - Official Docs: https://docs.alexlab.co
+   - Getting Started:
+     1. Visit alexgo.io, connect wallet
+     2. Swap your STX into ALEX token
+     3. Stake ALEX to receive yield
+   - TVL: Consistently highest on Stacks
    
-   **Velar Protocol**:
-   - Next-generation liquidity protocol
+   **2. StackingDAO** - https://www.stackingdao.com
+   - Type: Liquid Stacking Protocol
+   - What it solves: Stack STX and earn BTC while keeping liquidity
+   - Issues stSTX tokens 1:1 for stacked STX
+   - Auto-compounding Bitcoin rewards from stacking
+   - No minimum amount required (unlike solo stacking's 100K STX)
+   - Official Docs: https://docs.stackingdao.com/stackingdao
+   - Getting Started:
+     1. Visit stackingdao.com, connect wallet
+     2. Deposit STX
+     3. Receive stSTX immediately
+     4. Earn BTC yield + use stSTX in DeFi
+   
+   **3. Zest Protocol** - https://www.zestprotocol.com
+   - Type: Borrowing & Lending, Money Market
+   - Bitcoin-native lending built for BTC
+   - Two pool types: Earn pools (yield on BTC), Borrow pools (borrow against BTC)
+   - No trusted intermediary required
+   - Institutional-grade yields (8-15% APY on BTC)
+   - Official Docs: https://docs.zestprotocol.com/start
+   - Getting Started:
+     1. Visit zestprotocol.com, connect wallet
+     2. Add STX or BTC to liquidity pools
+     3. Earn lending yields
+   
+   **4. Bitflow Finance** - https://www.bitflow.finance
+   - Type: Decentralized Exchange, Farming & Staking
+   - Focus: Price-stable assets (stablecoins, Bitcoin swaps)
+   - Deep liquidity pools, low fees
+   - Yield on native BTC without custodial risk
+   - Official Docs: https://docs.bitflow.finance/bitflow-documentation
+   - Getting Started:
+     1. Visit bitflow.finance, connect wallet
+     2. Deploy stSTX into STX-stSTX reward pool
+     3. Earn trading fees and rewards
+   
+   **5. Hermetica** - https://www.hermetica.fi
+   - Type: DeFi Vaults
+   - Safest way to put Bitcoin to work
+   - Automated, self-executing strategy vaults
+   - Never give up custody of tokens
+   - Vaults execute investment strategies automatically
+   - Getting Started:
+     1. Visit hermetica.fi, connect wallet
+     2. Deposit stSTX into Earn Vault
+     3. Receive automated yield
+   
+   **6. Arkadiko Finance** - https://arkadiko.finance
+   - Type: Stablecoin, Collateralized Debt Position
+   - Mint USDA stablecoin using STX as collateral
+   - Self-repaying loans via stacking rewards
+   - Min 200% collateralization ratio
+   - DIKO governance token
+   - Getting Started:
+     1. Visit arkadiko.finance, connect wallet
+     2. Swap STX for USDA
+     3. Use USDA in DeFi or swap to USDC on Bitflow
+   
+   **7. XLink** - https://www.xlink.network
+   - Type: Cross-Chain Bridge
+   - Aggregates liquidity across Bitcoin L2s
+   - Bridge assets to Bitcoin Meta-Protocols and other chains
+   - Native-like DeFi experience for Bitcoin
+   - Getting Started:
+     1. Visit xlink.network, connect wallet
+     2. Bridge USDT from Ethereum to sUSDT on Stacks
+   
+   **8. Velar** - https://www.velar.co
+   - Type: Decentralized Exchange with Perpetuals
+   - Swap assets, earn yield, trade with leverage
    - Concentrated liquidity (Uniswap V3 style)
-   - Capital-efficient pools
+   - Up to 20x leverage on perpetuals (coming soon)
    - Advanced charting and analytics
-   - Cross-chain bridge support
-   - Low slippage on major pairs
-   - Yield farming opportunities
-   - Native VELAR token incentives
-   
-   **StackSwap**:
-   - Original Stacks AMM (x*y=k)
-   - Simple, reliable swapping
-   - Multiple liquidity pools
-   - Yield farming with STSW rewards
-   - Community-driven governance
-   - Lower fees than competitors
-   
-   **Bitflow**:
-   - Bitcoin-native DEX
-   - Trade Bitcoin L1 assets
-   - Runes and BRC-20 support
-   - Bridge Bitcoin to Stacks
-   - Advanced order types
-   - Professional trading interface
+   - Getting Started:
+     1. Visit velar.co, connect wallet
+     2. Add STX to liquidity pools
+     3. Earn trading fees and VELAR rewards
 
-   **STABLECOINS & MINTING**:
+   **ADDITIONAL VERIFIED PROTOCOLS**:
    
-   **USDA (Arkadiko Stablecoin)**:
+   **Lisa Protocol** - https://www.lisalab.io
+   - Community-driven liquid stacking alternative
+   - Issues LiSTX tokens for stacked STX
+   - Higher BTC reward distribution, lower fees
+   
+   **Wormhole Integration** (2024)
+   - Top interoperability protocol now supports Stacks
+   - Bridges native Bitcoin liquidity to Solana and Sui
+   - Brings multi-chain DeFi capabilities to Bitcoin L2
+
+   **STABLECOINS ON STACKS**:
+   
+   **USDA (Arkadiko)**:
    - Decentralized USD stablecoin
    - Mint with STX as collateral
-   - Min 200% collateralization ratio
-   - Interest rate: Variable (typically 2-4%)
-   - Liquidation protection mechanisms
-   - Stability pool for peg maintenance
-   - Use in DeFi across Stacks
-   - Governance by DIKO holders
+   - Min 200% collateralization
+   - Use across all Stacks DeFi
    
-   **USDH (Hermetica Stablecoin)**:
+   **USDH (Hermetica)**:
    - Bitcoin-backed synthetic USD
    - 1:1 redeemable for BTC value
-   - Minted using BTC as collateral
    - Over-collateralized for safety
-   - Zero interest on minting
-   - Decentralized oracle system
-   - Liquidation threshold: 150%
-   - How to mint USDH:
-     1. Connect wallet with BTC/sBTC
-     2. Deposit Bitcoin as collateral
-     3. Mint USDH (max 66% of collateral value)
-     4. Use USDH in DeFi or hold
-     5. Repay USDH to unlock collateral
-   - Use cases: Trading, yield farming, payments
-   - Lower volatility than crypto
-   - Instant Bitcoin exposure exit
-   
-   **xUSD (Not Protocol)**:
-   - Algorithmic stablecoin
-   - Collateralized by multiple assets
-   - Dynamic stability mechanisms
-   - Yield-generating (auto-staking)
-   - Lower collateral requirements
 
    **LENDING & BORROWING**:
    
    **Arkadiko Finance**:
    - OG Stacks lending protocol
    - Supply assets, earn interest
-   - Borrow against collateral
-   - Supported assets: STX, xBTC, USDA
-   - Collateralization ratios: 150-200%
-   - Automatic liquidations for safety
-   - DIKO token governance
-   - Stability pool yields
+   - Supported: STX, xBTC, USDA
+   - Collateralization: 150-200%
    
    **Zest Protocol**:
    - Bitcoin-backed lending
-   - Institutional-grade yields
    - Supply BTC/STX, earn fixed returns
-   - Under-collateralized loans (for verified borrowers)
-   - Pool-based lending model
    - APY: 8-15% on BTC
-   - Risk-assessed loan pools
    - Real-world asset (RWA) integration
-   
-   **Lydian DAO**:
-   - Decentralized credit protocol
-   - Collateral-backed borrowing
-   - Multi-asset support
-   - Credit scoring system
-   - Lower collateral for good credit
-   - Flash loan support coming
-
-   **DERIVATIVES & ADVANCED TRADING**:
-   
-   **ALEX Options**:
-   - On-chain options trading
-   - Call and put options
-   - Bitcoin and STX underlyings
-   - European-style settlement
-   - Decentralized pricing
-   
-   **Arkadiko Collateralized Vaults**:
-   - Leverage your STX position
-   - Mint stablecoins against holdings
-   - 2-5x effective leverage
-   - Manage risk with collateral ratios
-   
-   **Synthetic Assets**:
-   - Trade price exposure without holding
-   - Synths for stocks, commodities, crypto
-   - 24/7 trading (no market hours)
-   - Collateral-backed positions
 
    **LIQUID STACKING PROTOCOLS**:
    
-   **StackingDAO**:
+   **StackingDAO** (stSTX):
    - Largest liquid stacking provider
-   - Mint stSTX by stacking STX
    - 1:1 redemption guaranteed
-   - Auto-compounding BTC rewards
-   - Governance via STX token holders
+   - Auto-compounding rewards
    - No minimum amount
-   - Instant liquidity for stacked STX
    
-   **Lisa Protocol**:
-   - Community-driven liquid stacking
-   - Issues LiSTX tokens
-   - Higher BTC reward distribution
-   - Lower fees than competitors
-   - Built-in DeFi integrations
-   - Governance by LISA token
+   **Lisa Protocol** (LiSTX):
+   - Community-driven alternative
+   - Higher reward distribution
+   - Lower fees
 
    **BRIDGES**:
    
+   **XLink Bridge**:
+   - Bitcoin ↔ Multiple chains
+   - Ethereum, Solana, and more
+   
    **Alex Bridge**:
-   - Bitcoin ↔ Stacks bridge
-   - Wrap BTC to xBTC (on Stacks)
+   - Bitcoin ↔ Stacks
    - Fast transfers (< 30 min)
    - Low fees (~0.3%)
-   - Trustless swaps
    
-   **LNSwap**:
-   - Lightning Network integration
-   - Instant BTC transfers
-   - Minimal fees
-   - Lightning ↔ Stacks
-   
+
    **Magic Bridge**:
    - Multi-chain support
    - Ethereum ↔ Stacks
