@@ -46,8 +46,8 @@ const topics = [
   {
     image: topicMeme,
     title: "Memecoins",
-    description: "WELSH, RYDER, BOOM - community tokens",
-    prompt: "What memecoins exist on Stacks? How do I trade them safely?"
+    description: "WELSH, LEO, NOT, DOG, Teiko & more on DEXs",
+    prompt: "Tell me about memecoins on Stacks. According to Tenero.io, popular memecoins include WELSH (Welshcorgicoin), LEO, NOT, DOG, Teiko, PEPE, sAI, NASTY, and FlatEarth. These are traded on DEXs like Bitflow, Velar, and ALEX. Tenero provides real-time analytics showing volume, netflow, active traders, and recent trades. How do I safely trade memecoins on Stacks?"
   },
   {
     image: topicStacking,
