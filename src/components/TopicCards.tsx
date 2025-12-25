@@ -40,8 +40,8 @@ const topics = [
   {
     image: topicNft,
     title: "NFTs & Collections",
-    description: "Digital collectibles: Monkeys, Puppets & more",
-    prompt: "Tell me about NFTs on Stacks - marketplaces and top collections"
+    description: "Gamma marketplace: The Guests, Leo Cats, BNS & more",
+    prompt: "Tell me about NFTs on Stacks. Gamma (stacks.gamma.io) is the open marketplace for Bitcoin NFTs, supporting both Stacks L2 NFTs and Bitcoin L1 Ordinals. Popular collections include The Guests, SpaghettiPunk Club, Leo Cats, and Megapont Ape Club. It also hosts BNS (Bitcoin Name System) for human-readable names on Bitcoin. Categories include Collectibles, Fine Art, Photography, and Music. How do I get started with NFTs on Stacks?"
   },
   {
     image: topicMeme,
