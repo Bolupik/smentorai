@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { ProgressMap } from "./useTopicProgress";
+import { ProgressMap } from "./useTopicProgressDB";
 
 export interface Achievement {
   id: string;
@@ -28,9 +28,9 @@ const achievementDefinitions: Omit<Achievement, "unlocked">[] = [
   {
     id: "defi-explorer",
     title: "DeFi Explorer",
-    description: "Master DeFi Protocols & STX Stacking",
+    description: "Master DeFi Protocols & Dual Stacking",
     icon: "💰",
-    requiredTopics: ["DeFi Protocols", "STX Stacking"],
+    requiredTopics: ["DeFi Protocols", "Dual Stacking"],
   },
   {
     id: "collector",
@@ -64,7 +64,7 @@ const achievementDefinitions: Omit<Achievement, "unlocked">[] = [
       "DeFi Protocols",
       "NFTs & Collections",
       "Memecoins",
-      "STX Stacking",
+      "Dual Stacking",
       "sBTC Integration",
       "Security & Wallets",
     ],

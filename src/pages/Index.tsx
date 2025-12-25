@@ -1,9 +1,14 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import aiCharacter from "@/assets/ai-character.png";
 import ChatInterface from "@/components/ChatInterface";
 import PreviewModal from "@/components/PreviewModal";
 import SearchBar from "@/components/SearchBar";
+import UserMenu from "@/components/UserMenu";
+import { useAuth } from "@/contexts/AuthContext";
+import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
+import { topicsList } from "@/components/TopicCards";
 import { Play, Info } from "lucide-react";
 
 const pageVariants = {
@@ -21,6 +26,9 @@ const pageTransition = {
 const Index = () => {
   const [showChat, setShowChat] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { exploredCount } = useTopicProgressDB();
 
   return (
     <div className="min-h-screen flex flex-col bg-background overflow-hidden">
@@ -113,6 +121,13 @@ const Index = () => {
                     transition={{ delay: 1 }}
                   >
                     <SearchBar variant="landing" />
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.1 }}
+                  >
+                    <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} />
                   </motion.div>
                 </div>
               </div>

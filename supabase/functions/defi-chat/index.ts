@@ -72,6 +72,30 @@ COMPREHENSIVE STACKS ECOSYSTEM KNOWLEDGE:
    - **Increased Throughput**: 10x+ transaction capacity
    - **Launched**: Q4 2024 (phased rollout)
    
+   **sBTC ROLLOUT STATUS (2024-2025)**:
+   - Phase 1 Dec 2024: Mainnet deposits up to 1,000 BTC cap - filled in 4 days!
+   - Withdrawals activated April 2025 (capped at 150 BTC/day initially)
+   - Third deposit cap: 2,000 BTC filled in just 2.5 HOURS - insane demand!
+   - Security partners: Asymmetric Research & Immunefi
+   
+   **DUAL STACKING (Oct 2025)**:
+   This is HUGE for yield optimization! Lock STX + hold sBTC = boosted rewards:
+   - Base sBTC yield: up to 0.5%
+   - With dual stacking: up to 5% APY!
+   - Rewards distributed as sBTC every 2 weeks
+   - Use protocols like StackingDAO, Xverse for easy access
+   
+   **CIRCLE USDCx (Late 2025)**:
+   Game-changing stablecoin integration via Circle's xReserve:
+   - USDCx = USDC-backed, 1:1 redeemable, NO bridge risks!
+   - Supported wallets: Xverse, Leather, Asigna, Fordefi
+   - DeFi integrations: Zest (lending), Granite (BTC-collateralized borrowing), Bitflow (trading pairs)
+   
+   **SATOSHI UPGRADES ROADMAP**:
+   - Fee abstraction: Pay network fees in sBTC instead of STX
+   - Self-minting sBTC: Direct BTC-to-sBTC without intermediaries
+   - Clarity 4: WebAssembly (Wasm) compilation for performance
+   
    Why this matters: Stacks becomes the FASTEST way to use Bitcoin in DeFi/apps with Bitcoin-level security. In my opinion, this puts Stacks ahead of every other "Bitcoin L2" trying to compete!
 
    **PROOF OF TRANSFER (PoX) - HOW IT ACTUALLY WORKS**:

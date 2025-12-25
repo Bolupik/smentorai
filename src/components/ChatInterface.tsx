@@ -10,7 +10,7 @@ import AchievementBadges from "./AchievementBadges";
 import GetStartedCTA from "./GetStartedCTA";
 import NFTExplorer from "./NFTExplorer";
 import aiCharacter from "@/assets/ai-character.png";
-import { useTopicProgress } from "@/hooks/useTopicProgress";
+import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
 import { useAchievements } from "@/hooks/useAchievements";
 
 interface Message {
@@ -25,7 +25,7 @@ const ChatInterface = () => {
   const [showNFTExplorer, setShowNFTExplorer] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { progress, markExplored, isExplored, exploredCount } = useTopicProgress();
+  const { progress, markExplored, isExplored, exploredCount } = useTopicProgressDB();
   const { achievements, unlockedCount, totalAchievements, allCompleted } = useAchievements(progress);
 
   const isUserScrolledUp = useRef(false);

@@ -22,8 +22,8 @@ const topics = [
   {
     image: topicArchitecture,
     title: "Stacks Architecture",
-    description: "Proof of Transfer (PoX) consensus on Bitcoin L2",
-    prompt: "Explain the Stacks blockchain architecture, the Proof of Transfer (PoX) consensus mechanism, and how it connects to Bitcoin"
+    description: "Nakamoto upgrade, sBTC rollout & Satoshi roadmap",
+    prompt: "Explain the Stacks blockchain architecture including the Nakamoto upgrade completed in 2024. Cover the Proof of Transfer (PoX) consensus, how sBTC enables two-way BTC transfers between Bitcoin L1 and Stacks L2 (with withdrawal limits of 150 BTC/day), and the upcoming Satoshi upgrades roadmap including fee abstraction (paying fees in sBTC), self-minting sBTC, and Clarity 4 with WebAssembly support."
   },
   {
     image: topicClarity,
@@ -34,8 +34,8 @@ const topics = [
   {
     image: topicDefi,
     title: "DeFi Protocols",
-    description: "ALEX, Arkadiko, Velar - decentralized finance",
-    prompt: "What are the main DeFi protocols on Stacks and how do they work?"
+    description: "Zest, Granite, Bitflow, USDCx stablecoin",
+    prompt: "What are the main DeFi protocols on Stacks? Cover the latest integrations including Circle's USDCx (USDC-backed stablecoin via xReserve infrastructure launched late 2025), Zest Protocol for multi-asset lending, Granite for borrowing USDCx against BTC, and Bitflow for USDCx trading pairs. Also mention ALEX, Arkadiko, and Velar DEXs."
   },
   {
     image: topicNft,
@@ -51,21 +51,21 @@ const topics = [
   },
   {
     image: topicStacking,
-    title: "STX Stacking",
-    description: "Earn Bitcoin by stacking your STX tokens",
-    prompt: "How does STX stacking work? How can I earn Bitcoin rewards?"
+    title: "Dual Stacking",
+    description: "Boost STX stacking yield with sBTC holdings",
+    prompt: "Explain dual stacking on Stacks (launched October 2025). How does it work? Dual stacking lets users lock STX tokens while holding sBTC to boost their yield. The STX supports the PoX consensus mechanism, while sBTC holdings directly impact the reward rate - base yields for sBTC reach 0.5%, but pairing with STX dual stacking can raise rewards to 5% APY. Rewards are distributed as sBTC every two weeks. What are the strategies (conservative, moderate, aggressive) and recommended protocols like StackingDAO and Xverse?"
   },
   {
     image: topicSbtc,
     title: "sBTC Integration",
-    description: "Bitcoin integration in DeFi with sBTC",
-    prompt: "What is sBTC and how will it change DeFi on Stacks?"
+    description: "1:1 BTC peg with withdrawals now live",
+    prompt: "What is sBTC and how does it work on Stacks? Cover the sBTC rollout: Phase 1 mainnet launch in December 2024 with 1,000 BTC cap filled in 4 days, withdrawals activated April 2025, and the third deposit cap of 2,000 BTC filling in just 2.5 hours. Explain how sBTC maintains its 1:1 BTC peg, the security partnerships with Asymmetric Research and Immunefi, and how users can bridge BTC to Stacks DeFi."
   },
   {
     image: topicSecurity,
     title: "Security & Wallets",
-    description: "Best practices and wallet recommendations",
-    prompt: "What are security best practices and which wallets should I use?"
+    description: "Xverse, Leather, Asigna & best practices",
+    prompt: "What are security best practices and which wallets should I use on Stacks? Cover the major ecosystem wallets: Xverse, Leather, Asigna, and Fordefi - all supporting USDCx and sBTC. What security features should I look for?"
   }
 ];
 
