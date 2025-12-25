@@ -8,6 +8,7 @@ import ChatMessage from "./ChatMessage";
 import TopicCards, { topicsList } from "./TopicCards";
 import AchievementBadges from "./AchievementBadges";
 import GetStartedCTA from "./GetStartedCTA";
+import NFTExplorer from "./NFTExplorer";
 import aiCharacter from "@/assets/ai-character.png";
 import { useTopicProgress } from "@/hooks/useTopicProgress";
 import { useAchievements } from "@/hooks/useAchievements";
@@ -21,6 +22,7 @@ const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showNFTExplorer, setShowNFTExplorer] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { progress, markExplored, isExplored, exploredCount } = useTopicProgress();
@@ -151,6 +153,10 @@ const ChatInterface = () => {
 
   const handleTopicClick = (prompt: string, title: string) => {
     markExplored(title);
+    // Show NFT Explorer when NFT topic is clicked
+    if (title === "NFTs & Collections") {
+      setShowNFTExplorer(true);
+    }
     handleSend(prompt);
   };
 
@@ -231,6 +237,13 @@ const ChatInterface = () => {
               exploredCount={exploredCount}
             />
           </>
+        )}
+        {/* NFT Explorer - shown when NFT topic is selected */}
+        {showNFTExplorer && messages.length > 0 && (
+          <NFTExplorer 
+            isVisible={showNFTExplorer} 
+            onClose={() => setShowNFTExplorer(false)} 
+          />
         )}
         {messages.map((msg, idx) => (
           <ChatMessage key={idx} role={msg.role} content={msg.content} />
