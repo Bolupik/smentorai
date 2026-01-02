@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      knowledge_base: {
+        Row: {
+          approved: boolean | null
+          content: string
+          created_at: string
+          id: string
+          topic: string
+          updated_at: string
+          upvotes: number | null
+          user_id: string
+        }
+        Insert: {
+          approved?: boolean | null
+          content: string
+          created_at?: string
+          id?: string
+          topic: string
+          updated_at?: string
+          upvotes?: number | null
+          user_id: string
+        }
+        Update: {
+          approved?: boolean | null
+          content?: string
+          created_at?: string
+          id?: string
+          topic?: string
+          updated_at?: string
+          upvotes?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
