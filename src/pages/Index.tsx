@@ -7,10 +7,11 @@ import PreviewModal from "@/components/PreviewModal";
 import SearchBar from "@/components/SearchBar";
 import UserMenu from "@/components/UserMenu";
 import StacksQuiz from "@/components/StacksQuiz";
+import KnowledgeBase from "@/components/KnowledgeBase";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
 import { topicsList } from "@/components/TopicCards";
-import { Play, Info, BookOpen } from "lucide-react";
+import { Play, Info, BookOpen, Library } from "lucide-react";
 
 const pageVariants = {
   initial: { opacity: 0 },
@@ -28,6 +29,7 @@ const Index = () => {
   const [showChat, setShowChat] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
+  const [showKnowledge, setShowKnowledge] = useState(false);
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
   const { exploredCount } = useTopicProgressDB();
@@ -66,7 +68,49 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background overflow-hidden">
       <AnimatePresence mode="wait">
-        {showQuiz ? (
+        {showKnowledge ? (
+          <motion.div
+            key="knowledge"
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={pageTransition}
+            className="flex-1 flex flex-col"
+          >
+            <motion.header
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="border-b border-border/30 bg-background/95 backdrop-blur-md sticky top-0 z-50"
+            >
+              <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+                <motion.button
+                  whileHover={{ x: -5 }}
+                  onClick={() => setShowKnowledge(false)}
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+                >
+                  <span className="text-lg">←</span>
+                  <span>Return</span>
+                </motion.button>
+                <div className="flex items-center gap-3">
+                  <Library className="w-5 h-5 text-primary" />
+                  <h1 className="text-lg font-semibold tracking-tight">Knowledge Repository</h1>
+                </div>
+                <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} />
+              </div>
+            </motion.header>
+            <main className="flex-1 flex flex-col items-center justify-start p-6 overflow-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="w-full max-w-2xl py-8"
+              >
+                <KnowledgeBase />
+              </motion.div>
+            </main>
+          </motion.div>
+        ) : showQuiz ? (
           <motion.div
             key="quiz"
             variants={pageVariants}
@@ -285,9 +329,16 @@ const Index = () => {
                     <BookOpen className="w-5 h-5" />
                     <span>Assessment</span>
                   </button>
+                  <button
+                    onClick={() => setShowKnowledge(true)}
+                    className="group flex items-center gap-3 px-6 py-4 bg-muted/60 text-foreground/80 font-medium text-lg rounded-sm hover:bg-muted transition-all duration-300 backdrop-blur-sm"
+                  >
+                    <Library className="w-5 h-5" />
+                    <span>Contribute</span>
+                  </button>
                   <button 
                     onClick={() => setShowPreview(true)}
-                    className="group flex items-center gap-3 px-8 py-4 bg-muted/80 text-foreground font-semibold text-lg rounded-sm hover:bg-muted transition-all duration-300 backdrop-blur-sm"
+                    className="group flex items-center gap-3 px-6 py-4 bg-muted/80 text-foreground font-semibold text-lg rounded-sm hover:bg-muted transition-all duration-300 backdrop-blur-sm"
                   >
                     <Info className="w-6 h-6" />
                     <span>Overview</span>
