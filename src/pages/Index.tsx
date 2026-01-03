@@ -8,10 +8,12 @@ import SearchBar from "@/components/SearchBar";
 import UserMenu from "@/components/UserMenu";
 import StacksQuiz from "@/components/StacksQuiz";
 import KnowledgeBase from "@/components/KnowledgeBase";
+import AdminPanel from "@/components/AdminPanel";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
+import { useAdminRole } from "@/hooks/useAdminRole";
 import { topicsList } from "@/components/TopicCards";
-import { Play, Info, BookOpen, Library } from "lucide-react";
+import { Play, Info, BookOpen, Library, Shield } from "lucide-react";
 
 const pageVariants = {
   initial: { opacity: 0 },
@@ -30,9 +32,11 @@ const Index = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
   const [showKnowledge, setShowKnowledge] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
   const { exploredCount } = useTopicProgressDB();
+  const { isAdmin } = useAdminRole();
 
   // Redirect to auth if not logged in
   useEffect(() => {
@@ -68,7 +72,49 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background overflow-hidden">
       <AnimatePresence mode="wait">
-        {showKnowledge ? (
+        {showAdmin && isAdmin ? (
+          <motion.div
+            key="admin"
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={pageTransition}
+            className="flex-1 flex flex-col"
+          >
+            <motion.header
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="border-b border-border/30 bg-background/95 backdrop-blur-md sticky top-0 z-50"
+            >
+              <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+                <motion.button
+                  whileHover={{ x: -5 }}
+                  onClick={() => setShowAdmin(false)}
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+                >
+                  <span className="text-lg">←</span>
+                  <span>Return</span>
+                </motion.button>
+                <div className="flex items-center gap-3">
+                  <Shield className="w-5 h-5 text-destructive" />
+                  <h1 className="text-lg font-semibold tracking-tight">Admin Panel</h1>
+                </div>
+                <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} />
+              </div>
+            </motion.header>
+            <main className="flex-1 flex flex-col items-center justify-start p-6 overflow-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="w-full max-w-2xl py-8"
+              >
+                <AdminPanel />
+              </motion.div>
+            </main>
+          </motion.div>
+        ) : showKnowledge ? (
           <motion.div
             key="knowledge"
             variants={pageVariants}
@@ -343,6 +389,15 @@ const Index = () => {
                     <Info className="w-6 h-6" />
                     <span>Overview</span>
                   </button>
+                  {isAdmin && (
+                    <button
+                      onClick={() => setShowAdmin(true)}
+                      className="group flex items-center gap-3 px-6 py-4 bg-destructive/20 text-destructive border border-destructive/50 font-semibold text-lg rounded-sm hover:bg-destructive/30 transition-all duration-300"
+                    >
+                      <Shield className="w-5 h-5" />
+                      <span>Admin</span>
+                    </button>
+                  )}
                 </motion.div>
 
                 {/* Badge */}
