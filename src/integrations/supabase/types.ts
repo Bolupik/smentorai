@@ -17,9 +17,13 @@ export type Database = {
       knowledge_base: {
         Row: {
           approved: boolean | null
+          category: string | null
           content: string
           created_at: string
+          downvotes: number | null
           id: string
+          image_url: string | null
+          link_url: string | null
           topic: string
           updated_at: string
           upvotes: number | null
@@ -27,9 +31,13 @@ export type Database = {
         }
         Insert: {
           approved?: boolean | null
+          category?: string | null
           content: string
           created_at?: string
+          downvotes?: number | null
           id?: string
+          image_url?: string | null
+          link_url?: string | null
           topic: string
           updated_at?: string
           upvotes?: number | null
@@ -37,15 +45,51 @@ export type Database = {
         }
         Update: {
           approved?: boolean | null
+          category?: string | null
           content?: string
           created_at?: string
+          downvotes?: number | null
           id?: string
+          image_url?: string | null
+          link_url?: string | null
           topic?: string
           updated_at?: string
           upvotes?: number | null
           user_id?: string
         }
         Relationships: []
+      }
+      knowledge_votes: {
+        Row: {
+          created_at: string
+          entry_id: string
+          id: string
+          user_id: string
+          vote_type: string
+        }
+        Insert: {
+          created_at?: string
+          entry_id: string
+          id?: string
+          user_id: string
+          vote_type: string
+        }
+        Update: {
+          created_at?: string
+          entry_id?: string
+          id?: string
+          user_id?: string
+          vote_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_votes_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_base"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
