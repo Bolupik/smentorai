@@ -20,6 +20,7 @@ import {
   ExternalLink
 } from "lucide-react";
 import KnowledgeComments from "./KnowledgeComments";
+import ContributorBadge from "./ContributorBadge";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -646,10 +647,11 @@ const KnowledgeBase = () => {
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
+                      <div className="flex items-center justify-between gap-2 mb-1">
                         <span className="text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary">
                           {getCategoryLabel(entry.category)}
                         </span>
+                        <ContributorBadge userId={entry.user_id} />
                       </div>
                       <h4 className="font-medium text-foreground">{entry.topic}</h4>
                       <p className="text-sm text-muted-foreground mt-1">

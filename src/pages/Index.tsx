@@ -9,6 +9,7 @@ import UserMenu from "@/components/UserMenu";
 import StacksQuiz from "@/components/StacksQuiz";
 import KnowledgeBase from "@/components/KnowledgeBase";
 import AdminPanel from "@/components/AdminPanel";
+import ProfileEditor from "@/components/ProfileEditor";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
 import { useAdminRole } from "@/hooks/useAdminRole";
@@ -150,8 +151,9 @@ const Index = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="w-full max-w-2xl py-8"
+                className="w-full max-w-2xl py-8 space-y-6"
               >
+                <ProfileEditor />
                 <KnowledgeBase />
               </motion.div>
             </main>
