@@ -19,6 +19,7 @@ import {
   X,
   ExternalLink
 } from "lucide-react";
+import KnowledgeComments from "./KnowledgeComments";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -678,6 +679,9 @@ const KnowledgeBase = () => {
                           View Reference
                         </a>
                       )}
+
+                      {/* Comments */}
+                      <KnowledgeComments entryId={entry.id} />
                     </div>
                   </div>
                 </motion.div>
