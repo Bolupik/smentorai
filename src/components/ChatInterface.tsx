@@ -18,6 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 interface Message {
   role: "user" | "assistant";
   content: string;
+  images?: string[];
 }
 
 const ChatInterface = () => {
@@ -253,7 +254,7 @@ const ChatInterface = () => {
           />
         )}
         {messages.map((msg, idx) => (
-          <ChatMessage key={idx} role={msg.role} content={msg.content} />
+          <ChatMessage key={idx} role={msg.role} content={msg.content} images={msg.images} />
         ))}
         {isLoading && messages[messages.length - 1]?.role === "user" && (
           <motion.div
