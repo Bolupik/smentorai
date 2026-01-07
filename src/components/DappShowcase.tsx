@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ExternalLink, Grid3X3, X } from "lucide-react";
+import { ExternalLink, Grid3X3 } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -10,21 +10,37 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 
+// Import logos
+import stacksMentorLogo from "@/assets/sponsors/stacks-mentor-ai.png";
+import boostxLogo from "@/assets/sponsors/boostx.png";
+import zestLogo from "@/assets/sponsors/zest.jpg";
+import stxtoolsLogo from "@/assets/sponsors/stxtools.ico";
+import deorganizedLogo from "@/assets/sponsors/deorganized.jpg";
+import hermeticaLogo from "@/assets/sponsors/hermetica.jpg";
+import ryderLogo from "@/assets/sponsors/ryder.png";
+import fakLogo from "@/assets/sponsors/fak.jpg";
+import gammaLogo from "@/assets/sponsors/gamma.jpg";
+import bitflowLogo from "@/assets/sponsors/bitflow.ico";
+import zeroauthorityLogo from "@/assets/sponsors/zeroauthority.ico";
+import velarLogo from "@/assets/sponsors/velar.jpg";
+import alexLogo from "@/assets/sponsors/alex.jpg";
+import arkadikoLogo from "@/assets/sponsors/arkadiko.jpg";
+
 const dapps = [
-  { name: "Stacks Mentor AI", tagline: "AI-powered learning for Stacks", url: "https://stacks-mentor-ai.lovable.app" },
-  { name: "BoostX", tagline: "Amplify your crypto journey", url: "https://boostx.cc/" },
-  { name: "Zest Protocol", tagline: "DeFi lending on Bitcoin", url: "https://app.zestprotocol.com" },
-  { name: "STX Tools", tagline: "Essential Stacks analytics", url: "https://stxtools.io/" },
-  { name: "Deorganized", tagline: "Web3 media & insights", url: "https://deorganized.media" },
-  { name: "Hermetica", tagline: "Bitcoin-backed stablecoin", url: "https://portfolio.hermetica.fi" },
-  { name: "Ryder", tagline: "Self-custody wallet", url: "https://ryder.id" },
-  { name: "FAK", tagline: "Fun on Stacks", url: "https://fak.fun" },
-  { name: "Gamma", tagline: "NFT marketplace", url: "https://gamma.io" },
-  { name: "Bitflow", tagline: "DeFi on Bitcoin", url: "https://app.bitflow.finance" },
-  { name: "Zero Authority DAO", tagline: "Decentralized governance", url: "https://zeroauthoritydao.com" },
-  { name: "Velar", tagline: "DeFi Hub", url: "https://velar.com" },
-  { name: "ALEX", tagline: "Bitcoin DeFi", url: "https://alex.io" },
-  { name: "Arkadiko", tagline: "Stablecoin Protocol", url: "https://arkadiko.finance" },
+  { name: "Stacks Mentor AI", tagline: "AI-powered learning for Stacks", url: "https://stacks-mentor-ai.lovable.app", logo: stacksMentorLogo },
+  { name: "BoostX", tagline: "Amplify your crypto journey", url: "https://boostx.cc/", logo: boostxLogo },
+  { name: "Zest Protocol", tagline: "DeFi lending on Bitcoin", url: "https://app.zestprotocol.com", logo: zestLogo },
+  { name: "STX Tools", tagline: "Essential Stacks analytics", url: "https://stxtools.io/", logo: stxtoolsLogo },
+  { name: "Deorganized", tagline: "Web3 media & insights", url: "https://deorganized.media", logo: deorganizedLogo },
+  { name: "Hermetica", tagline: "Bitcoin-backed stablecoin", url: "https://portfolio.hermetica.fi", logo: hermeticaLogo },
+  { name: "Ryder", tagline: "Self-custody wallet", url: "https://ryder.id", logo: ryderLogo },
+  { name: "FAK", tagline: "Fun on Stacks", url: "https://fak.fun", logo: fakLogo },
+  { name: "Gamma", tagline: "NFT marketplace", url: "https://gamma.io", logo: gammaLogo },
+  { name: "Bitflow", tagline: "DeFi on Bitcoin", url: "https://app.bitflow.finance", logo: bitflowLogo },
+  { name: "Zero Authority DAO", tagline: "Decentralized governance", url: "https://zeroauthoritydao.com", logo: zeroauthorityLogo },
+  { name: "Velar", tagline: "DeFi Hub", url: "https://velar.com", logo: velarLogo },
+  { name: "ALEX", tagline: "Bitcoin DeFi", url: "https://alex.io", logo: alexLogo },
+  { name: "Arkadiko", tagline: "Stablecoin Protocol", url: "https://arkadiko.finance", logo: arkadikoLogo },
 ];
 
 const DappCard = ({ dapp, compact = false }: { dapp: typeof dapps[0]; compact?: boolean }) => (
@@ -36,8 +52,12 @@ const DappCard = ({ dapp, compact = false }: { dapp: typeof dapps[0]; compact?: 
   >
     <div className={`relative overflow-hidden rounded-xl border border-border/50 bg-card/80 backdrop-blur-sm ${compact ? 'p-4' : 'p-4'} hover:border-primary/50 hover:bg-card transition-all duration-300`}>
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center flex-shrink-0">
-          <span className="text-lg font-bold text-primary">{dapp.name.charAt(0)}</span>
+        <div className="w-10 h-10 rounded-lg overflow-hidden bg-muted flex items-center justify-center flex-shrink-0">
+          <img 
+            src={dapp.logo} 
+            alt={`${dapp.name} logo`} 
+            className="w-full h-full object-cover"
+          />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
