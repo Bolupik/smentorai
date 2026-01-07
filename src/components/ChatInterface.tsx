@@ -9,6 +9,7 @@ import TopicCards, { topicsList } from "./TopicCards";
 import AchievementBadges from "./AchievementBadges";
 import GetStartedCTA from "./GetStartedCTA";
 import NFTExplorer from "./NFTExplorer";
+import AgeSelector, { type AgeLevel } from "./AgeSelector";
 import aiCharacter from "@/assets/ai-character.png";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
 import { useAchievements } from "@/hooks/useAchievements";
@@ -22,6 +23,7 @@ const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [ageLevel, setAgeLevel] = useState<AgeLevel>("adult");
   const [showNFTExplorer, setShowNFTExplorer] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -59,7 +61,7 @@ const ChatInterface = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: [...messages, userMessage] }),
+        body: JSON.stringify({ messages: [...messages, userMessage], ageLevel }),
       });
 
       if (!resp.ok) {
@@ -274,27 +276,32 @@ const ChatInterface = () => {
         animate={{ opacity: 1, y: 0 }}
         className="border-t border-border/30 bg-background/95 backdrop-blur-md p-4 md:p-6"
       >
-        <div className="max-w-4xl mx-auto flex gap-3">
-          <Textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Ask about DeFi, NFTs, STX Stacking, sBTC..."
-            className="resize-none bg-muted/50 border border-border/50 focus:border-primary/50 text-foreground placeholder:text-muted-foreground rounded-xl text-base min-h-[56px] py-4"
-            rows={1}
-          />
-          <Button
-            onClick={() => handleSend()}
-            disabled={!input.trim() || isLoading}
-            size="lg"
-            className="h-auto px-6 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl transition-all duration-300 hover:scale-105 shadow-lg shadow-primary/20"
-          >
-            {isLoading ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : (
-              <Send className="w-5 h-5" />
-            )}
-          </Button>
+        <div className="max-w-4xl mx-auto space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <AgeSelector value={ageLevel} onChange={setAgeLevel} />
+          </div>
+          <div className="flex gap-3">
+            <Textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Ask about DeFi, NFTs, STX Stacking, sBTC..."
+              className="resize-none bg-muted/50 border border-border/50 focus:border-primary/50 text-foreground placeholder:text-muted-foreground rounded-xl text-base min-h-[56px] py-4"
+              rows={1}
+            />
+            <Button
+              onClick={() => handleSend()}
+              disabled={!input.trim() || isLoading}
+              size="lg"
+              className="h-auto px-6 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl transition-all duration-300 hover:scale-105 shadow-lg shadow-primary/20"
+            >
+              {isLoading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Send className="w-5 h-5" />
+              )}
+            </Button>
+          </div>
         </div>
       </motion.div>
     </div>
