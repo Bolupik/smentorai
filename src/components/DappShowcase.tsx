@@ -96,24 +96,23 @@ const DappShowcase = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category>("All");
 
   // Duplicate dapps for seamless loop
-  const duplicatedDapps = [...dapps, ...dapps];
+  const duplicatedDapps = [...dapps, ...dapps, ...dapps];
   
   const filteredDapps = selectedCategory === "All" 
     ? dapps 
     : dapps.filter(dapp => dapp.category === selectedCategory);
 
   return (
-    <section className="py-6 sm:py-8 overflow-hidden">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between px-4 mb-4 gap-3">
-        <div>
-          <h3 className="text-base sm:text-lg font-bold text-foreground">Explore Stacks Ecosystem</h3>
-          <p className="text-xs sm:text-sm text-muted-foreground">Discover apps built on Stacks</p>
-        </div>
+    <section className="w-full bg-background/80 backdrop-blur-sm border-t border-border/30">
+      {/* Simple header with View All */}
+      <div className="flex items-center justify-between px-4 py-3">
+        <h3 className="text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+          Stacks Ecosystem
+        </h3>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
-            <Button variant="outline" size="sm" className="gap-2 w-fit">
-              <Grid3X3 className="w-4 h-4" />
+            <Button variant="ghost" size="sm" className="text-xs text-muted-foreground hover:text-foreground">
+              <Grid3X3 className="w-3.5 h-3.5 mr-1.5" />
               View All
             </Button>
           </DialogTrigger>
@@ -163,21 +162,21 @@ const DappShowcase = () => {
       </div>
 
       {/* Auto-scrolling marquee */}
-      <div className="relative">
+      <div className="relative pb-3">
         {/* Gradient fade edges */}
-        <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-20 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-20 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
         
         <motion.div
-          className="flex gap-3 sm:gap-4 px-4"
+          className="flex gap-3 sm:gap-4"
           animate={{
-            x: [0, -44 * dapps.length],
+            x: [0, -176 * dapps.length],
           }}
           transition={{
             x: {
               repeat: Infinity,
               repeatType: "loop",
-              duration: 30,
+              duration: 40,
               ease: "linear",
             },
           }}

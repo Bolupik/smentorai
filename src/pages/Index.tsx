@@ -429,12 +429,12 @@ const Index = () => {
                   </span>
                 </motion.div>
               </div>
-              
-              {/* Dapp Showcase at bottom */}
-              <div className="absolute bottom-0 left-0 right-0 z-30">
-                <DappShowcase />
-              </div>
             </main>
+            
+            {/* Dapp Showcase - Fixed at very bottom */}
+            <div className="relative z-40">
+              <DappShowcase />
+            </div>
 
             {/* Subtle particles */}
             <div className="absolute inset-0 pointer-events-none z-20">
