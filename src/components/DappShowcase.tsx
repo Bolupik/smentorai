@@ -686,7 +686,7 @@ const DappShowcase = () => {
             x: {
               repeat: Infinity,
               repeatType: "loop",
-              duration: 40,
+              duration: 120,
               ease: "linear",
             },
           }}
