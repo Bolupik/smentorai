@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="og:type" content="website" />
+
+    <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/touchicon_192.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="/touchicon_512.png" />
+
+    <meta name="theme-color" content="#000000" />
+
+    <title>Brotocol - The Road to Bitcoin</title>
+    <meta property="og:title" content="Brotocol - The Road to Bitcoin" />
+
+    <meta name="description" content="Brotocol is a Bitcoin-centric DeFi platform designed to connect the Bitcoin ecosystem with the broader cryptocurrency landscape. We provide infrastructure that allows Bitcoin users to access DeFi functionality without leaving their native environment, maintaining Bitcoin as the secure settlement layer while bringing the world's liquidity to Bitcoin." />
+    <meta property="og:description" content="Brotocol is a Bitcoin-centric DeFi platform designed to connect the Bitcoin ecosystem with the broader cryptocurrency landscape. We provide infrastructure that allows Bitcoin users to access DeFi functionality without leaving their native environment, maintaining Bitcoin as the secure settlement layer while bringing the world's liquidity to Bitcoin." />
+
+    <meta property="og:image" content="https://cdn.alexlab.co/brotocol/Brotocol_Open_Graph_Image.jpg" />
+    <meta property="twitter:image" content="https://cdn.alexlab.co/brotocol/Brotocol_Open_Graph_Image.jpg" />
+    <script type="module" crossorigin src="/assets/index-BndcCg-0.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-C3bTVcsA.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-DXZdKuUD.css">
+  <link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script></head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script>
+      window.__commitSha = "c80cb8033226b7ea3d8d35753920342acd0ed30d"
+    </script>
+    <script
+      defer
+      src="https://ua.alexgo.io/script.js"
+      data-website-id="97884584-9581-4883-8587-35751afedbc7"
+    ></script>
+  <!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b1ab12f7a0d24d8c97707dcfc2455459"}'></script><!-- Cloudflare Pages Analytics --></body>
+</html>
