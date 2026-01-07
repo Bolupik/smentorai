@@ -31,6 +31,26 @@ import zeroauthorityLogo from "@/assets/sponsors/zeroauthority.ico";
 import velarLogo from "@/assets/sponsors/velar.jpg";
 import alexLogo from "@/assets/sponsors/alex.jpg";
 import arkadikoLogo from "@/assets/sponsors/arkadiko.jpg";
+// New logo imports
+import asignaLogo from "@/assets/sponsors/asigna.ico";
+import boomLogo from "@/assets/sponsors/boom.ico";
+import hiroLogo from "@/assets/sponsors/hiro.svg";
+import fastpoolLogo from "@/assets/sponsors/fastpool.png";
+import sigleLogo from "@/assets/sponsors/sigle.png";
+import stx20Logo from "@/assets/sponsors/stx20.ico";
+import tradeportLogo from "@/assets/sponsors/tradeport.ico";
+import brotocolLogo from "@/assets/sponsors/brotocol.ico";
+import leatherLogo from "@/assets/sponsors/leather.png";
+import stxwatchLogo from "@/assets/sponsors/stxwatch.ico";
+import graniteLogo from "@/assets/sponsors/granite.svg";
+import blocksurveyLogo from "@/assets/sponsors/blocksurvey.ico";
+import lunarcrushLogo from "@/assets/sponsors/lunarcrush.ico";
+import charismaLogo from "@/assets/sponsors/charisma.png";
+import indexerLogo from "@/assets/sponsors/indexer.ico";
+import chessonchainLogo from "@/assets/sponsors/chessonchain.ico";
+import bnsoneLogo from "@/assets/sponsors/bnsone.ico";
+import xverseLogo from "@/assets/sponsors/xverse.webp";
+import stxcityLogo from "@/assets/sponsors/stxcity.ico";
 
 type Category = "All" | "DeFi" | "NFT" | "Tools" | "Wallets" | "Other";
 
@@ -192,7 +212,7 @@ const dapps: DappInfo[] = [
     name: "Asigna", 
     tagline: "Multi-sig wallet", 
     url: "https://asigna.io", 
-    logo: "https://asigna.io/favicon.ico", 
+    logo: asignaLogo, 
     category: "Wallets",
     description: "Secure multi-signature wallet for Stacks. Perfect for DAOs, teams, and anyone needing shared custody.",
     highlights: ["Multi-sig", "Team Treasury", "Secure"],
@@ -202,7 +222,7 @@ const dapps: DappInfo[] = [
     name: "BNS Market", 
     tagline: "BNS name marketplace", 
     url: "https://bns.market", 
-    logo: "https://bns.market/favicon.ico", 
+    logo: gammaLogo, 
     category: "NFT",
     description: "Buy, sell, and trade Bitcoin Name System domains. The premier marketplace for .btc names.",
     highlights: ["BNS Trading", "Name Discovery", "Auctions"],
@@ -212,7 +232,7 @@ const dapps: DappInfo[] = [
     name: "Boom", 
     tagline: "NFT wallet & tools", 
     url: "https://boom.money", 
-    logo: "https://boom.money/favicon.ico", 
+    logo: boomLogo, 
     category: "NFT",
     description: "Mobile-first NFT wallet and marketplace for Stacks. Collect, trade, and showcase your Bitcoin NFTs.",
     highlights: ["Mobile App", "NFT Gallery", "Easy Trading"],
@@ -222,7 +242,7 @@ const dapps: DappInfo[] = [
     name: "Hiro", 
     tagline: "Developer tools", 
     url: "https://hiro.so", 
-    logo: "https://hiro.so/favicon.ico", 
+    logo: hiroLogo, 
     category: "Tools",
     description: "The complete developer platform for building on Bitcoin. SDKs, APIs, and tools for Stacks developers.",
     highlights: ["Clarity IDE", "APIs", "Documentation"],
@@ -232,7 +252,7 @@ const dapps: DappInfo[] = [
     name: "FastPool", 
     tagline: "Stacking pool", 
     url: "https://fastpool.org", 
-    logo: "https://fastpool.org/favicon.ico", 
+    logo: fastpoolLogo, 
     category: "DeFi",
     description: "High-performance stacking pool with competitive yields. Stack your STX and earn Bitcoin rewards.",
     highlights: ["High APY", "No Minimum", "Auto-compound"],
@@ -242,7 +262,7 @@ const dapps: DappInfo[] = [
     name: "Sigle", 
     tagline: "Decentralized blogging", 
     url: "https://sigle.io", 
-    logo: "https://sigle.io/favicon.ico", 
+    logo: sigleLogo, 
     category: "Other",
     description: "Write and publish on the decentralized web. Own your content with blockchain-based blogging.",
     highlights: ["Decentralized", "Own Your Data", "Monetization"],
@@ -252,7 +272,7 @@ const dapps: DappInfo[] = [
     name: "STX20", 
     tagline: "Token standard", 
     url: "https://stx20.com", 
-    logo: "https://stx20.com/favicon.ico", 
+    logo: stx20Logo, 
     category: "Tools",
     description: "Explore and interact with STX20 tokens. The new token standard bringing innovation to Stacks.",
     highlights: ["Token Explorer", "Minting", "Trading"],
@@ -262,7 +282,7 @@ const dapps: DappInfo[] = [
     name: "Tradeport", 
     tagline: "NFT aggregator", 
     url: "https://tradeport.xyz", 
-    logo: "https://tradeport.xyz/favicon.ico", 
+    logo: tradeportLogo, 
     category: "NFT",
     description: "Cross-marketplace NFT aggregator for Stacks. Find the best prices across all platforms.",
     highlights: ["Best Prices", "Multi-marketplace", "Analytics"],
@@ -272,7 +292,7 @@ const dapps: DappInfo[] = [
     name: "Brotocol", 
     tagline: "DeFi protocol", 
     url: "https://brotocol.xyz", 
-    logo: "https://brotocol.xyz/favicon.ico", 
+    logo: brotocolLogo, 
     category: "DeFi",
     description: "Community-driven DeFi protocol on Stacks. Innovative yield strategies and token mechanics.",
     highlights: ["Yield Farming", "Community", "Innovation"],
@@ -282,7 +302,7 @@ const dapps: DappInfo[] = [
     name: "Leather", 
     tagline: "Bitcoin wallet", 
     url: "https://leather.io", 
-    logo: "https://leather.io/favicon.ico", 
+    logo: leatherLogo, 
     category: "Wallets",
     description: "The most popular wallet for Bitcoin and Stacks. Secure, intuitive, and feature-rich.",
     highlights: ["Browser Extension", "Mobile", "NFT Support"],
@@ -292,7 +312,7 @@ const dapps: DappInfo[] = [
     name: "STX Watch", 
     tagline: "Stacking analytics", 
     url: "https://stxwatch.io", 
-    logo: "https://stxwatch.io/favicon.ico", 
+    logo: stxwatchLogo, 
     category: "Tools",
     description: "Comprehensive stacking analytics and monitoring. Track your rewards and pool performance.",
     highlights: ["Reward Tracking", "Pool Stats", "Alerts"],
@@ -302,7 +322,7 @@ const dapps: DappInfo[] = [
     name: "Granite", 
     tagline: "Bitcoin lending", 
     url: "https://granite.world", 
-    logo: "https://granite.world/favicon.ico", 
+    logo: graniteLogo, 
     category: "DeFi",
     description: "Secure Bitcoin-backed loans. Unlock liquidity from your BTC without selling.",
     highlights: ["BTC Loans", "Low Rates", "Non-custodial"],
@@ -312,7 +332,7 @@ const dapps: DappInfo[] = [
     name: "Stone Zone", 
     tagline: "Gaming platform", 
     url: "https://stonezone.gg", 
-    logo: "https://stonezone.gg/favicon.ico", 
+    logo: fakLogo, 
     category: "Other",
     description: "Play-to-earn gaming on Stacks. Compete, collect, and earn in blockchain-powered games.",
     highlights: ["P2E Games", "NFT Rewards", "Tournaments"],
@@ -322,7 +342,7 @@ const dapps: DappInfo[] = [
     name: "BlockSurvey", 
     tagline: "Decentralized surveys", 
     url: "https://blocksurvey.io", 
-    logo: "https://blocksurvey.io/favicon.ico", 
+    logo: blocksurveyLogo, 
     category: "Tools",
     description: "Privacy-focused survey and form builder. Collect data securely on the blockchain.",
     highlights: ["Privacy First", "No Tracking", "Encrypted"],
@@ -332,7 +352,7 @@ const dapps: DappInfo[] = [
     name: "LunarCrush", 
     tagline: "Social analytics", 
     url: "https://lunarcrush.com", 
-    logo: "https://lunarcrush.com/favicon.ico", 
+    logo: lunarcrushLogo, 
     category: "Tools",
     description: "Social intelligence for crypto. Track sentiment, trends, and community engagement for Stacks.",
     highlights: ["Social Metrics", "Sentiment", "Trends"],
@@ -342,7 +362,7 @@ const dapps: DappInfo[] = [
     name: "Moonlabs", 
     tagline: "Meme token launchpad", 
     url: "https://moonlabs.fun", 
-    logo: "https://moonlabs.fun/favicon.ico", 
+    logo: fakLogo, 
     category: "DeFi",
     description: "Launch and trade meme tokens on Stacks. Fair launches and community-driven projects.",
     highlights: ["Fair Launch", "Meme Tokens", "Community"],
@@ -352,7 +372,7 @@ const dapps: DappInfo[] = [
     name: "Charisma", 
     tagline: "DeFi gamification", 
     url: "https://charisma.rocks", 
-    logo: "https://charisma.rocks/favicon.ico", 
+    logo: charismaLogo, 
     category: "DeFi",
     description: "Gamified DeFi experience on Stacks. Earn rewards through engagement and participation.",
     highlights: ["Gamification", "Rewards", "Community"],
@@ -362,7 +382,7 @@ const dapps: DappInfo[] = [
     name: "Indexer", 
     tagline: "Blockchain data", 
     url: "https://indexer.xyz", 
-    logo: "https://indexer.xyz/favicon.ico", 
+    logo: indexerLogo, 
     category: "Tools",
     description: "Real-time blockchain indexing and data APIs. Power your dApps with reliable data.",
     highlights: ["Fast Indexing", "APIs", "Reliable"],
@@ -372,7 +392,7 @@ const dapps: DappInfo[] = [
     name: "Chess on Chain", 
     tagline: "On-chain chess", 
     url: "https://chessonchain.io", 
-    logo: "https://chessonchain.io/favicon.ico", 
+    logo: chessonchainLogo, 
     category: "Other",
     description: "Play chess with moves recorded on Bitcoin. Compete, wager, and prove your skills on-chain.",
     highlights: ["On-chain Games", "Competitions", "NFT Boards"],
@@ -382,7 +402,7 @@ const dapps: DappInfo[] = [
     name: "BNS One", 
     tagline: "BNS manager", 
     url: "https://bns.one", 
-    logo: "https://bns.one/favicon.ico", 
+    logo: bnsoneLogo, 
     category: "Tools",
     description: "Manage and explore Bitcoin Name System domains. Register, transfer, and update your .btc names.",
     highlights: ["Name Management", "Registration", "Lookup"],
@@ -392,7 +412,7 @@ const dapps: DappInfo[] = [
     name: "Xverse", 
     tagline: "Bitcoin super wallet", 
     url: "https://xverse.app", 
-    logo: "https://xverse.app/favicon.ico", 
+    logo: xverseLogo, 
     category: "Wallets",
     description: "All-in-one Bitcoin wallet with Stacks, Ordinals, and Runes support. The complete Bitcoin experience.",
     highlights: ["Multi-asset", "Ordinals", "Stacking"],
@@ -402,7 +422,7 @@ const dapps: DappInfo[] = [
     name: "STX City", 
     tagline: "Token launchpad", 
     url: "https://stx.city", 
-    logo: "https://stx.city/favicon.ico", 
+    logo: stxcityLogo, 
     category: "DeFi",
     description: "Launch and discover new tokens on Stacks. Community-driven token creation platform.",
     highlights: ["Token Launch", "Discovery", "Trading"],
@@ -412,7 +432,7 @@ const dapps: DappInfo[] = [
     name: "Skullcoin", 
     tagline: "Meme community", 
     url: "https://skullcoin.in", 
-    logo: "https://skullcoin.in/favicon.ico", 
+    logo: fakLogo, 
     category: "Other",
     description: "The skull-themed meme coin community on Stacks. NFTs, games, and community events.",
     highlights: ["Meme Coin", "NFTs", "Community"],
