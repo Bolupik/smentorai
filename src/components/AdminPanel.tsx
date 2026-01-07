@@ -129,8 +129,8 @@ const AdminPanel = () => {
         throw new Error(data.error || "Review failed");
       }
     } catch (error: any) {
-      console.error('Error reviewing entry:', error);
-      toast.error(error.message || "Failed to review with AI");
+      console.error('Review error:', error);
+      toast.error("Failed to review with AI. Please try again.");
     } finally {
       setReviewingId(null);
     }

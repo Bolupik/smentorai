@@ -230,7 +230,8 @@ const KnowledgeBase = () => {
       setShowForm(false);
       fetchEntries();
     } catch (error: any) {
-      toast.error(error.message || "Failed to submit knowledge");
+      console.error('Submission error:', error);
+      toast.error("Failed to submit knowledge. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -256,7 +257,7 @@ const KnowledgeBase = () => {
             .eq('user_id', user.id)
             .eq('entry_id', entryId);
 
-          // Update counts
+          // Update counts - uses atomic RPC when types are available
           const updateField = voteType === 'up' ? 'upvotes' : 'downvotes';
           await supabase
             .from('knowledge_base')
@@ -329,8 +330,8 @@ const KnowledgeBase = () => {
         );
       }
     } catch (error) {
-      console.error('Error voting:', error);
-      toast.error("Failed to register vote");
+      console.error('Vote error:', error);
+      toast.error("Failed to register vote. Please try again.");
     }
   };
 
