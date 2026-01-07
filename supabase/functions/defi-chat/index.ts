@@ -1,10 +1,60 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Fetch community-contributed knowledge from the database
+async function fetchCommunityKnowledge(): Promise<string> {
+  try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    
+    if (!supabaseUrl || !supabaseKey) {
+      console.log("Supabase credentials not available for knowledge fetch");
+      return "";
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    
+    const { data, error } = await supabase
+      .from('knowledge_base')
+      .select('topic, content, category')
+      .eq('approved', true)
+      .order('upvotes', { ascending: false })
+      .limit(30);
+
+    if (error) {
+      console.error("Error fetching community knowledge:", error);
+      return "";
+    }
+
+    if (!data || data.length === 0) {
+      return "";
+    }
+
+    // Format the knowledge entries
+    const formattedKnowledge = data.map((entry, index) => {
+      return `[${entry.category.toUpperCase()}] ${entry.topic}:\n${entry.content}`;
+    }).join("\n\n---\n\n");
+
+    return `
+
+COMMUNITY-CONTRIBUTED KNOWLEDGE:
+The following knowledge has been contributed and verified by the community. Use this information to enhance your responses:
+
+${formattedKnowledge}
+
+END OF COMMUNITY KNOWLEDGE
+`;
+  } catch (e) {
+    console.error("Failed to fetch community knowledge:", e);
+    return "";
+  }
+}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -18,6 +68,10 @@ serve(async (req) => {
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
+
+    // Fetch community knowledge to augment the AI's knowledge base
+    const communityKnowledge = await fetchCommunityKnowledge();
+    console.log(`Loaded ${communityKnowledge ? 'community knowledge' : 'no community knowledge'} for this request`);
 
     // Age-based tone adjustments
     const ageToneGuide: Record<string, string> = {
@@ -1392,7 +1446,8 @@ FORMATTING CONVENTIONS:
 - Reserve bullet points for data or enumeration only
 - Avoid excessive emoji usage; maintain professional tone
 
-You are an autonomous guide of considerable expertise. Direct the learner toward mastery through the architectural foundations of Stacks and Bitcoin programmability.`;
+You are an autonomous guide of considerable expertise. Direct the learner toward mastery through the architectural foundations of Stacks and Bitcoin programmability.
+${communityKnowledge}`;
 
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
