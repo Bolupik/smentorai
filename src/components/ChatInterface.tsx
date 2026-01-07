@@ -53,6 +53,72 @@ const ChatInterface = () => {
     }
   }, [messages, isLoading]);
 
+  // Check if content is complex enough for an infographic
+  const shouldAutoGenerateInfographic = (content: string, userQuery: string): boolean => {
+    // Complex topics that benefit from visual explanation
+    const complexKeywords = [
+      'proof of transfer', 'stacking', 'mining', 'consensus', 'architecture',
+      'how does', 'how it works', 'explain', 'what is', 'difference between',
+      'clarity', 'smart contract', 'defi', 'yield', 'liquidity', 'amm',
+      'sbtc', 'nakamoto', 'bitcoin finality', 'microblocks', 'pox',
+      'rls', 'security', 'transaction', 'block', 'layer'
+    ];
+    
+    const queryLower = userQuery.toLowerCase();
+    const hasComplexKeyword = complexKeywords.some(kw => queryLower.includes(kw));
+    const isLongResponse = content.length > 800;
+    const hasCodeBlock = content.includes('```');
+    const hasMultipleSections = (content.match(/#{1,3}\s/g) || []).length >= 2;
+    
+    // Generate infographic for complex explanations
+    return hasComplexKeyword && (isLongResponse || hasMultipleSections) && !hasCodeBlock;
+  };
+
+  const generateInfographicForMessage = async (content: string, messageIndex: number) => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const accessToken = session?.access_token;
+      
+      if (!accessToken) return;
+
+      const topic = content.split('.')[0].slice(0, 150);
+      
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-infographic`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ 
+            topic,
+            context: content.slice(0, 500)
+          }),
+        }
+      );
+
+      if (!response.ok) return;
+
+      const data = await response.json();
+      if (data.imageUrl) {
+        setMessages((prev) => 
+          prev.map((m, i) => 
+            i === messageIndex 
+              ? { ...m, images: [...(m.images || []), data.imageUrl] }
+              : m
+          )
+        );
+        toast({
+          title: "📊 Infographic Generated",
+          description: "Visual explanation added to help you understand better!",
+        });
+      }
+    } catch (error) {
+      console.error("Auto-infographic error:", error);
+    }
+  };
+
   const streamChat = async (userMessage: Message) => {
     const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/defi-chat`;
     
@@ -135,6 +201,16 @@ const ChatInterface = () => {
             break;
           }
         }
+      }
+
+      // After streaming completes, check if we should auto-generate an infographic
+      if (assistantContent && shouldAutoGenerateInfographic(assistantContent, userMessage.content)) {
+        // Get the index of the assistant message we just added
+        const messageIndex = messages.length + 1; // +1 for user message, this is the assistant index
+        // Delay slightly to let the UI settle
+        setTimeout(() => {
+          generateInfographicForMessage(assistantContent, messageIndex);
+        }, 500);
       }
     } catch (error) {
       console.error("Chat error:", error);
