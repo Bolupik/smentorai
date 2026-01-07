@@ -10,6 +10,7 @@ import StacksQuiz from "@/components/StacksQuiz";
 import KnowledgeBase from "@/components/KnowledgeBase";
 import AdminPanel from "@/components/AdminPanel";
 import ProfileEditor from "@/components/ProfileEditor";
+import DappShowcase from "@/components/DappShowcase";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
 import { useAdminRole } from "@/hooks/useAdminRole";
@@ -416,6 +417,11 @@ const Index = () => {
                     2025 • Technical Mastery • Guided Instruction
                   </span>
                 </motion.div>
+              </div>
+              
+              {/* Dapp Showcase at bottom */}
+              <div className="absolute bottom-0 left-0 right-0 z-30">
+                <DappShowcase />
               </div>
             </main>
 
