@@ -241,25 +241,26 @@ const Index = () => {
               <div className="absolute bottom-0 left-0 right-0 h-1/3 netflix-hero-glow" />
             </div>
 
-            {/* Navigation */}
+            {/* Navigation - Mobile optimized */}
             <motion.header
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="relative z-50 px-8 py-6"
+              className="relative z-50 px-4 sm:px-8 py-4 sm:py-6"
             >
               <div className="flex items-center justify-between">
                 <motion.div 
-                  className="text-3xl font-bold tracking-tighter text-primary"
+                  className="text-xl sm:text-3xl font-bold tracking-tighter text-primary"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  THE ARCHITECT
+                  <span className="hidden sm:inline">THE ARCHITECT</span>
+                  <span className="sm:hidden">ARCHITECT</span>
                 </motion.div>
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2 sm:gap-6">
                   <motion.span 
-                    className="text-sm font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors hidden md:inline"
+                    className="text-xs sm:text-sm font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors hidden lg:inline"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.6 }}
@@ -267,7 +268,7 @@ const Index = () => {
                     Protocols
                   </motion.span>
                   <motion.span 
-                    className="text-sm font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors hidden md:inline"
+                    className="text-xs sm:text-sm font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors hidden lg:inline"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.7 }}
@@ -275,25 +276,18 @@ const Index = () => {
                     Architecture
                   </motion.span>
                   <motion.span 
-                    className="text-sm font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors hidden md:inline"
+                    className="text-xs sm:text-sm font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors hidden xl:inline"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.8 }}
                   >
                     Clarity
                   </motion.span>
-                  <motion.span 
-                    className="text-sm font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors hidden lg:inline"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.9 }}
-                  >
-                    Bitcoin L2
-                  </motion.span>
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1 }}
+                    className="hidden sm:block"
                   >
                     <SearchBar variant="landing" />
                   </motion.div>
@@ -308,38 +302,44 @@ const Index = () => {
               </div>
             </motion.header>
 
-            {/* Hero Content */}
-            <main className="relative z-10 flex-1 flex flex-col justify-end px-8 pb-32 md:pb-40">
+            {/* Hero Content - Mobile optimized */}
+            <main className="relative z-10 flex-1 flex flex-col justify-end px-4 sm:px-8 pb-28 sm:pb-32 md:pb-40">
               <div className="max-w-2xl">
                 {/* Series badge */}
                 <motion.div
                   initial={{ opacity: 0, x: -30 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
-                  className="flex items-center gap-3 mb-4"
+                  className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4"
                 >
-                  <span className="text-primary font-bold text-lg tracking-wider">◆</span>
-                  <span className="text-xs tracking-[0.3em] text-muted-foreground uppercase">Masterclass</span>
+                  <motion.span 
+                    className="text-primary font-bold text-base sm:text-lg tracking-wider"
+                    animate={{ rotate: [0, 5, -5, 0], scale: [1, 1.1, 1] }}
+                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 4 }}
+                  >
+                    ◆
+                  </motion.span>
+                  <span className="text-[10px] sm:text-xs tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground uppercase">Masterclass</span>
                 </motion.div>
 
-                {/* Title */}
+                {/* Title - Responsive sizing */}
                 <motion.h1
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.5 }}
-                  className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-foreground mb-6 leading-none"
+                  className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-foreground mb-4 sm:mb-6 leading-none"
                 >
                   {"THE ARCHITECT".split("").map((char, index) => (
                     <motion.span
                       key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={{ opacity: 0, y: 20, rotateX: -90 }}
+                      animate={{ opacity: 1, y: 0, rotateX: 0 }}
                       transition={{
                         delay: 0.7 + index * 0.04,
-                        duration: 0.4,
-                        ease: "easeOut",
+                        duration: 0.5,
+                        ease: [0.6, -0.05, 0.01, 0.99],
                       }}
-                      className="inline-block"
+                      className="inline-block hover:text-primary transition-colors duration-200"
                       style={{ minWidth: char === " " ? "0.25em" : "auto" }}
                     >
                       {char}
@@ -347,74 +347,85 @@ const Index = () => {
                   ))}
                 </motion.h1>
 
-                {/* Description - Elegant prose */}
+                {/* Description - Mobile optimized */}
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 1.2 }}
-                  className="text-lg md:text-xl text-foreground/80 mb-8 leading-relaxed max-w-xl font-light"
+                  className="text-sm sm:text-lg md:text-xl text-foreground/80 mb-6 sm:mb-8 leading-relaxed max-w-xl font-light"
                 >
-                  A comprehensive discourse on the Stacks paradigm. Herein lies the knowledge to navigate decentralized finance, comprehend Bitcoin's programmable layer, and master the elegant precision of Clarity.
+                  A comprehensive discourse on the Stacks paradigm. Master decentralized finance, Bitcoin's programmable layer, and the elegance of Clarity.
                 </motion.p>
 
-                {/* Buttons */}
+                {/* Buttons - Mobile responsive grid */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 1.4 }}
-                  className="flex items-center gap-4 flex-wrap"
+                  className="flex flex-wrap gap-2 sm:gap-3 md:gap-4"
                 >
-                  <button
+                  <motion.button
                     onClick={() => setShowChat(true)}
-                    className="group flex items-center gap-3 px-8 py-4 bg-foreground text-background font-semibold text-lg rounded-sm hover:bg-foreground/90 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                    className="group flex items-center gap-2 sm:gap-3 px-4 sm:px-8 py-3 sm:py-4 bg-foreground text-background font-semibold text-sm sm:text-lg rounded-sm hover:bg-foreground/90 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <Play className="w-6 h-6 fill-current" />
-                    <span>Begin Session</span>
-                  </button>
-                  <button
+                    <Play className="w-4 h-4 sm:w-6 sm:h-6 fill-current" />
+                    <span>Begin</span>
+                  </motion.button>
+                  <motion.button
                     onClick={() => setShowQuiz(true)}
-                    className="group flex items-center gap-3 px-8 py-4 bg-primary/20 text-primary border border-primary/50 font-semibold text-lg rounded-sm hover:bg-primary/30 transition-all duration-300"
+                    className="group flex items-center gap-2 px-4 sm:px-8 py-3 sm:py-4 bg-primary/20 text-primary border border-primary/50 font-semibold text-sm sm:text-lg rounded-sm hover:bg-primary/30 transition-all duration-300"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <BookOpen className="w-5 h-5" />
-                    <span>Assessment</span>
-                  </button>
-                  <button
+                    <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="hidden sm:inline">Assessment</span>
+                    <span className="sm:hidden">Quiz</span>
+                  </motion.button>
+                  <motion.button
                     onClick={() => setShowKnowledge(true)}
-                    className="group flex items-center gap-3 px-6 py-4 bg-muted/60 text-foreground/80 font-medium text-lg rounded-sm hover:bg-muted transition-all duration-300 backdrop-blur-sm"
+                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-muted/60 text-foreground/80 font-medium text-sm sm:text-lg rounded-sm hover:bg-muted transition-all duration-300 backdrop-blur-sm"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <Library className="w-5 h-5" />
-                    <span>Contribute</span>
-                  </button>
-                  <button 
+                    <Library className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="hidden sm:inline">Contribute</span>
+                  </motion.button>
+                  <motion.button 
                     onClick={() => setShowPreview(true)}
-                    className="group flex items-center gap-3 px-6 py-4 bg-muted/80 text-foreground font-semibold text-lg rounded-sm hover:bg-muted transition-all duration-300 backdrop-blur-sm"
+                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-muted/80 text-foreground font-semibold text-sm sm:text-lg rounded-sm hover:bg-muted transition-all duration-300 backdrop-blur-sm"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <Info className="w-6 h-6" />
-                    <span>Overview</span>
-                  </button>
+                    <Info className="w-4 h-4 sm:w-6 sm:h-6" />
+                    <span className="hidden sm:inline">Overview</span>
+                  </motion.button>
                   {isAdmin && (
-                    <button
+                    <motion.button
                       onClick={() => setShowAdmin(true)}
-                      className="group flex items-center gap-3 px-6 py-4 bg-destructive/20 text-destructive border border-destructive/50 font-semibold text-lg rounded-sm hover:bg-destructive/30 transition-all duration-300"
+                      className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-destructive/20 text-destructive border border-destructive/50 font-semibold text-sm sm:text-lg rounded-sm hover:bg-destructive/30 transition-all duration-300"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <Shield className="w-5 h-5" />
-                      <span>Admin</span>
-                    </button>
+                      <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span className="hidden sm:inline">Admin</span>
+                    </motion.button>
                   )}
                 </motion.div>
 
-                {/* Badge */}
+                {/* Badge - Mobile optimized */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.6, delay: 1.6 }}
-                  className="flex items-center gap-4 mt-8"
+                  className="flex flex-wrap items-center gap-2 sm:gap-4 mt-6 sm:mt-8"
                 >
-                  <span className="px-2 py-1 border border-muted-foreground/50 text-xs text-muted-foreground">
+                  <span className="px-2 py-1 border border-muted-foreground/50 text-[10px] sm:text-xs text-muted-foreground">
                     BITCOIN L2
                   </span>
-                  <span className="text-sm text-muted-foreground font-light">
-                    2025 • Technical Mastery • Guided Instruction
+                  <span className="text-xs sm:text-sm text-muted-foreground font-light">
+                    2025 • Technical Mastery
                   </span>
                 </motion.div>
               </div>
