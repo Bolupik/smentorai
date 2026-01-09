@@ -11,11 +11,12 @@ import KnowledgeBase from "@/components/KnowledgeBase";
 import AdminPanel from "@/components/AdminPanel";
 import ProfileEditor from "@/components/ProfileEditor";
 import DappShowcase from "@/components/DappShowcase";
+import { CommunitySentiment } from "@/components/CommunitySentiment";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
 import { useAdminRole } from "@/hooks/useAdminRole";
 import { topicsList } from "@/components/TopicCards";
-import { Play, Info, BookOpen, Library, Shield } from "lucide-react";
+import { Play, Info, BookOpen, Library, Shield, Activity } from "lucide-react";
 
 const pageVariants = {
   initial: { opacity: 0 },
@@ -35,6 +36,7 @@ const Index = () => {
   const [showQuiz, setShowQuiz] = useState(false);
   const [showKnowledge, setShowKnowledge] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
+  const [showSentiment, setShowSentiment] = useState(false);
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
   const { exploredCount } = useTopicProgressDB();
@@ -74,7 +76,49 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background overflow-hidden">
       <AnimatePresence mode="wait">
-        {showAdmin && isAdmin ? (
+        {showSentiment ? (
+          <motion.div
+            key="sentiment"
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={pageTransition}
+            className="flex-1 flex flex-col"
+          >
+            <motion.header
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="border-b border-border/30 bg-background/95 backdrop-blur-md sticky top-0 z-50"
+            >
+              <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+                <motion.button
+                  whileHover={{ x: -5 }}
+                  onClick={() => setShowSentiment(false)}
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+                >
+                  <span className="text-lg">←</span>
+                  <span>Return</span>
+                </motion.button>
+                <div className="flex items-center gap-3">
+                  <Activity className="w-5 h-5 text-orange-500" />
+                  <h1 className="text-lg font-semibold tracking-tight">Community Pulse</h1>
+                </div>
+                <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} />
+              </div>
+            </motion.header>
+            <main className="flex-1 flex flex-col items-center justify-start p-6 overflow-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="w-full max-w-4xl py-8"
+              >
+                <CommunitySentiment />
+              </motion.div>
+            </main>
+          </motion.div>
+        ) : showAdmin && isAdmin ? (
           <motion.div
             key="admin"
             variants={pageVariants}
@@ -391,6 +435,15 @@ const Index = () => {
                   >
                     <Library className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span className="hidden sm:inline">Contribute</span>
+                  </motion.button>
+                  <motion.button
+                    onClick={() => setShowSentiment(true)}
+                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-orange-500/20 text-orange-400 border border-orange-500/50 font-semibold text-sm sm:text-lg rounded-sm hover:bg-orange-500/30 transition-all duration-300"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Activity className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="hidden sm:inline">Pulse</span>
                   </motion.button>
                   <motion.button 
                     onClick={() => setShowPreview(true)}
