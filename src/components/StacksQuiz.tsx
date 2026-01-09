@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
-import { CheckCircle, XCircle, BookOpen, Trophy, RotateCcw } from "lucide-react";
+import { CheckCircle, XCircle, BookOpen, Trophy, RotateCcw, Timer, Clock } from "lucide-react";
+import { Switch } from "./ui/switch";
 
 interface QuizQuestion {
   id: number;
@@ -818,6 +819,8 @@ interface StacksQuizProps {
   onComplete?: (score: number, total: number) => void;
 }
 
+const QUESTION_TIME_LIMIT = 45; // seconds per question
+
 const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string>("");
@@ -827,6 +830,10 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
   const [quizComplete, setQuizComplete] = useState(false);
   const [answeredQuestions, setAnsweredQuestions] = useState<Set<number>>(new Set());
   const [shuffledQuestions, setShuffledQuestions] = useState<QuizQuestion[]>([]);
+  const [timedMode, setTimedMode] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(QUESTION_TIME_LIMIT);
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [timedOutQuestions, setTimedOutQuestions] = useState(0);
 
   // Shuffle and select 25 questions (comprehensive exam) ensuring diverse categories
   useEffect(() => {
@@ -863,6 +870,36 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
   }, []);
 
   const question = shuffledQuestions[currentQuestion];
+
+  // Timer effect for timed mode
+  useEffect(() => {
+    if (!timedMode || !quizStarted || showResult || quizComplete) return;
+    
+    setTimeLeft(QUESTION_TIME_LIMIT);
+    
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          // Auto-submit when time runs out
+          handleTimeOut();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    
+    return () => clearInterval(timer);
+  }, [currentQuestion, timedMode, quizStarted, showResult, quizComplete]);
+
+  const handleTimeOut = () => {
+    if (showResult) return;
+    
+    setIsCorrect(false);
+    setShowResult(true);
+    setTimedOutQuestions(prev => prev + 1);
+    setAnsweredQuestions(prev => new Set(prev).add(currentQuestion));
+  };
 
   const handleSubmit = () => {
     if (!selectedAnswer || !question) return;
@@ -921,10 +958,62 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
     setScore(0);
     setQuizComplete(false);
     setAnsweredQuestions(new Set());
+    setTimeLeft(QUESTION_TIME_LIMIT);
+    setTimedOutQuestions(0);
+    setQuizStarted(false);
+  };
+
+  const startQuiz = () => {
+    setQuizStarted(true);
+    setTimeLeft(QUESTION_TIME_LIMIT);
   };
 
   if (shuffledQuestions.length === 0) {
     return <div className="text-center text-muted-foreground">Loading assessment...</div>;
+  }
+
+  // Mode selection screen
+  if (!quizStarted) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-card border border-border rounded-xl p-8 max-w-2xl mx-auto"
+      >
+        <div className="text-center mb-8">
+          <BookOpen className="w-12 h-12 mx-auto mb-4 text-primary" />
+          <h2 className="text-2xl font-bold text-foreground mb-2">Stacks Knowledge Assessment</h2>
+          <p className="text-muted-foreground">
+            Test your understanding across {shuffledQuestions.length} questions covering architecture, Clarity, DeFi, NFTs, security, and advanced topics.
+          </p>
+        </div>
+
+        <div className="bg-muted/30 rounded-lg p-6 mb-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Timer className={`w-5 h-5 ${timedMode ? "text-primary" : "text-muted-foreground"}`} />
+              <div>
+                <p className="font-medium text-foreground">Timed Exam Mode</p>
+                <p className="text-sm text-muted-foreground">
+                  {timedMode 
+                    ? `${QUESTION_TIME_LIMIT} seconds per question. Unanswered questions count as incorrect.`
+                    : "Take your time with no time pressure."}
+                </p>
+              </div>
+            </div>
+            <Switch
+              checked={timedMode}
+              onCheckedChange={setTimedMode}
+            />
+          </div>
+        </div>
+
+        <Button onClick={startQuiz} className="w-full gap-2" size="lg">
+          {timedMode ? <Timer className="w-4 h-4" /> : <BookOpen className="w-4 h-4" />}
+          {timedMode ? "Start Timed Exam" : "Start Assessment"}
+        </Button>
+      </motion.div>
+    );
   }
 
   if (quizComplete) {
@@ -947,6 +1036,14 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
           
           <h2 className="text-2xl font-bold text-foreground mb-2">Assessment Complete</h2>
           <p className="text-4xl font-black text-primary mb-2">{score} / {shuffledQuestions.length}</p>
+          
+          {timedMode && timedOutQuestions > 0 && (
+            <p className="text-sm text-muted-foreground mb-2">
+              <Clock className="w-4 h-4 inline mr-1" />
+              {timedOutQuestions} question{timedOutQuestions > 1 ? 's' : ''} timed out
+            </p>
+          )}
+          
           <p className="text-muted-foreground mb-6">
             {percentage >= 80 
               ? "Exceptional comprehension. You possess the foundational knowledge to navigate this ecosystem with confidence."
@@ -979,14 +1076,38 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
       animate={{ opacity: 1, y: 0 }}
       className="bg-card border border-border rounded-xl p-6 max-w-2xl mx-auto"
     >
-      {/* Progress */}
+      {/* Progress and Timer */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <BookOpen className="w-4 h-4" />
           <span>Question {currentQuestion + 1} of {shuffledQuestions.length}</span>
         </div>
-        <span className="text-sm font-medium text-primary">{score} correct</span>
+        <div className="flex items-center gap-4">
+          {timedMode && !showResult && (
+            <div className={`flex items-center gap-1.5 text-sm font-medium ${
+              timeLeft <= 10 ? "text-destructive" : timeLeft <= 20 ? "text-yellow-500" : "text-primary"
+            }`}>
+              <Timer className="w-4 h-4" />
+              <span>{timeLeft}s</span>
+            </div>
+          )}
+          <span className="text-sm font-medium text-primary">{score} correct</span>
+        </div>
       </div>
+
+      {/* Timer progress bar for timed mode */}
+      {timedMode && !showResult && (
+        <div className="h-1 bg-muted rounded-full mb-2 overflow-hidden">
+          <motion.div
+            className={`h-full ${
+              timeLeft <= 10 ? "bg-destructive" : timeLeft <= 20 ? "bg-yellow-500" : "bg-primary"
+            }`}
+            initial={{ width: "100%" }}
+            animate={{ width: `${(timeLeft / QUESTION_TIME_LIMIT) * 100}%` }}
+            transition={{ duration: 0.3 }}
+          />
+        </div>
+      )}
 
       {/* Category badge */}
       <div className="mb-4">
