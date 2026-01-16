@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   TrendingUp, 
@@ -16,7 +16,12 @@ import {
   Layers,
   Shield,
   Code2,
-  Rocket
+  Rocket,
+  DollarSign,
+  Clock,
+  Box,
+  Loader2,
+  AlertCircle
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface TrendingTopic {
   id: string;
@@ -36,12 +42,20 @@ interface TrendingTopic {
   hotness: number;
 }
 
-interface EcosystemMetric {
-  label: string;
-  value: string;
-  change: string;
-  changeType: "positive" | "negative" | "neutral";
-  icon: React.ReactNode;
+interface LiveMetrics {
+  stxPrice: number;
+  stxPriceChange24h: number;
+  btcPrice: number;
+  totalTransactions: number;
+  recentTransactions: number;
+  blockHeight: number;
+  avgBlockTime: number;
+  totalSupply: number;
+  circulatingSupply: number;
+  mempoolSize: number;
+  stxLocked: number;
+  currentCycle: number;
+  signers: number;
 }
 
 interface CommunityDiscussion {
@@ -136,51 +150,6 @@ const trendingTopics: TrendingTopic[] = [
   }
 ];
 
-const ecosystemMetrics: EcosystemMetric[] = [
-  {
-    label: "DeFi TVL",
-    value: "$1.2B+",
-    change: "+97.6% Q1",
-    changeType: "positive",
-    icon: <BarChart3 className="h-4 w-4" />
-  },
-  {
-    label: "sBTC Deployed",
-    value: "3,000+ BTC",
-    change: "+2000 BTC",
-    changeType: "positive",
-    icon: <Bitcoin className="h-4 w-4" />
-  },
-  {
-    label: "Active Developers",
-    value: "1,000+",
-    change: "#7 Fastest",
-    changeType: "positive",
-    icon: <Code2 className="h-4 w-4" />
-  },
-  {
-    label: "Q2 Transactions",
-    value: "+68.4%",
-    change: "vs Q1 2025",
-    changeType: "positive",
-    icon: <Activity className="h-4 w-4" />
-  },
-  {
-    label: "Signers Network",
-    value: "Top Tier",
-    change: "#1 Bitcoin L2",
-    changeType: "positive",
-    icon: <Shield className="h-4 w-4" />
-  },
-  {
-    label: "STX Stacked",
-    value: "Growing",
-    change: "Each Cycle",
-    changeType: "positive",
-    icon: <Layers className="h-4 w-4" />
-  }
-];
-
 const communityHotTakes = [
   { text: "sBTC filled the cap in 2.5 hours... bullish AF 🟧", likes: 1247 },
   { text: "Nakamoto upgrade = Stacks finally production-ready", likes: 892 },
@@ -190,15 +159,61 @@ const communityHotTakes = [
   { text: "Show us your Nakamojo 🟧", likes: 478 }
 ];
 
+const formatNumber = (num: number): string => {
+  if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B';
+  if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
+  if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+  return num.toLocaleString();
+};
+
+const formatSupply = (num: number): string => {
+  // STX supply is in microSTX, convert to STX
+  const stx = num / 1000000;
+  if (stx >= 1000000000) return (stx / 1000000000).toFixed(2) + 'B';
+  if (stx >= 1000000) return (stx / 1000000).toFixed(2) + 'M';
+  return stx.toLocaleString();
+};
+
 export function CommunitySentiment() {
   const [discussions, setDiscussions] = useState<CommunityDiscussion[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [liveMetrics, setLiveMetrics] = useState<LiveMetrics | null>(null);
+  const [metricsLoading, setMetricsLoading] = useState(false);
+  const [metricsError, setMetricsError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("trending");
+  const { toast } = useToast();
+
+  const fetchLiveMetrics = useCallback(async () => {
+    setMetricsLoading(true);
+    setMetricsError(null);
+    try {
+      const { data, error } = await supabase.functions.invoke('stacks-metrics');
+      
+      if (error) throw error;
+      
+      if (data?.success && data?.data) {
+        setLiveMetrics(data.data);
+        setLastUpdated(new Date());
+      } else {
+        throw new Error(data?.error || 'Failed to fetch metrics');
+      }
+    } catch (e) {
+      console.error("Failed to fetch live metrics:", e);
+      setMetricsError(e instanceof Error ? e.message : 'Failed to fetch metrics');
+    } finally {
+      setMetricsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     fetchDiscussions();
-  }, []);
+    fetchLiveMetrics();
+    
+    // Auto-refresh metrics every 60 seconds
+    const interval = setInterval(fetchLiveMetrics, 60000);
+    return () => clearInterval(interval);
+  }, [fetchLiveMetrics]);
 
   const fetchDiscussions = async () => {
     setIsRefreshing(true);
@@ -219,6 +234,10 @@ export function CommunitySentiment() {
     } finally {
       setIsRefreshing(false);
     }
+  };
+
+  const handleRefresh = async () => {
+    await Promise.all([fetchDiscussions(), fetchLiveMetrics()]);
   };
 
   const getSentimentColor = (sentiment: string) => {
@@ -266,10 +285,10 @@ export function CommunitySentiment() {
           <Button
             variant="outline"
             size="sm"
-            onClick={fetchDiscussions}
-            disabled={isRefreshing}
+            onClick={handleRefresh}
+            disabled={isRefreshing || metricsLoading}
           >
-            <RefreshCw className={`h-4 w-4 mr-1 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-4 w-4 mr-1 ${isRefreshing || metricsLoading ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
         </div>
@@ -397,79 +416,204 @@ export function CommunitySentiment() {
           </div>
         </TabsContent>
 
-        {/* Ecosystem Metrics */}
+        {/* Ecosystem Metrics - Live Data */}
         <TabsContent value="metrics" className="mt-4">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {ecosystemMetrics.map((metric, index) => (
-              <motion.div
-                key={metric.label}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className="relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-primary/10 to-transparent rounded-bl-full" />
-                  <CardContent className="pt-6">
-                    <div className="flex items-center gap-2 mb-2 text-muted-foreground">
-                      {metric.icon}
-                      <span className="text-sm">{metric.label}</span>
-                    </div>
-                    <div className="text-2xl font-bold">{metric.value}</div>
-                    <div className={`text-sm mt-1 flex items-center gap-1 ${
-                      metric.changeType === "positive" ? "text-green-500" :
-                      metric.changeType === "negative" ? "text-red-500" : "text-muted-foreground"
-                    }`}>
-                      {metric.changeType === "positive" && <ArrowUpRight className="h-3 w-3" />}
-                      {metric.changeType === "negative" && <ArrowDownRight className="h-3 w-3" />}
-                      {metric.change}
+          {metricsLoading && !liveMetrics ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
+              <span className="ml-2">Loading live metrics...</span>
+            </div>
+          ) : metricsError && !liveMetrics ? (
+            <Card className="bg-red-500/10 border-red-500/30">
+              <CardContent className="py-8 text-center">
+                <AlertCircle className="h-12 w-12 mx-auto mb-4 text-red-500" />
+                <h3 className="font-semibold mb-2">Unable to load live metrics</h3>
+                <p className="text-sm text-muted-foreground mb-4">{metricsError}</p>
+                <Button onClick={fetchLiveMetrics} variant="outline">
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Try Again
+                </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <>
+              {/* Live Price Banner */}
+              {liveMetrics && (
+                <Card className="mb-4 bg-gradient-to-r from-orange-500/10 via-amber-500/10 to-yellow-500/10 border-orange-500/30">
+                  <CardContent className="py-4">
+                    <div className="flex items-center justify-between flex-wrap gap-4">
+                      <div className="flex items-center gap-6">
+                        <div className="flex items-center gap-2">
+                          <DollarSign className="h-5 w-5 text-orange-500" />
+                          <span className="text-sm text-muted-foreground">STX</span>
+                          <span className="text-2xl font-bold">${liveMetrics.stxPrice.toFixed(4)}</span>
+                          <Badge className={liveMetrics.stxPriceChange24h >= 0 ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}>
+                            {liveMetrics.stxPriceChange24h >= 0 ? '+' : ''}{liveMetrics.stxPriceChange24h.toFixed(2)}%
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-2 border-l pl-6">
+                          <Bitcoin className="h-5 w-5 text-amber-500" />
+                          <span className="text-sm text-muted-foreground">BTC</span>
+                          <span className="font-semibold">${formatNumber(liveMetrics.btcPrice)}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <Activity className="h-3 w-3" />
+                        Live from Hiro & CoinGecko API
+                        {metricsLoading && <Loader2 className="h-3 w-3 animate-spin ml-1" />}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
-              </motion.div>
-            ))}
-          </div>
+              )}
 
-          {/* Additional Stats */}
-          <Card className="mt-4">
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-green-500" />
-                Growth Highlights (2025)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">DeFi TVL Q1</span>
-                    <span className="font-semibold text-green-500">+97.6%</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">DeFi TVL Q2</span>
-                    <span className="font-semibold text-green-500">+9.2%</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Transactions Q2</span>
-                    <span className="font-semibold text-green-500">+68.4%</span>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">STX Locked Q1</span>
-                    <span className="font-semibold text-green-500">+3.3%</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">STX Locked Q2</span>
-                    <span className="font-semibold text-green-500">+2.4%</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Developer Rank</span>
-                    <span className="font-semibold text-green-500">#7 Fastest</span>
-                  </div>
-                </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {liveMetrics && (
+                  <>
+                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }}>
+                      <Card className="relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-orange-500/10 to-transparent rounded-bl-full" />
+                        <CardContent className="pt-6">
+                          <div className="flex items-center gap-2 mb-2 text-muted-foreground">
+                            <Box className="h-4 w-4" />
+                            <span className="text-sm">Block Height</span>
+                          </div>
+                          <div className="text-2xl font-bold">{formatNumber(liveMetrics.blockHeight)}</div>
+                          <div className="text-sm mt-1 flex items-center gap-1 text-green-500">
+                            <ArrowUpRight className="h-3 w-3" />
+                            Live
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+
+                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}>
+                      <Card className="relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-purple-500/10 to-transparent rounded-bl-full" />
+                        <CardContent className="pt-6">
+                          <div className="flex items-center gap-2 mb-2 text-muted-foreground">
+                            <Activity className="h-4 w-4" />
+                            <span className="text-sm">Total Transactions</span>
+                          </div>
+                          <div className="text-2xl font-bold">{formatNumber(liveMetrics.totalTransactions)}</div>
+                          <div className="text-sm mt-1 flex items-center gap-1 text-muted-foreground">
+                            All-time on-chain
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+
+                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }}>
+                      <Card className="relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-cyan-500/10 to-transparent rounded-bl-full" />
+                        <CardContent className="pt-6">
+                          <div className="flex items-center gap-2 mb-2 text-muted-foreground">
+                            <Clock className="h-4 w-4" />
+                            <span className="text-sm">Mempool</span>
+                          </div>
+                          <div className="text-2xl font-bold">{liveMetrics.mempoolSize} txs</div>
+                          <div className="text-sm mt-1 flex items-center gap-1 text-yellow-500">
+                            Pending
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+
+                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4 }}>
+                      <Card className="relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-green-500/10 to-transparent rounded-bl-full" />
+                        <CardContent className="pt-6">
+                          <div className="flex items-center gap-2 mb-2 text-muted-foreground">
+                            <Layers className="h-4 w-4" />
+                            <span className="text-sm">STX Locked</span>
+                          </div>
+                          <div className="text-2xl font-bold">{formatSupply(liveMetrics.stxLocked)}</div>
+                          <div className="text-sm mt-1 flex items-center gap-1 text-green-500">
+                            <ArrowUpRight className="h-3 w-3" />
+                            Stacking
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+
+                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 }}>
+                      <Card className="relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-blue-500/10 to-transparent rounded-bl-full" />
+                        <CardContent className="pt-6">
+                          <div className="flex items-center gap-2 mb-2 text-muted-foreground">
+                            <Shield className="h-4 w-4" />
+                            <span className="text-sm">PoX Cycle</span>
+                          </div>
+                          <div className="text-2xl font-bold">#{liveMetrics.currentCycle}</div>
+                          <div className="text-sm mt-1 flex items-center gap-1 text-blue-500">
+                            {liveMetrics.signers} Signers
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+
+                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.6 }}>
+                      <Card className="relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-amber-500/10 to-transparent rounded-bl-full" />
+                        <CardContent className="pt-6">
+                          <div className="flex items-center gap-2 mb-2 text-muted-foreground">
+                            <TrendingUp className="h-4 w-4" />
+                            <span className="text-sm">Circulating</span>
+                          </div>
+                          <div className="text-2xl font-bold">{formatSupply(liveMetrics.circulatingSupply)}</div>
+                          <div className="text-sm mt-1 flex items-center gap-1 text-muted-foreground">
+                            of {formatSupply(liveMetrics.totalSupply)} total
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  </>
+                )}
               </div>
-            </CardContent>
-          </Card>
+
+              {/* Growth Highlights */}
+              <Card className="mt-4">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-green-500" />
+                    Growth Highlights (2025)
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">DeFi TVL Q1</span>
+                        <span className="font-semibold text-green-500">+97.6%</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">DeFi TVL Q2</span>
+                        <span className="font-semibold text-green-500">+9.2%</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">Transactions Q2</span>
+                        <span className="font-semibold text-green-500">+68.4%</span>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">STX Locked Q1</span>
+                        <span className="font-semibold text-green-500">+3.3%</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">STX Locked Q2</span>
+                        <span className="font-semibold text-green-500">+2.4%</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">Developer Rank</span>
+                        <span className="font-semibold text-green-500">#7 Fastest</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </>
+          )}
         </TabsContent>
 
         {/* Community Discussions */}
