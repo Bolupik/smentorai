@@ -12,7 +12,6 @@ import AdminPanel from "@/components/AdminPanel";
 import ProfileEditor from "@/components/ProfileEditor";
 import DappShowcase from "@/components/DappShowcase";
 import { CommunitySentiment } from "@/components/CommunitySentiment";
-import ArchitectTitle from "@/components/ArchitectTitle";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
 import { useAdminRole } from "@/hooks/useAdminRole";
@@ -367,15 +366,30 @@ const Index = () => {
                   <span className="text-[10px] sm:text-xs tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground uppercase">Masterclass</span>
                 </motion.div>
 
-                {/* Interactive Title with Bear Characters */}
-                <motion.div
+                {/* Title - Responsive sizing */}
+                <motion.h1
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.5 }}
-                  className="mb-4 sm:mb-6"
+                  className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-foreground mb-4 sm:mb-6 leading-none"
                 >
-                  <ArchitectTitle />
-                </motion.div>
+                  {"THE ARCHITECT".split("").map((char, index) => (
+                    <motion.span
+                      key={index}
+                      initial={{ opacity: 0, y: 20, rotateX: -90 }}
+                      animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                      transition={{
+                        delay: 0.7 + index * 0.04,
+                        duration: 0.5,
+                        ease: [0.6, -0.05, 0.01, 0.99],
+                      }}
+                      className="inline-block hover:text-primary transition-colors duration-200"
+                      style={{ minWidth: char === " " ? "0.25em" : "auto" }}
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
+                </motion.h1>
 
                 {/* Description - Mobile optimized */}
                 <motion.p
