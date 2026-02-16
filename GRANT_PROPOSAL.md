@@ -589,7 +589,45 @@ The frontend consists of 25+ custom React components organized into:
 
 ### E. Screenshots
 
-*[Insert screenshots of: Landing page, Chat interface, Quiz, Knowledge Base, Sentiment Dashboard, dApp Showcase, Achievement Badges, Mobile views]*
+#### Landing Page — Hero & Navigation
+The cinematic landing page features The Architect's AI character, Netflix-inspired UI with hero section, action buttons (Begin, Assessment, Contribute, Pulse), and the scrollable dApp ecosystem bar.
+
+![Landing Page](docs/screenshots/01-landing-page.png)
+
+#### Chat Interface — Topic Selection & Progress
+After clicking "Begin", users see 8 interactive topic cards with progress tracking, achievement badges, age selector, and the chat input. Explored topics are highlighted with animated indicators.
+
+![Chat Topics](docs/screenshots/02-chat-topics.png)
+
+#### Active AI Conversation
+Streaming AI responses with rich formatting, covering Stacks architecture, PoX consensus, Nakamoto upgrade, and sBTC mechanics. Voice controls and infographic generation available per message.
+
+![Active Chat](docs/screenshots/03-active-chat.png)
+
+#### Knowledge Assessment — Quiz Start
+The quiz landing shows 25-question assessment covering architecture, Clarity, DeFi, NFTs, security, and advanced topics with optional timed exam mode.
+
+![Quiz Start](docs/screenshots/04-quiz-start.png)
+
+#### Knowledge Assessment — Quiz Question
+Each question features 4 multiple-choice options, category tags (DeFi, Architecture, Clarity, etc.), progress bar, and score tracking.
+
+![Quiz Question](docs/screenshots/05-quiz-question.png)
+
+#### Community Pulse — Trending Topics
+Live sentiment dashboard showing overall bullish/bearish meter, ranked trending topics (Dual Stacking, sBTC milestones, BitGo, Clarity 4 WASM, DeFAI) with hotness scores and category badges.
+
+![Sentiment Trending](docs/screenshots/06-sentiment-trending.png)
+
+#### Community Pulse — Live Metrics
+Real-time ecosystem data from Hiro Stacks API and CoinGecko: STX/BTC prices, block height (6.6M+), total transactions (22.5M+), mempool size, PoX cycle, STX locked, and growth highlights.
+
+![Live Metrics](docs/screenshots/07-live-metrics.png)
+
+#### dApp Showcase Directory
+Filterable directory of 36+ Stacks ecosystem applications across DeFi, NFT, Tools, Wallets, and Other categories with logos, descriptions, ratings, and direct links.
+
+![dApp Showcase](docs/screenshots/08-dapp-showcase.png)
 
 ---
 
