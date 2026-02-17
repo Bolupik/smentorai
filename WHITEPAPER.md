@@ -110,10 +110,12 @@ The Architect uses a sustainable, multi-stream revenue model:
 
 | Source | Quarterly Estimate |
 |---|---|
-| Subscriptions | $2,000 – $8,000 |
-| Partnerships | $3,000 – $10,000 |
-| Grants | $15,000 – $50,000 |
-| **Total (Year 1)** | **$80,000 – $272,000** |
+| Subscriptions | $200 – $600 |
+| Partnerships | $300 – $800 |
+| Grants | $1,000 – $4,000 |
+| **Total (Year 1)** | **$6,000 – $21,600** |
+
+> **Break-even target**: Recover the $4,000 initial investment within 3–6 months through a combination of grants and early subscriptions.
 
 ---
 
