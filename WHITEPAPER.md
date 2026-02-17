@@ -1,319 +1,203 @@
 # The Architect — Whitepaper
 
-### An AI-Powered Onboarding Platform for the Stacks Ecosystem
+### AI-Powered Onboarding for the Stacks Ecosystem
 
-**Version 1.0 | February 2026**
-
----
-
-## Table of Contents
-
-1. [Problem](#1-problem)
-2. [Proposed Solution](#2-proposed-solution)
-3. [Key Beneficiaries](#3-key-beneficiaries)
-4. [Revenue Model](#4-revenue-model)
-5. [Roadmap](#5-roadmap)
-6. [Budget Allocation](#6-budget-allocation)
-7. [Technology Stack](#7-technology-stack)
+**Version 1.1 | February 2026 | 3-Month Plan**
 
 ---
 
 ## 1. Problem
 
-The Stacks ecosystem is growing rapidly, but new users face three critical barriers:
+New users trying to join the Stacks ecosystem face three barriers:
 
-### 1.1 Steep Learning Curve
-Stacks introduces unique concepts — Proof of Transfer (PoX), Clarity smart contracts, sBTC, and dual stacking — that have no direct equivalents in other blockchains. Existing documentation is written for developers, leaving everyday users behind.
+1. **Too complicated** — Concepts like Proof of Transfer, Clarity smart contracts, and sBTC have no simple explanations aimed at everyday people.
+2. **Information is everywhere** — Useful content is scattered across GitHub, Discord, Twitter, and blogs. There's no single place to learn.
+3. **People leave** — Without guided help, most newcomers get overwhelmed and never come back.
 
-### 1.2 Fragmented Information
-Knowledge about Stacks is scattered across GitHub repos, Discord servers, blog posts, and Twitter threads. There is no single, interactive resource that explains the ecosystem in plain language.
-
-### 1.3 Low Retention After First Contact
-Most newcomers visit a Stacks website, feel overwhelmed, and leave. Without guided, engaging onboarding, the ecosystem loses potential users, stakers, and builders every day.
-
-**The result:** Stacks has powerful technology but struggles to convert curiosity into participation.
+**Bottom line:** Stacks has great technology, but not enough people understand it.
 
 ---
 
 ## 2. Proposed Solution
 
-**The Architect** is an AI-powered learning companion that makes the Stacks ecosystem accessible to everyone — from complete beginners to experienced developers.
+**The Architect** is an AI chatbot that teaches people about Stacks in plain, simple language.
 
-### How It Works
+- Ask any question → get a clear answer
+- Pick a topic → follow a guided lesson
+- Take a quiz → test what you learned
+- See live data → real-time STX prices and network stats
+- Browse dApps → discover what's built on Stacks
 
-| Feature | What It Does |
-|---|---|
-| **AI Chat** | Users ask questions in plain language and receive age-appropriate, accurate answers about any Stacks topic |
-| **Topic Explorer** | 8 guided learning paths covering Architecture, Clarity, DeFi, NFTs, sBTC, Stacking, Security, and Meme Culture |
-| **Knowledge Quiz** | 50+ questions across 8 categories to test and reinforce understanding |
-| **Live Dashboard** | Real-time STX price, block height, transaction count, and network health pulled from Hiro API and CoinGecko |
-| **Community Pulse** | Trending topics and sentiment analysis showing what the community is excited about |
-| **dApp Directory** | Curated showcase of 36+ ecosystem apps with ratings, categories, and direct links |
-| **Knowledge Base** | Community-contributed articles with moderation, voting, and commenting |
-| **Achievement System** | Badges and progress tracking that reward exploration and learning |
-
-### What Makes It Different
-
-- **Adaptive difficulty**: Content adjusts for kids, teens, or adults
-- **Voice narration**: Every AI response can be read aloud
-- **Visual explanations**: Complex topics auto-generate infographics
-- **No prior knowledge required**: Start from "What is Bitcoin?" and work up to "How does PoX consensus achieve Bitcoin finality?"
+It works for beginners (even kids) and experienced users alike.
 
 ---
 
 ## 3. Key Beneficiaries
 
-### 3.1 New Users & Crypto Beginners
-People who have heard about Stacks but don't know where to start. The Architect gives them a friendly, guided entry point instead of a wall of documentation.
-
-### 3.2 STX Holders & Stackers
-Current holders who want to understand stacking mechanics, yield strategies, and ecosystem developments to make better decisions with their assets.
-
-### 3.3 Developers Exploring Stacks
-Builders evaluating Stacks as a platform. The Architect explains Clarity, SIP standards, and architecture patterns with code examples and comparisons to Solidity.
-
-### 3.4 Stacks Ecosystem Projects
-dApps listed in the showcase gain visibility. As The Architect educates users about DeFi, NFTs, and tools, it naturally drives traffic to ecosystem projects.
-
-### 3.5 The Stacks Foundation
-A growing, educated community strengthens the entire ecosystem. Better-informed users become contributors, stakers, voters, and advocates.
+| Who | How They Benefit |
+|---|---|
+| **New users** | Learn Stacks without reading technical docs |
+| **STX holders** | Understand stacking, yield, and ecosystem news |
+| **Developers** | Get code examples and Clarity explanations |
+| **Stacks projects** | Gain visibility through the dApp directory |
+| **Stacks Foundation** | More educated users = stronger ecosystem |
 
 ---
 
 ## 4. Revenue Model
 
-The Architect uses a sustainable, multi-stream revenue model:
-
-### 4.1 Freemium Access
-| Tier | Price | Includes |
-|---|---|---|
-| **Free** | $0 | 10 AI chat messages/day, quiz access, live dashboard, dApp directory |
-| **Explorer** | $5/month | Unlimited AI chat, voice narration, infographic generation, priority responses |
-| **Builder** | $15/month | Everything in Explorer + API access, advanced analytics, contributor tools |
-
-### 4.2 Ecosystem Partnerships
-- **Featured Listings**: dApps pay for premium placement in the showcase directory
-- **Sponsored Topics**: Projects sponsor educational content about their protocols (clearly labeled)
-- **Integration Fees**: Protocols integrate The Architect's chat widget into their own onboarding flows
-
-### 4.3 Grants & Foundation Support
-- Stacks Foundation grants for ecosystem development
-- Bitcoin-aligned education grants
-- Community treasury proposals
-
-### 4.4 Future Revenue
-- **NFT Certificates**: Verified learning completion badges minted on Stacks
-- **Enterprise Licensing**: White-label version for exchanges and wallets to onboard their Stacks users
-- **Data Insights**: Anonymized, aggregated data on what newcomers struggle with most (sold to ecosystem projects to improve their UX)
-
-### Revenue Projection (Year 1)
-
-| Source | Quarterly Estimate |
+| Stream | How It Works |
 |---|---|
-| Subscriptions | $200 – $600 |
-| Partnerships | $300 – $800 |
-| Grants | $1,000 – $4,000 |
-| **Total (Year 1)** | **$6,000 – $21,600** |
+| **Free tier** | 10 AI chats/day, quiz, dashboard — attracts users |
+| **Paid tier ($5/mo)** | Unlimited chat, voice, infographics |
+| **Featured listings** | dApps pay for premium placement |
+| **Sponsored content** | Projects fund educational topics about their protocol |
+| **Grants** | Stacks Foundation and Bitcoin education grants |
 
-> **Break-even target**: Recover the $4,000 initial investment within 3–6 months through a combination of grants and early subscriptions.
+### 3-Month Revenue Projection
+
+| Source | Month 1 | Month 2 | Month 3 | Total |
+|---|---|---|---|---|
+| Grants | $2,000 | $500 | $500 | $3,000 |
+| Subscriptions | $0 | $100 | $200 | $300 |
+| Partnerships | $0 | $0 | $200 | $200 |
+| **Total** | **$2,000** | **$600** | **$900** | **$3,500** |
+
+> Goal: Recover the $4,000 investment within 4–5 months.
 
 ---
 
-## 5. Roadmap
+## 5. Roadmap (3 Months)
 
-### Phase 1: Foundation (Completed ✅)
-*Q4 2025 – Q1 2026*
+### Month 1 — Build & Launch
+- [x] AI chat with streaming responses
+- [x] 8 topic learning paths
+- [x] 50+ question quiz
+- [x] Live metrics dashboard (STX price, block height, transactions)
+- [x] dApp showcase (36+ projects)
+- [x] User accounts and progress tracking
+- [ ] Bug fixes and performance optimization
 
-- [x] AI chat with streaming responses and age adaptation
-- [x] 8 topic learning paths with progress tracking
-- [x] 50+ question knowledge quiz with categories
-- [x] Real-time metrics dashboard (Hiro API + CoinGecko)
-- [x] Community sentiment and trending topics
-- [x] dApp showcase with 36+ projects
-- [x] User authentication and profiles
-- [x] Achievement badge system
-- [x] Voice narration (text-to-speech)
-- [x] Auto-generated infographics
-
-### Phase 2: Growth (Q2 2026)
-- [ ] Freemium subscription tiers
-- [ ] Mobile-optimized PWA
-- [ ] Multi-language support (Spanish, Portuguese, Turkish)
+### Month 2 — Grow
+- [ ] Launch paid subscription tier
+- [ ] Add 3 languages (Spanish, Portuguese, Turkish)
+- [ ] Mobile-friendly PWA version
+- [ ] Partner with 5 ecosystem projects for co-marketing
 - [ ] Community knowledge base with moderation
-- [ ] Embeddable chat widget for ecosystem projects
-- [ ] User analytics dashboard
 
-### Phase 3: Expansion (Q3 2026)
-- [ ] NFT learning certificates minted on Stacks
-- [ ] API for third-party integrations
-- [ ] Advanced DeFi simulator (practice stacking, swaps without real funds)
-- [ ] Partnered content with top ecosystem projects
-- [ ] Leaderboard and community challenges
-
-### Phase 4: Sustainability (Q4 2026)
-- [ ] Enterprise white-label product
-- [ ] DAO governance for content curation
-- [ ] AI model fine-tuned specifically on Stacks documentation
-- [ ] Cross-chain education (Bitcoin L2 comparisons)
-- [ ] Revenue self-sustainability target
+### Month 3 — Sustain
+- [ ] Embeddable chat widget for other Stacks websites
+- [ ] NFT learning certificates on Stacks
+- [ ] Analytics dashboard for user engagement
+- [ ] Apply for follow-up grants based on results
+- [ ] Publish impact report (users, topics covered, retention)
 
 ---
 
 ## 6. Budget Allocation
 
-### Total Requested: $4,000
+### Total: $4,000
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                  BUDGET ALLOCATION                       │
-├─────────────────────┬──────────┬────────────────────────┤
-│ Category            │ Amount   │ Percentage             │
-├─────────────────────┼──────────┼────────────────────────┤
-│ Development         │ $1,800   │ ████████████████ 45.0% │
-│ Marketing           │ $800     │ ███████ 20.0%          │
-│ Dispute Resolution  │ $400     │ ███ 10.0%              │
-│ Management          │ $700     │ ██████ 17.5%           │
-│ Reserve             │ $300     │ ██ 7.5%                │
-└─────────────────────┴──────────┴────────────────────────┘
+Development        $1,800  ████████████████  45%
+Marketing            $800  ███████           20%
+Dispute Resolution   $400  ███               10%
+Management           $700  █████             17.5%
+Reserve              $300  ██                 7.5%
 ```
 
-### 6.1 Development — $1,800 (45.0%)
+### Development — $1,800 (45%)
 
-| Item | Cost | Purpose |
-|---|---|---|
-| AI & Backend Infrastructure | $600 | Edge function hosting, AI API credits (OpenAI/Gemini), database scaling |
-| Frontend Development | $500 | Mobile PWA, multi-language UI, subscription system, accessibility improvements |
-| Smart Contract Development | $300 | NFT certificate minting contracts in Clarity |
-| API Development | $200 | Public API for third-party embeds and integrations |
-| Testing & Security Audits | $200 | Penetration testing, load testing, code audits |
+| Item | Cost |
+|---|---|
+| AI API credits (chat, voice, images) | $600 |
+| Frontend improvements (mobile, languages) | $500 |
+| Smart contract (NFT certificates) | $300 |
+| API for embeddable widget | $200 |
+| Testing and bug fixes | $200 |
 
-### 6.2 Marketing — $800 (20.0%)
+### Marketing — $800 (20%)
 
-| Item | Cost | Purpose |
-|---|---|---|
-| Content Creation | $300 | Tutorial videos, blog posts, social media content |
-| Community Campaigns | $200 | Twitter Spaces, Discord events, ambassador program |
-| Ecosystem Outreach | $150 | Partnerships with Stacks projects for co-marketing |
-| Conference Presence | $150 | Stacks events, Bitcoin conferences, demo presentations |
+| Item | Cost |
+|---|---|
+| Social media content and videos | $300 |
+| Community events (Twitter Spaces, Discord) | $200 |
+| Partnerships with Stacks projects | $150 |
+| Conference demos | $150 |
 
-### 6.3 Dispute Resolution Fund — $400 (10.0%)
+### Dispute Resolution — $400 (10%)
 
-A dedicated fund to handle:
-- **Content disputes**: When community-submitted knowledge base entries are challenged for accuracy
-- **Moderation appeals**: Users who contest content removal or account actions
-- **Partnership disagreements**: Resolving issues with sponsored content or featured listings
-- **Bug bounties**: Rewarding users who report critical security issues
+Covers content disputes, moderation appeals, bug bounties, and partnership disagreements. Keeps operations fair without touching other budgets.
 
-This fund ensures fair, transparent resolution without impacting operational budgets.
+### Management — $700 (17.5%)
 
-### 6.4 Management — $700 (17.5%)
+| Item | Cost |
+|---|---|
+| Project coordination | $300 |
+| Legal (terms, privacy policy) | $200 |
+| Accounting and reporting | $100 |
+| Tools and software | $100 |
 
-| Item | Cost | Purpose |
-|---|---|---|
-| Project Management | $300 | Coordination, milestone tracking, stakeholder reporting |
-| Legal & Compliance | $200 | Terms of service, privacy policy, crypto regulatory review |
-| Accounting & Reporting | $100 | Financial tracking, grant reporting, tax compliance |
-| Team Operations | $100 | Tools, communication, project management software |
+### Reserve — $300 (7.5%)
 
-### 6.5 Reserve — $300 (7.5%)
-
-Emergency fund for unexpected costs: API price increases, scaling spikes, critical bug fixes, or opportunities that arise mid-project.
+Emergency fund for unexpected costs like API price changes or traffic spikes.
 
 ---
 
 ## 7. Technology Stack
 
-### 7.1 Frontend
+### What We Build With
 
-| Technology | Version | Purpose |
-|---|---|---|
-| **React** | 18.3 | UI framework — component-based architecture for fast, interactive interfaces |
-| **TypeScript** | 5.x | Type-safe JavaScript — catches bugs before they reach users |
-| **Vite** | 5.x | Build tool — instant hot reload during development, optimized production builds |
-| **Tailwind CSS** | 3.x | Utility-first CSS — consistent, responsive design without writing custom CSS |
-| **Framer Motion** | 12.x | Animation library — smooth transitions, page animations, micro-interactions |
-| **React Router** | 6.x | Client-side routing — seamless navigation without page reloads |
-| **shadcn/ui** | Latest | Pre-built accessible UI components (buttons, dialogs, forms, cards) |
-| **Recharts** | 2.x | Data visualization — charts and graphs for metrics dashboard |
-| **React Markdown** | 10.x | Renders AI responses with proper formatting (headers, code blocks, lists) |
-
-### 7.2 Backend
-
-| Technology | Purpose |
+| Tool | What It Does |
 |---|---|
-| **Lovable Cloud (Supabase)** | Backend-as-a-service — database, authentication, edge functions, file storage |
-| **PostgreSQL** | Relational database — stores user profiles, progress, knowledge base, quiz data |
-| **Edge Functions (Deno)** | Serverless functions — AI chat, metrics fetching, text-to-speech, infographic generation |
-| **Row Level Security (RLS)** | Database security — ensures users can only access their own data |
+| **React** | Builds the user interface |
+| **TypeScript** | Catches code errors before users see them |
+| **Vite** | Makes the app load fast |
+| **Tailwind CSS** | Styles everything consistently |
+| **Framer Motion** | Adds smooth animations |
+| **shadcn/ui** | Pre-built buttons, forms, and cards |
 
-### 7.3 External APIs
+### Where Data Lives
 
-| API | Purpose |
+| Tool | What It Does |
 |---|---|
-| **Hiro Stacks API** | Real-time blockchain data — block height, transactions, mempool, PoX cycles, STX supply |
-| **CoinGecko API** | Price data — STX/USD, STX/BTC, market cap, 24h volume and price changes |
-| **OpenAI / Google Gemini** | AI models — powers the chat assistant, generates educational responses |
+| **PostgreSQL** | Stores user profiles, progress, and content |
+| **Edge Functions** | Runs AI chat, fetches live data, generates audio |
+| **Row Level Security** | Keeps each user's data private |
 
-### 7.4 Database Schema
+### External Services
 
-```
-┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
-│    profiles       │     │  topic_progress   │     │   user_roles     │
-├──────────────────┤     ├──────────────────┤     ├──────────────────┤
-│ id               │     │ id               │     │ id               │
-│ user_id          │     │ user_id          │     │ user_id          │
-│ display_name     │     │ topic_title      │     │ role (enum)      │
-│ username         │     │ explored         │     │ created_at       │
-│ avatar_url       │     │ last_visited     │     └──────────────────┘
-│ created_at       │     └──────────────────┘
-│ updated_at       │
-└──────────────────┘
-        │
-        │
-┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
-│  knowledge_base   │     │knowledge_comments │     │ knowledge_votes  │
-├──────────────────┤     ├──────────────────┤     ├──────────────────┤
-│ id               │     │ id               │     │ id               │
-│ user_id          │     │ entry_id (FK)    │     │ entry_id (FK)    │
-│ topic            │     │ user_id          │     │ user_id          │
-│ content          │     │ content          │     │ vote_type        │
-│ category         │     │ created_at       │     │ created_at       │
-│ approved         │     └──────────────────┘     └──────────────────┘
-│ upvotes          │
-│ downvotes        │
-│ image_url        │
-│ link_url         │
-│ created_at       │
-│ updated_at       │
-└──────────────────┘
-```
+| Service | What It Does |
+|---|---|
+| **Hiro Stacks API** | Live blockchain data (blocks, transactions, stacking) |
+| **CoinGecko** | STX price and market data |
+| **AI Models** | Powers the chat assistant |
 
-### 7.5 Edge Functions
+### Backend Functions
 
-| Function | Language | Purpose |
-|---|---|---|
-| `defi-chat` | TypeScript (Deno) | Handles AI conversation with streaming responses, age adaptation, and context management |
-| `stacks-metrics` | TypeScript (Deno) | Fetches real-time blockchain and price data from Hiro API and CoinGecko |
-| `generate-infographic` | TypeScript (Deno) | Creates visual explanations for complex topics using AI image generation |
-| `text-to-speech` | TypeScript (Deno) | Converts AI text responses to audio for voice narration |
-| `review-contribution` | TypeScript (Deno) | AI-assisted moderation for community knowledge base submissions |
-
-### 7.6 Security
-
-- **Authentication**: Email/password with email verification
-- **Authorization**: Role-based access (admin, moderator, user) via `user_roles` table
-- **Data Protection**: Row Level Security on all tables — users can only read/write their own data
-- **API Security**: All edge functions require valid JWT tokens
-- **Rate Limiting**: Chat limited to prevent abuse and manage AI costs
+| Function | Purpose |
+|---|---|
+| `defi-chat` | AI conversation engine |
+| `stacks-metrics` | Fetches live network stats |
+| `text-to-speech` | Voice narration |
+| `generate-infographic` | Visual explanations |
+| `review-contribution` | Content moderation |
 
 ---
 
-## Contact
+## Summary
 
-- **Project**: The Architect — Stacks Mentor AI
-- **Website**: [smentorai.lovable.app](https://smentorai.lovable.app)
-- **Status**: Live and functional
+| | |
+|---|---|
+| **Problem** | Stacks is hard to learn for newcomers |
+| **Solution** | AI chatbot that explains everything simply |
+| **Who benefits** | New users, holders, developers, projects, the Foundation |
+| **Revenue** | Subscriptions + partnerships + grants |
+| **Budget** | $4,000 over 3 months |
+| **Tech** | React + PostgreSQL + AI + Stacks APIs |
 
 ---
 
-*This whitepaper is a living document and will be updated as the project evolves.*
+**Website:** [smentorai.lovable.app](https://smentorai.lovable.app)
+
+*Last updated: February 2026*
