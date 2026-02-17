@@ -159,7 +159,7 @@ The Architect uses a sustainable, multi-stream revenue model:
 
 ## 6. Budget Allocation
 
-### Total Requested: $75,000
+### Total Requested: $4,000
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -167,34 +167,34 @@ The Architect uses a sustainable, multi-stream revenue model:
 ├─────────────────────┬──────────┬────────────────────────┤
 │ Category            │ Amount   │ Percentage             │
 ├─────────────────────┼──────────┼────────────────────────┤
-│ Development         │ $35,000  │ ██████████████ 46.7%   │
-│ Marketing           │ $15,000  │ ██████ 20.0%           │
-│ Dispute Resolution  │ $7,500   │ ███ 10.0%              │
-│ Management          │ $12,500  │ █████ 16.7%            │
-│ Reserve             │ $5,000   │ ██ 6.6%                │
+│ Development         │ $1,800   │ ████████████████ 45.0% │
+│ Marketing           │ $800     │ ███████ 20.0%          │
+│ Dispute Resolution  │ $400     │ ███ 10.0%              │
+│ Management          │ $700     │ ██████ 17.5%           │
+│ Reserve             │ $300     │ ██ 7.5%                │
 └─────────────────────┴──────────┴────────────────────────┘
 ```
 
-### 6.1 Development — $35,000 (46.7%)
+### 6.1 Development — $1,800 (45.0%)
 
 | Item | Cost | Purpose |
 |---|---|---|
-| AI & Backend Infrastructure | $12,000 | Edge function hosting, AI API credits (OpenAI/Gemini), database scaling |
-| Frontend Development | $10,000 | Mobile PWA, multi-language UI, subscription system, accessibility improvements |
-| Smart Contract Development | $5,000 | NFT certificate minting contracts in Clarity |
-| API Development | $4,000 | Public API for third-party embeds and integrations |
-| Testing & Security Audits | $4,000 | Penetration testing, load testing, code audits |
+| AI & Backend Infrastructure | $600 | Edge function hosting, AI API credits (OpenAI/Gemini), database scaling |
+| Frontend Development | $500 | Mobile PWA, multi-language UI, subscription system, accessibility improvements |
+| Smart Contract Development | $300 | NFT certificate minting contracts in Clarity |
+| API Development | $200 | Public API for third-party embeds and integrations |
+| Testing & Security Audits | $200 | Penetration testing, load testing, code audits |
 
-### 6.2 Marketing — $15,000 (20.0%)
+### 6.2 Marketing — $800 (20.0%)
 
 | Item | Cost | Purpose |
 |---|---|---|
-| Content Creation | $5,000 | Tutorial videos, blog posts, social media content |
-| Community Campaigns | $4,000 | Twitter Spaces, Discord events, ambassador program |
-| Ecosystem Outreach | $3,000 | Partnerships with Stacks projects for co-marketing |
-| Conference Presence | $3,000 | Stacks events, Bitcoin conferences, demo presentations |
+| Content Creation | $300 | Tutorial videos, blog posts, social media content |
+| Community Campaigns | $200 | Twitter Spaces, Discord events, ambassador program |
+| Ecosystem Outreach | $150 | Partnerships with Stacks projects for co-marketing |
+| Conference Presence | $150 | Stacks events, Bitcoin conferences, demo presentations |
 
-### 6.3 Dispute Resolution Fund — $7,500 (10.0%)
+### 6.3 Dispute Resolution Fund — $400 (10.0%)
 
 A dedicated fund to handle:
 - **Content disputes**: When community-submitted knowledge base entries are challenged for accuracy
@@ -204,16 +204,16 @@ A dedicated fund to handle:
 
 This fund ensures fair, transparent resolution without impacting operational budgets.
 
-### 6.4 Management — $12,500 (16.7%)
+### 6.4 Management — $700 (17.5%)
 
 | Item | Cost | Purpose |
 |---|---|---|
-| Project Management | $5,000 | Coordination, milestone tracking, stakeholder reporting |
-| Legal & Compliance | $3,500 | Terms of service, privacy policy, crypto regulatory review |
-| Accounting & Reporting | $2,000 | Financial tracking, grant reporting, tax compliance |
-| Team Operations | $2,000 | Tools, communication, project management software |
+| Project Management | $300 | Coordination, milestone tracking, stakeholder reporting |
+| Legal & Compliance | $200 | Terms of service, privacy policy, crypto regulatory review |
+| Accounting & Reporting | $100 | Financial tracking, grant reporting, tax compliance |
+| Team Operations | $100 | Tools, communication, project management software |
 
-### 6.5 Reserve — $5,000 (6.6%)
+### 6.5 Reserve — $300 (7.5%)
 
 Emergency fund for unexpected costs: API price increases, scaling spikes, critical bug fixes, or opportunities that arise mid-project.
 
