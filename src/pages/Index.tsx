@@ -1,5 +1,4 @@
 import { motion, AnimatePresence } from "framer-motion";
-import WhitepaperSection from "@/components/WhitepaperSection";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import aiCharacter from "@/assets/ai-character.png";
@@ -489,9 +488,6 @@ const Index = () => {
             <div className="relative z-40">
               <DappShowcase />
             </div>
-
-            {/* Whitepaper Section */}
-            <WhitepaperSection />
 
             {/* Subtle particles */}
             <div className="absolute inset-0 pointer-events-none z-20">
