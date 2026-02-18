@@ -302,6 +302,41 @@ const ChatInterface = () => {
                 Voice narration accompanies all discourse
               </motion.p>
             </motion.div>
+
+            {/* Search input above topics */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.4 }}
+              className="max-w-2xl mx-auto w-full px-2 sm:px-4 mb-6"
+            >
+              <div className="flex gap-3">
+                <Textarea
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Ask about DeFi, NFTs, STX Stacking, sBTC..."
+                  className="resize-none bg-muted/50 border border-border/50 focus:border-primary/50 text-foreground placeholder:text-muted-foreground rounded-xl text-base min-h-[56px] py-4"
+                  rows={1}
+                />
+                <Button
+                  onClick={() => handleSend()}
+                  disabled={!input.trim() || isLoading}
+                  size="lg"
+                  className="h-auto px-6 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl transition-all duration-300 hover:scale-105 shadow-lg shadow-primary/20"
+                >
+                  {isLoading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Send className="w-5 h-5" />
+                  )}
+                </Button>
+              </div>
+              <div className="mt-2">
+                <AgeSelector value={ageLevel} onChange={setAgeLevel} />
+              </div>
+            </motion.div>
+
             <TopicCards 
               onTopicClick={handleTopicClick} 
               exploredTopics={exploredTopics}
@@ -352,40 +387,42 @@ const ChatInterface = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input area - Netflix style */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="border-t border-border/30 bg-background/95 backdrop-blur-md p-4 md:p-6"
-      >
-        <div className="max-w-4xl mx-auto space-y-3">
-          <div className="flex items-center justify-between gap-3">
-            <AgeSelector value={ageLevel} onChange={setAgeLevel} />
+      {/* Input area - Netflix style, hidden on empty state */}
+      {messages.length > 0 && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="border-t border-border/30 bg-background/95 backdrop-blur-md p-4 md:p-6"
+        >
+          <div className="max-w-4xl mx-auto space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              <AgeSelector value={ageLevel} onChange={setAgeLevel} />
+            </div>
+            <div className="flex gap-3">
+              <Textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Ask about DeFi, NFTs, STX Stacking, sBTC..."
+                className="resize-none bg-muted/50 border border-border/50 focus:border-primary/50 text-foreground placeholder:text-muted-foreground rounded-xl text-base min-h-[56px] py-4"
+                rows={1}
+              />
+              <Button
+                onClick={() => handleSend()}
+                disabled={!input.trim() || isLoading}
+                size="lg"
+                className="h-auto px-6 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl transition-all duration-300 hover:scale-105 shadow-lg shadow-primary/20"
+              >
+                {isLoading ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <Send className="w-5 h-5" />
+                )}
+              </Button>
+            </div>
           </div>
-          <div className="flex gap-3">
-            <Textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Ask about DeFi, NFTs, STX Stacking, sBTC..."
-              className="resize-none bg-muted/50 border border-border/50 focus:border-primary/50 text-foreground placeholder:text-muted-foreground rounded-xl text-base min-h-[56px] py-4"
-              rows={1}
-            />
-            <Button
-              onClick={() => handleSend()}
-              disabled={!input.trim() || isLoading}
-              size="lg"
-              className="h-auto px-6 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl transition-all duration-300 hover:scale-105 shadow-lg shadow-primary/20"
-            >
-              {isLoading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <Send className="w-5 h-5" />
-              )}
-            </Button>
-          </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 };
