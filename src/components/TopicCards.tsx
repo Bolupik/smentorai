@@ -67,8 +67,8 @@ const topics = [
   {
     image: topicTools,
     title: "Tools",
-    description: "Hiro, STXTools, STX.City, explorers & dev tools",
-    prompt: "What are the essential tools in the Stacks ecosystem? Cover developer tools like Hiro Platform (Clarinet, Explorer, API), STXTools for analytics and portfolio tracking, STX.City for token launches, Stacks Explorer for on-chain data, and other community tools. How do these tools help developers and users navigate the Stacks ecosystem?",
+    description: "BNS, BoostX, Hiro, STXTools & more",
+    prompt: "What are the essential tools in the Stacks ecosystem?\n\n**BNS (Bitcoin Name System):** BNS lets users register human-readable names (.btc, .stx, .id) on Bitcoin via Stacks. The BNS Community (bns.foundation) provides education and resources, while BNS One (bns.one) is an all-in-one platform for registering, renewing, transferring, and trading BNS names.\n\n**BoostX:** A Chrome browser extension that brings Bitcoin-backed DeFi to social platforms like X (Twitter) and Discord. Users can tip, boost, and airdrop tokens (STX, sBTC, USDh) directly from social feeds. It integrates with BNS names for intuitive sending.\n\nAlso cover Hiro Platform (Clarinet, Explorer, API), STXTools for analytics and portfolio tracking, STX.City for token launches, and Stacks Explorer for on-chain data. How do these tools help developers and users navigate the Stacks ecosystem?",
     icon: TrendingUp,
     color: "from-amber-500/20 to-yellow-500/20",
     accentColor: "text-amber-400"
