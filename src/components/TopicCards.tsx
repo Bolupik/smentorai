@@ -66,27 +66,27 @@ const topics = [
   },
   {
     image: topicStacking,
-    title: "Dual Stacking",
-    description: "Boost STX stacking yield with sBTC holdings",
-    prompt: "Explain dual stacking on Stacks (launched October 2025). How does it work? Dual stacking lets users lock STX tokens while holding sBTC to boost their yield. The STX supports the PoX consensus mechanism, while sBTC holdings directly impact the reward rate - base yields for sBTC reach 0.5%, but pairing with STX dual stacking can raise rewards to 5% APY. Rewards are distributed as sBTC every two weeks. What are the strategies (conservative, moderate, aggressive) and recommended protocols like StackingDAO and Xverse?",
+    title: "Tools",
+    description: "Hiro, STXTools, STX.City, explorers & dev tools",
+    prompt: "What are the essential tools in the Stacks ecosystem? Cover developer tools like Hiro Platform (Clarinet, Explorer, API), STXTools for analytics and portfolio tracking, STX.City for token launches, Stacks Explorer for on-chain data, and other community tools. How do these tools help developers and users navigate the Stacks ecosystem?",
     icon: TrendingUp,
     color: "from-amber-500/20 to-yellow-500/20",
     accentColor: "text-amber-400"
   },
   {
     image: topicSbtc,
-    title: "sBTC Integration",
-    description: "1:1 BTC peg with withdrawals now live",
-    prompt: "What is sBTC and how does it work on Stacks? Cover the sBTC rollout: Phase 1 mainnet launch in December 2024 with 1,000 BTC cap filled in 4 days, withdrawals activated April 2025, and the third deposit cap of 2,000 BTC filling in just 2.5 hours. Explain how sBTC maintains its 1:1 BTC peg, the security partnerships with Asymmetric Research and Immunefi, and how users can bridge BTC to Stacks DeFi.",
+    title: "Wallets",
+    description: "Xverse, Leather, Asigna & Fordefi",
+    prompt: "What wallets are available on Stacks and how do I choose the right one? Cover the major ecosystem wallets: Xverse (mobile & browser, supports sBTC, USDCx, stacking), Leather (browser extension by Hiro, open-source), Asigna (multisig wallet for teams and DAOs), and Fordefi (institutional-grade MPC wallet). Compare features, security models, and use cases for each wallet.",
     icon: Zap,
     color: "from-orange-500/20 to-red-500/20",
     accentColor: "text-orange-400"
   },
   {
     image: topicSecurity,
-    title: "Security & Wallets",
-    description: "Xverse, Leather, Asigna & best practices",
-    prompt: "What are security best practices and which wallets should I use on Stacks? Cover the major ecosystem wallets: Xverse, Leather, Asigna, and Fordefi - all supporting USDCx and sBTC. What security features should I look for?",
+    title: "Security",
+    description: "Best practices, audits & safe DeFi usage",
+    prompt: "What are the security best practices for using the Stacks ecosystem? Cover smart contract auditing (Coinfabrik, Asymmetric Research), the Immunefi bug bounty program, how Clarity's decidability prevents common vulnerabilities, safe DeFi practices (checking approvals, avoiding scams), and how to protect your wallet and private keys.",
     icon: Shield,
     color: "from-red-500/20 to-rose-500/20",
     accentColor: "text-red-400"
