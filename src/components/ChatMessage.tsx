@@ -130,7 +130,7 @@ const ChatMessage = ({ role, content, images = [] }: ChatMessageProps) => {
         } px-5 py-4`}
       >
         {isAssistant ? (
-          <div className="prose prose-sm max-w-none text-foreground prose-headings:text-foreground prose-strong:text-foreground prose-code:text-primary">
+          <div className="prose prose-base max-w-none text-foreground prose-headings:text-foreground prose-strong:text-foreground prose-code:text-primary prose-p:text-[15px] prose-li:text-[15px]">
             <ReactMarkdown
               components={{
                 code({ className, children, ...props }: any) {
@@ -138,7 +138,7 @@ const ChatMessage = ({ role, content, images = [] }: ChatMessageProps) => {
                   const isInline = !match;
                   
                   return !isInline ? (
-                    <pre className="bg-muted/80 rounded-lg p-4 overflow-x-auto my-3 text-sm border border-border/50">
+                    <pre className="bg-muted/80 rounded-lg p-4 overflow-x-auto my-4 text-sm border border-border/50">
                       <code className={className} {...props}>
                         {children}
                       </code>
@@ -149,13 +149,16 @@ const ChatMessage = ({ role, content, images = [] }: ChatMessageProps) => {
                     </code>
                   );
                 },
-                h1: ({ children }) => <h1 className="text-xl font-bold mb-3 mt-4">{children}</h1>,
-                h2: ({ children }) => <h2 className="text-lg font-bold mb-2 mt-3">{children}</h2>,
-                h3: ({ children }) => <h3 className="text-base font-bold mb-2 mt-3">{children}</h3>,
-                p: ({ children }) => <p className="mb-3 leading-relaxed">{children}</p>,
-                ul: ({ children }) => <ul className="mb-3 space-y-1 list-disc list-inside">{children}</ul>,
-                ol: ({ children }) => <ol className="mb-3 space-y-1 list-decimal list-inside">{children}</ol>,
-                li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                h1: ({ children }) => <h1 className="text-xl font-bold mb-4 mt-6">{children}</h1>,
+                h2: ({ children }) => <h2 className="text-lg font-semibold mb-3 mt-5">{children}</h2>,
+                h3: ({ children }) => <h3 className="text-base font-semibold mb-2 mt-4">{children}</h3>,
+                p: ({ children }) => <p className="mb-4 leading-[1.75] text-[15px]">{children}</p>,
+                ul: ({ children }) => <ul className="mb-4 space-y-2 list-disc pl-5">{children}</ul>,
+                ol: ({ children }) => <ol className="mb-4 space-y-2 list-decimal pl-5">{children}</ol>,
+                li: ({ children }) => <li className="leading-[1.7] text-[15px] pl-1">{children}</li>,
+                hr: () => <hr className="my-5 border-border/40" />,
+                blockquote: ({ children }) => <blockquote className="border-l-2 border-primary/50 pl-4 my-4 italic text-muted-foreground">{children}</blockquote>,
+                a: ({ href, children }) => <a href={href} target="_blank" rel="noopener noreferrer" className="text-primary underline underline-offset-2 hover:text-primary/80">{children}</a>,
               }}
             >
               {content}
