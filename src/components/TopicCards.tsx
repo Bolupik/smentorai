@@ -7,8 +7,8 @@ import topicClarity from "@/assets/topic-clarity.png";
 import topicDefi from "@/assets/topic-defi.png";
 import topicNft from "@/assets/topic-nft.png";
 import topicMeme from "@/assets/topic-meme.png";
-import topicStacking from "@/assets/topic-stacking.png";
-import topicSbtc from "@/assets/topic-sbtc.png";
+import topicTools from "@/assets/topic-tools.png";
+import topicWallets from "@/assets/topic-wallets.png";
 import topicSecurity from "@/assets/topic-security.png";
 
 interface TopicCardsProps {
@@ -65,7 +65,7 @@ const topics = [
     accentColor: "text-yellow-400"
   },
   {
-    image: topicStacking,
+    image: topicTools,
     title: "Tools",
     description: "Hiro, STXTools, STX.City, explorers & dev tools",
     prompt: "What are the essential tools in the Stacks ecosystem? Cover developer tools like Hiro Platform (Clarinet, Explorer, API), STXTools for analytics and portfolio tracking, STX.City for token launches, Stacks Explorer for on-chain data, and other community tools. How do these tools help developers and users navigate the Stacks ecosystem?",
@@ -74,7 +74,7 @@ const topics = [
     accentColor: "text-amber-400"
   },
   {
-    image: topicSbtc,
+    image: topicWallets,
     title: "Wallets",
     description: "Xverse, Leather, Asigna & Fordefi",
     prompt: "What wallets are available on Stacks and how do I choose the right one? Cover the major ecosystem wallets: Xverse (mobile & browser, supports sBTC, USDCx, stacking), Leather (browser extension by Hiro, open-source), Asigna (multisig wallet for teams and DAOs), and Fordefi (institutional-grade MPC wallet). Compare features, security models, and use cases for each wallet.",
