@@ -41,7 +41,16 @@ serve(async (req) => {
 
     const { text, voice = "XgIBIfN2yX7nyVpCk8Tf" } = await req.json();
     
-    if (!text) {
+    // Validate voice ID format (alphanumeric, 20 chars)
+    const VOICE_ID_REGEX = /^[a-zA-Z0-9]{10,30}$/;
+    if (voice && !VOICE_ID_REGEX.test(voice)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid voice ID" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!text || typeof text !== 'string') {
       return new Response(
         JSON.stringify({ error: "Text is required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
