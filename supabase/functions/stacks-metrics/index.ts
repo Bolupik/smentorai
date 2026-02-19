@@ -216,10 +216,10 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error fetching metrics:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Failed to fetch metrics';
+    console.error('Detailed metrics error:', error instanceof Error ? error.message : error);
     return new Response(JSON.stringify({
       success: false,
-      error: errorMessage,
+      error: 'Failed to fetch Stacks network metrics. Please try again later.',
       data: null
     }), {
       status: 500,
