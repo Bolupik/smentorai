@@ -152,7 +152,7 @@ const ChatMessage = ({ role, content, images = [] }: ChatMessageProps) => {
                 h1: ({ children }) => <h1 className="text-xl font-bold mb-4 mt-6">{children}</h1>,
                 h2: ({ children }) => <h2 className="text-lg font-semibold mb-3 mt-5">{children}</h2>,
                 h3: ({ children }) => <h3 className="text-base font-semibold mb-2 mt-4">{children}</h3>,
-                p: ({ children }) => <p className="mb-4 leading-[1.75] text-[15px]">{children}</p>,
+                p: ({ children }) => <p className="mb-5 leading-[1.8] text-[15px]">{children}</p>,
                 ul: ({ children }) => <ul className="mb-4 space-y-2 list-disc pl-5">{children}</ul>,
                 ol: ({ children }) => <ol className="mb-4 space-y-2 list-decimal pl-5">{children}</ol>,
                 li: ({ children }) => <li className="leading-[1.7] text-[15px] pl-1">{children}</li>,
