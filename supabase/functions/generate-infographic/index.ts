@@ -6,6 +6,64 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+type ImageMode = "infographic" | "meme" | "character";
+
+function buildPrompt(mode: ImageMode, topic: string, context?: string): string {
+  switch (mode) {
+    case "meme":
+      return `Create a funny, viral-worthy crypto meme image about "${topic}".
+
+Style:
+- Bold, punchy meme format (think popular meme templates but original artwork)
+- Exaggerated cartoon or comic style with vivid colors
+- Include expressive characters or mascots reacting to the crypto situation
+- Text overlays should be large, bold, white with black outline (classic meme font style)
+- The humor should be relatable to crypto/blockchain enthusiasts
+- Make it shareable and instantly funny
+- Use vibrant saturated colors, NOT dark/muted tones
+- The image should work as a standalone meme without needing extra context
+
+Topic context: ${context || topic}`;
+
+    case "character":
+      return `Create a unique, memorable character illustration representing "${topic}" in the Stacks/Bitcoin ecosystem.
+
+Style:
+- Anime/manga inspired or stylized digital art character design
+- The character should embody the concept visually (e.g., a DeFi character might have golden armor, a security character might have a shield)
+- Full character design with distinctive outfit, accessories, and pose
+- Rich color palette with Stacks purple (#5546FF) and Bitcoin orange (#F7931A) accents
+- Professional quality, suitable as a mascot or avatar
+- Dynamic pose showing personality and energy
+- Clean linework with cel-shading or polished digital art style
+- Background should complement the character with subtle thematic elements
+
+Character concept: ${context || topic}`;
+
+    case "infographic":
+    default:
+      return `Create a HIGH-QUALITY, visually stunning educational infographic poster about "${topic}".
+
+CRITICAL DESIGN REQUIREMENTS:
+- This must look like a professionally designed infographic, NOT AI-generated slop
+- Use a clean grid layout with clear visual hierarchy
+- Dark gradient background (deep navy #0A0E1A to dark purple #1A0B2E)
+- Accent colors: Bitcoin orange (#F7931A), Stacks purple (#5546FF), electric cyan (#00D4FF)
+- Modern sans-serif typography with clear size hierarchy (title > subtitles > body)
+- Use geometric icons, clean vector-style illustrations, and connecting lines/arrows
+- Include data visualization elements: progress bars, pie charts, flow diagrams, or comparison tables where relevant
+- Each section should have an icon and a short, punchy label
+- White and light gray text on dark background for maximum readability
+- Add subtle glow effects on accent elements for a premium tech feel
+- The layout should flow logically: top-to-bottom or left-to-right storytelling
+- Include at minimum 3-5 distinct information sections
+
+Content to visualize: ${context || topic}
+
+Make this look like something from a top-tier crypto research report or Bloomberg terminal design.`;
+  }
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -36,31 +94,22 @@ serve(async (req) => {
       );
     }
 
-    const { topic, context } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    const { topic, context, mode = "infographic" } = await req.json();
     
+    // Validate mode
+    const validModes: ImageMode[] = ["infographic", "meme", "character"];
+    const imageMode: ImageMode = validModes.includes(mode) ? mode : "infographic";
+
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       throw new Error("AI service configuration error");
     }
 
-    console.log(`Generating infographic for topic: ${topic}`);
+    console.log(`Generating ${imageMode} for topic: ${topic}`);
 
-    // Create a detailed prompt for infographic generation
-    const imagePrompt = `Create a clean, educational infographic about "${topic}" in the context of blockchain and cryptocurrency.
+    const imagePrompt = buildPrompt(imageMode, topic, context);
 
-Style requirements:
-- Modern, professional design with a dark theme (dark blue/purple background)
-- Use orange (#F7931A for Bitcoin) and purple (#5546FF for Stacks) accent colors
-- Clean typography with clear hierarchy
-- Include simple icons and visual elements
-- Minimalist style, easy to understand at a glance
-- Include key statistics or steps if relevant
-- Make it look like a professional crypto/blockchain educational graphic
-
-Context: ${context || topic}
-
-The infographic should visually explain the concept in a way that's easy to understand, using icons, arrows, and simple diagrams where appropriate.`;
-
+    // Use the higher-quality pro model for all image generation
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -68,7 +117,7 @@ The infographic should visually explain the concept in a way that's easy to unde
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash-image-preview",
+        model: "google/gemini-3-pro-image-preview",
         messages: [
           {
             role: "user",
@@ -95,20 +144,19 @@ The infographic should visually explain the concept in a way that's easy to unde
       const errorText = await response.text();
       console.error("Image generation error:", response.status, errorText);
       return new Response(
-        JSON.stringify({ error: "Failed to generate infographic" }),
+        JSON.stringify({ error: "Failed to generate image" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
     const data = await response.json();
-    console.log("Image generation response received");
+    console.log(`${imageMode} generation response received`);
 
-    // Extract the image from the response
     const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
     const textContent = data.choices?.[0]?.message?.content;
 
     if (!imageUrl) {
-      console.error("No image in response:", JSON.stringify(data));
+      console.error("No image in response:", JSON.stringify(data).slice(0, 500));
       return new Response(
         JSON.stringify({ error: "No image generated", fallback: true }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -118,14 +166,15 @@ The infographic should visually explain the concept in a way that's easy to unde
     return new Response(
       JSON.stringify({ 
         imageUrl,
-        description: textContent || `Infographic explaining ${topic}`
+        mode: imageMode,
+        description: textContent || `${imageMode} about ${topic}`
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (e) {
-    console.error("Infographic generation error:", e);
+    console.error("Image generation error:", e);
     return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
+      JSON.stringify({ error: "An unexpected error occurred during image generation." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

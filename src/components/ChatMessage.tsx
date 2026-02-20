@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
-import { Image, Loader2, X } from "lucide-react";
+import { Image, Loader2, X, Laugh, User } from "lucide-react";
 import { Button } from "./ui/button";
 import aiCharacter from "@/assets/ai-character.png";
 import VoiceControls from "./VoiceControls";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "./ui/use-toast";
+
+type ImageMode = "infographic" | "meme" | "character";
 
 interface ChatMessageProps {
   role: "user" | "assistant";
@@ -16,13 +18,13 @@ interface ChatMessageProps {
 
 const ChatMessage = ({ role, content, images = [] }: ChatMessageProps) => {
   const isAssistant = role === "assistant";
-  const [generatingInfographic, setGeneratingInfographic] = useState(false);
-  const [infographic, setInfographic] = useState<string | null>(null);
+  const [generatingMode, setGeneratingMode] = useState<ImageMode | null>(null);
+  const [generatedImages, setGeneratedImages] = useState<{ url: string; mode: ImageMode }[]>([]);
   const [showFullImage, setShowFullImage] = useState(false);
   const { toast } = useToast();
 
-  const generateInfographic = async () => {
-    setGeneratingInfographic(true);
+  const generateImage = async (mode: ImageMode) => {
+    setGeneratingMode(mode);
     try {
       const { data: { session } } = await supabase.auth.getSession();
       const accessToken = session?.access_token;
@@ -30,13 +32,12 @@ const ChatMessage = ({ role, content, images = [] }: ChatMessageProps) => {
       if (!accessToken) {
         toast({
           title: "Login Required",
-          description: "Please log in to generate infographics.",
+          description: "Please log in to generate images.",
           variant: "destructive",
         });
         return;
       }
 
-      // Extract topic from the message content (first 100 chars or first sentence)
       const topic = content.split('.')[0].slice(0, 150);
 
       const response = await fetch(
@@ -49,58 +50,41 @@ const ChatMessage = ({ role, content, images = [] }: ChatMessageProps) => {
           },
           body: JSON.stringify({ 
             topic,
-            context: content.slice(0, 500)
+            context: content.slice(0, 500),
+            mode
           }),
         }
       );
 
       if (!response.ok) {
         if (response.status === 429) {
-          toast({
-            title: "Rate Limited",
-            description: "Too many requests. Please wait a moment.",
-            variant: "destructive",
-          });
+          toast({ title: "Rate Limited", description: "Too many requests. Please wait a moment.", variant: "destructive" });
           return;
         }
         if (response.status === 402) {
-          toast({
-            title: "Credits Depleted",
-            description: "AI credits have run out.",
-            variant: "destructive",
-          });
+          toast({ title: "Credits Depleted", description: "AI credits have run out.", variant: "destructive" });
           return;
         }
-        throw new Error("Failed to generate infographic");
+        throw new Error("Failed to generate image");
       }
 
       const data = await response.json();
       if (data.imageUrl) {
-        setInfographic(data.imageUrl);
-        toast({
-          title: "Infographic Generated!",
-          description: "Visual explanation created successfully.",
-        });
+        setGeneratedImages(prev => [...prev, { url: data.imageUrl, mode }]);
+        const labels: Record<ImageMode, string> = { infographic: "Infographic", meme: "Meme", character: "Character" };
+        toast({ title: `${labels[mode]} Generated!`, description: "Image created successfully." });
       } else if (data.fallback) {
-        toast({
-          title: "Generation Unavailable",
-          description: "Could not generate infographic for this content.",
-          variant: "destructive",
-        });
+        toast({ title: "Generation Unavailable", description: "Could not generate image for this content.", variant: "destructive" });
       }
     } catch (error) {
-      console.error("Infographic error:", error);
-      toast({
-        title: "Error",
-        description: "Failed to generate infographic.",
-        variant: "destructive",
-      });
+      console.error("Image generation error:", error);
+      toast({ title: "Error", description: "Failed to generate image.", variant: "destructive" });
     } finally {
-      setGeneratingInfographic(false);
+      setGeneratingMode(null);
     }
   };
 
-  const allImages = [...images, ...(infographic ? [infographic] : [])];
+  const allImages = [...images, ...generatedImages.map(i => i.url)];
 
   return (
     <motion.div
@@ -211,30 +195,47 @@ const ChatMessage = ({ role, content, images = [] }: ChatMessageProps) => {
             transition={{ delay: 0.3 }}
             className="mt-4 pt-3 border-t border-border/30 flex justify-between items-center gap-2 flex-wrap"
           >
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={generateInfographic}
-              disabled={generatingInfographic || !!infographic}
-              className="text-xs gap-1.5"
-            >
-              {generatingInfographic ? (
-                <>
-                  <Loader2 className="w-3 h-3 animate-spin" />
-                  Creating...
-                </>
-              ) : infographic ? (
-                <>
-                  <Image className="w-3 h-3" />
-                  Infographic Ready
-                </>
-              ) : (
-                <>
-                  <Image className="w-3 h-3" />
-                  Generate Infographic
-                </>
-              )}
-            </Button>
+            <div className="flex gap-2 flex-wrap">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => generateImage("infographic")}
+                disabled={generatingMode !== null}
+                className="text-xs gap-1.5"
+              >
+                {generatingMode === "infographic" ? (
+                  <><Loader2 className="w-3 h-3 animate-spin" />Creating...</>
+                ) : (
+                  <><Image className="w-3 h-3" />Infographic</>
+                )}
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => generateImage("meme")}
+                disabled={generatingMode !== null}
+                className="text-xs gap-1.5"
+              >
+                {generatingMode === "meme" ? (
+                  <><Loader2 className="w-3 h-3 animate-spin" />Creating...</>
+                ) : (
+                  <><Laugh className="w-3 h-3" />Meme</>
+                )}
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => generateImage("character")}
+                disabled={generatingMode !== null}
+                className="text-xs gap-1.5"
+              >
+                {generatingMode === "character" ? (
+                  <><Loader2 className="w-3 h-3 animate-spin" />Creating...</>
+                ) : (
+                  <><User className="w-3 h-3" />Character</>
+                )}
+              </Button>
+            </div>
             <VoiceControls text={content} />
           </motion.div>
         )}
