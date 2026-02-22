@@ -101,7 +101,7 @@ const Index = () => {
                   <span>Return</span>
                 </motion.button>
                 <div className="flex items-center gap-3">
-                  <Activity className="w-5 h-5 text-orange-500" />
+                  <Activity className="w-5 h-5 text-accent" />
                   <h1 className="text-lg font-semibold tracking-tight">Community Pulse</h1>
                 </div>
                 <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} />
@@ -438,7 +438,7 @@ const Index = () => {
                   </motion.button>
                   <motion.button
                     onClick={() => setShowSentiment(true)}
-                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-orange-500/20 text-orange-400 border border-orange-500/50 font-semibold text-sm sm:text-lg rounded-sm hover:bg-orange-500/30 transition-all duration-300"
+                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-accent/20 text-accent border border-accent/50 font-semibold text-sm sm:text-lg rounded-sm hover:bg-accent/30 transition-all duration-300"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.98 }}
                   >
