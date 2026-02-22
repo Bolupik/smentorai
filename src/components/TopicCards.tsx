@@ -251,9 +251,9 @@ const TopicCards = ({ onTopicClick, exploredTopics, totalTopics, exploredCount }
                 
                 {/* Text section */}
                 <div className="p-2 sm:p-3">
-                  <div className="flex items-center gap-1.5 sm:gap-2">
+                  <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
                     <Icon className={`w-3 h-3 sm:w-4 sm:h-4 ${topic.accentColor} flex-shrink-0`} />
-                    <h4 className={`text-xs sm:text-sm font-bold group-hover:text-primary transition-colors line-clamp-1 ${
+                    <h4 className={`text-xs sm:text-sm font-bold group-hover:text-primary transition-colors truncate min-w-0 ${
                       isExplored ? "text-primary" : "text-foreground"
                     }`}>
                       {topic.title}
