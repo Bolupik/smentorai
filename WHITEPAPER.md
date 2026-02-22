@@ -44,30 +44,7 @@ It works for beginners (even kids) and experienced users alike.
 
 ---
 
-## 4. Revenue Model
-
-| Stream | How It Works |
-|---|---|
-| **Free tier** | 10 AI chats/day, quiz, dashboard — attracts users |
-| **Paid tier ($5/mo)** | Unlimited chat, voice, infographics |
-| **Featured listings** | dApps pay for premium placement |
-| **Sponsored content** | Projects fund educational topics about their protocol |
-| **Grants** | Stacks Foundation and Bitcoin education grants |
-
-### 3-Month Revenue Projection
-
-| Source | Month 1 | Month 2 | Month 3 | Total |
-|---|---|---|---|---|
-| Grants | $2,000 | $500 | $500 | $3,000 |
-| Subscriptions | $0 | $100 | $200 | $300 |
-| Partnerships | $0 | $0 | $200 | $200 |
-| **Total** | **$2,000** | **$600** | **$900** | **$3,500** |
-
-> Goal: Recover the $4,000 investment within 4–5 months.
-
----
-
-## 5. Roadmap (3 Months)
+## 4. Roadmap (3 Months)
 
 ### Month 1 — Build & Launch
 - [x] AI chat with streaming responses
@@ -94,57 +71,7 @@ It works for beginners (even kids) and experienced users alike.
 
 ---
 
-## 6. Budget Allocation
-
-### Total: $4,000
-
-```
-Development        $1,800  ████████████████  45%
-Marketing            $800  ███████           20%
-Dispute Resolution   $400  ███               10%
-Management           $700  █████             17.5%
-Reserve              $300  ██                 7.5%
-```
-
-### Development — $1,800 (45%)
-
-| Item | Cost |
-|---|---|
-| AI API credits (chat, voice, images) | $600 |
-| Frontend improvements (mobile, languages) | $500 |
-| Smart contract (NFT certificates) | $300 |
-| API for embeddable widget | $200 |
-| Testing and bug fixes | $200 |
-
-### Marketing — $800 (20%)
-
-| Item | Cost |
-|---|---|
-| Social media content and videos | $300 |
-| Community events (Twitter Spaces, Discord) | $200 |
-| Partnerships with Stacks projects | $150 |
-| Conference demos | $150 |
-
-### Dispute Resolution — $400 (10%)
-
-Covers content disputes, moderation appeals, bug bounties, and partnership disagreements. Keeps operations fair without touching other budgets.
-
-### Management — $700 (17.5%)
-
-| Item | Cost |
-|---|---|
-| Project coordination | $300 |
-| Legal (terms, privacy policy) | $200 |
-| Accounting and reporting | $100 |
-| Tools and software | $100 |
-
-### Reserve — $300 (7.5%)
-
-Emergency fund for unexpected costs like API price changes or traffic spikes.
-
----
-
-## 7. Technology Stack
+## 5. Technology Stack
 
 ### What We Build With
 
@@ -192,8 +119,7 @@ Emergency fund for unexpected costs like API price changes or traffic spikes.
 | **Problem** | Stacks is hard to learn for newcomers |
 | **Solution** | AI chatbot that explains everything simply |
 | **Who benefits** | New users, holders, developers, projects, the Foundation |
-| **Revenue** | Subscriptions + partnerships + grants |
-| **Budget** | $4,000 over 3 months |
+| **Tech** | React + PostgreSQL + AI + Stacks APIs |
 | **Tech** | React + PostgreSQL + AI + Stacks APIs |
 
 ---
