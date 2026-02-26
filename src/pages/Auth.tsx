@@ -130,7 +130,7 @@ const Auth = () => {
       } else {
         const redirectUrl = `${window.location.origin}/`;
         
-        const { error } = await supabase.auth.signUp({
+        const { data: signUpData, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -157,6 +157,15 @@ const Auth = () => {
             });
           }
           return;
+        }
+
+        // Store age_level in profile after signup
+        if (signUpData.user) {
+          await supabase.from('profiles').upsert({
+            user_id: signUpData.user.id,
+            age_level: ageLevel,
+            username: username || email.split("@")[0],
+          }, { onConflict: 'user_id' });
         }
 
         toast({
