@@ -6,9 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, User } from "lucide-react";
+import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, User, Baby, Sparkles, GraduationCap, Brain } from "lucide-react";
 import aiCharacter from "@/assets/ai-character.png";
 import { z } from "zod";
+
+type AgeLevel = "child" | "teen" | "adult" | "expert";
+
+const ageLevels: { value: AgeLevel; label: string; icon: React.ReactNode; description: string; age: string }[] = [
+  { value: "child", label: "Kid Mode", icon: <Baby className="w-4 h-4" />, description: "Super simple & fun!", age: "6–10" },
+  { value: "teen", label: "Teen Mode", icon: <Sparkles className="w-4 h-4" />, description: "Clear & engaging", age: "11–17" },
+  { value: "adult", label: "Adult Mode", icon: <GraduationCap className="w-4 h-4" />, description: "Detailed explanations", age: "18+" },
+  { value: "expert", label: "Expert Mode", icon: <Brain className="w-4 h-4" />, description: "Technical & precise", age: "Dev" },
+];
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
