@@ -821,6 +821,18 @@ interface StacksQuizProps {
 
 const QUESTION_TIME_LIMIT = 45; // seconds per question
 
+type TopicFilter = "all" | "architecture" | "clarity" | "defi" | "nft" | "security" | "advanced";
+
+const topicOptions: { value: TopicFilter; label: string; emoji: string; description: string }[] = [
+  { value: "all", label: "All Topics", emoji: "🎯", description: "Mixed from every category" },
+  { value: "architecture", label: "Architecture", emoji: "🏗️", description: "PoX, Nakamoto, Bitcoin anchoring" },
+  { value: "clarity", label: "Clarity", emoji: "💎", description: "Smart contract language" },
+  { value: "defi", label: "DeFi & sBTC", emoji: "₿", description: "Protocols, stacking, sBTC" },
+  { value: "nft", label: "NFTs", emoji: "🖼️", description: "Standards, marketplaces, BNS" },
+  { value: "security", label: "Security", emoji: "🔐", description: "Vulnerabilities & best practices" },
+  { value: "advanced", label: "Advanced", emoji: "🧠", description: "Governance, ecosystem, tokenomics" },
+];
+
 const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string>("");
@@ -834,6 +846,9 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
   const [timeLeft, setTimeLeft] = useState(QUESTION_TIME_LIMIT);
   const [quizStarted, setQuizStarted] = useState(false);
   const [timedOutQuestions, setTimedOutQuestions] = useState(0);
+  const [selectedTopic, setSelectedTopic] = useState<TopicFilter>("all");
+  // Track answers per question index for back-navigation
+  const [questionAnswers, setQuestionAnswers] = useState<Record<number, string>>({});
 
   // Shuffle and select 25 questions (comprehensive exam) ensuring diverse categories
   useEffect(() => {
