@@ -1240,20 +1240,30 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
       </AnimatePresence>
 
       {/* Actions */}
-      <div className="flex justify-end gap-3 mt-6">
-        {!showResult ? (
-          <Button 
-            onClick={handleSubmit} 
-            disabled={!selectedAnswer}
-            className="px-6"
-          >
-            Submit Answer
-          </Button>
-        ) : (
-          <Button onClick={handleNext} className="px-6">
-            {currentQuestion < shuffledQuestions.length - 1 ? "Continue" : "View Results"}
-          </Button>
-        )}
+      <div className="flex justify-between gap-3 mt-6">
+        <Button
+          variant="outline"
+          onClick={handlePrevious}
+          disabled={currentQuestion === 0}
+          className="px-4 gap-2"
+        >
+          ← Previous
+        </Button>
+        <div>
+          {!showResult ? (
+            <Button 
+              onClick={handleSubmit} 
+              disabled={!selectedAnswer}
+              className="px-6"
+            >
+              Submit Answer
+            </Button>
+          ) : (
+            <Button onClick={handleNext} className="px-6">
+              {currentQuestion < shuffledQuestions.length - 1 ? "Continue" : "View Results"}
+            </Button>
+          )}
+        </div>
       </div>
     </motion.div>
   );
