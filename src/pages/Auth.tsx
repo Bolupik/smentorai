@@ -276,6 +276,35 @@ const Auth = () => {
               </div>
             )}
 
+            {!isLogin && (
+              <div className="space-y-2">
+                <Label>Learning Level <span className="text-muted-foreground text-xs">(cannot be changed later)</span></Label>
+                <div className="grid grid-cols-2 gap-2">
+                  {ageLevels.map((level) => (
+                    <button
+                      key={level.value}
+                      type="button"
+                      onClick={() => setAgeLevel(level.value)}
+                      className={`flex items-center gap-2 p-3 rounded-lg border text-left transition-all ${
+                        ageLevel === level.value
+                          ? "border-primary bg-primary/10"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <span className={`${ageLevel === level.value ? "text-primary" : "text-muted-foreground"}`}>
+                        {level.icon}
+                      </span>
+                      <div>
+                        <p className="text-xs font-semibold text-foreground">{level.label}</p>
+                        <p className="text-[10px] text-muted-foreground">{level.age}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground">{ageLevels.find(l => l.value === ageLevel)?.description}</p>
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
