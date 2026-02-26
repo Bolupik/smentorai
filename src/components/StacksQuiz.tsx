@@ -894,11 +894,11 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
 
   const handleTimeOut = () => {
     if (showResult) return;
-    
     setIsCorrect(false);
     setShowResult(true);
     setTimedOutQuestions(prev => prev + 1);
     setAnsweredQuestions(prev => new Set(prev).add(currentQuestion));
+    setQuestionAnswers(prev => ({ ...prev, [currentQuestion]: "-1" })); // -1 = timed out
   };
 
   const handleSubmit = () => {
