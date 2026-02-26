@@ -850,39 +850,24 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
   // Track answers per question index for back-navigation
   const [questionAnswers, setQuestionAnswers] = useState<Record<number, string>>({});
 
-  // Shuffle and select 25 questions (comprehensive exam) ensuring diverse categories
+  // Shuffle and select questions based on topic filter
   useEffect(() => {
-    const categories = ["architecture", "clarity", "defi", "nft", "security", "advanced"];
-    const questionsPerCategory: Record<string, QuizQuestion[]> = {};
-    
-    categories.forEach(cat => {
-      questionsPerCategory[cat] = quizQuestions.filter(q => q.category === cat);
-    });
-    
-    // Select questions proportionally from each category
-    const selected: QuizQuestion[] = [];
-    const targetTotal = 25;
-    
-    // Distribute questions: architecture 5, clarity 6, defi 5, nft 3, security 3, advanced 3
-    const distribution: Record<string, number> = {
-      architecture: 5,
-      clarity: 6,
-      defi: 5,
-      nft: 3,
-      security: 3,
-      advanced: 3
+    const buildQuestions = (topic: TopicFilter) => {
+      if (topic !== "all") {
+        const pool = quizQuestions.filter(q => q.category === topic).sort(() => Math.random() - 0.5);
+        return pool.slice(0, Math.min(15, pool.length));
+      }
+      const categories = ["architecture", "clarity", "defi", "nft", "security", "advanced"] as const;
+      const distribution: Record<string, number> = { architecture: 5, clarity: 6, defi: 5, nft: 3, security: 3, advanced: 3 };
+      const selected: QuizQuestion[] = [];
+      categories.forEach(cat => {
+        const available = quizQuestions.filter(q => q.category === cat).sort(() => Math.random() - 0.5);
+        selected.push(...available.slice(0, Math.min(distribution[cat], available.length)));
+      });
+      return selected.sort(() => Math.random() - 0.5);
     };
-    
-    categories.forEach(cat => {
-      const available = [...questionsPerCategory[cat]].sort(() => Math.random() - 0.5);
-      const count = Math.min(distribution[cat], available.length);
-      selected.push(...available.slice(0, count));
-    });
-    
-    // Shuffle the final selection
-    const shuffled = selected.sort(() => Math.random() - 0.5);
-    setShuffledQuestions(shuffled);
-  }, []);
+    setShuffledQuestions(buildQuestions(selectedTopic));
+  }, [selectedTopic]);
 
   const question = shuffledQuestions[currentQuestion];
 
