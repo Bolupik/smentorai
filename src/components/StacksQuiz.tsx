@@ -821,6 +821,18 @@ interface StacksQuizProps {
 
 const QUESTION_TIME_LIMIT = 45; // seconds per question
 
+type TopicFilter = "all" | "architecture" | "clarity" | "defi" | "nft" | "security" | "advanced";
+
+const topicOptions: { value: TopicFilter; label: string; emoji: string; description: string }[] = [
+  { value: "all", label: "All Topics", emoji: "🎯", description: "Mixed from every category" },
+  { value: "architecture", label: "Architecture", emoji: "🏗️", description: "PoX, Nakamoto, Bitcoin anchoring" },
+  { value: "clarity", label: "Clarity", emoji: "💎", description: "Smart contract language" },
+  { value: "defi", label: "DeFi & sBTC", emoji: "₿", description: "Protocols, stacking, sBTC" },
+  { value: "nft", label: "NFTs", emoji: "🖼️", description: "Standards, marketplaces, BNS" },
+  { value: "security", label: "Security", emoji: "🔐", description: "Vulnerabilities & best practices" },
+  { value: "advanced", label: "Advanced", emoji: "🧠", description: "Governance, ecosystem, tokenomics" },
+];
+
 const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string>("");
@@ -834,40 +846,28 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
   const [timeLeft, setTimeLeft] = useState(QUESTION_TIME_LIMIT);
   const [quizStarted, setQuizStarted] = useState(false);
   const [timedOutQuestions, setTimedOutQuestions] = useState(0);
+  const [selectedTopic, setSelectedTopic] = useState<TopicFilter>("all");
+  // Track answers per question index for back-navigation
+  const [questionAnswers, setQuestionAnswers] = useState<Record<number, string>>({});
 
-  // Shuffle and select 25 questions (comprehensive exam) ensuring diverse categories
+  // Shuffle and select questions based on topic filter
   useEffect(() => {
-    const categories = ["architecture", "clarity", "defi", "nft", "security", "advanced"];
-    const questionsPerCategory: Record<string, QuizQuestion[]> = {};
-    
-    categories.forEach(cat => {
-      questionsPerCategory[cat] = quizQuestions.filter(q => q.category === cat);
-    });
-    
-    // Select questions proportionally from each category
-    const selected: QuizQuestion[] = [];
-    const targetTotal = 25;
-    
-    // Distribute questions: architecture 5, clarity 6, defi 5, nft 3, security 3, advanced 3
-    const distribution: Record<string, number> = {
-      architecture: 5,
-      clarity: 6,
-      defi: 5,
-      nft: 3,
-      security: 3,
-      advanced: 3
+    const buildQuestions = (topic: TopicFilter) => {
+      if (topic !== "all") {
+        const pool = quizQuestions.filter(q => q.category === topic).sort(() => Math.random() - 0.5);
+        return pool.slice(0, Math.min(15, pool.length));
+      }
+      const categories = ["architecture", "clarity", "defi", "nft", "security", "advanced"] as const;
+      const distribution: Record<string, number> = { architecture: 5, clarity: 6, defi: 5, nft: 3, security: 3, advanced: 3 };
+      const selected: QuizQuestion[] = [];
+      categories.forEach(cat => {
+        const available = quizQuestions.filter(q => q.category === cat).sort(() => Math.random() - 0.5);
+        selected.push(...available.slice(0, Math.min(distribution[cat], available.length)));
+      });
+      return selected.sort(() => Math.random() - 0.5);
     };
-    
-    categories.forEach(cat => {
-      const available = [...questionsPerCategory[cat]].sort(() => Math.random() - 0.5);
-      const count = Math.min(distribution[cat], available.length);
-      selected.push(...available.slice(0, count));
-    });
-    
-    // Shuffle the final selection
-    const shuffled = selected.sort(() => Math.random() - 0.5);
-    setShuffledQuestions(shuffled);
-  }, []);
+    setShuffledQuestions(buildQuestions(selectedTopic));
+  }, [selectedTopic]);
 
   const question = shuffledQuestions[currentQuestion];
 
@@ -894,11 +894,11 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
 
   const handleTimeOut = () => {
     if (showResult) return;
-    
     setIsCorrect(false);
     setShowResult(true);
     setTimedOutQuestions(prev => prev + 1);
     setAnsweredQuestions(prev => new Set(prev).add(currentQuestion));
+    setQuestionAnswers(prev => ({ ...prev, [currentQuestion]: "-1" })); // -1 = timed out
   };
 
   const handleSubmit = () => {
@@ -909,58 +909,73 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
     
     setIsCorrect(correct);
     setShowResult(true);
+    setQuestionAnswers(prev => ({ ...prev, [currentQuestion]: selectedAnswer }));
     
     if (correct && !answeredQuestions.has(currentQuestion)) {
       setScore(s => s + 1);
+    } else if (!correct && answeredQuestions.has(currentQuestion) && questionAnswers[currentQuestion] === String(question.correctAnswer)) {
+      // Was correct before, now wrong — deduct
+      setScore(s => Math.max(0, s - 1));
     }
     setAnsweredQuestions(prev => new Set(prev).add(currentQuestion));
   };
 
   const handleNext = () => {
     if (currentQuestion < shuffledQuestions.length - 1) {
-      setCurrentQuestion(c => c + 1);
-      setSelectedAnswer("");
-      setShowResult(false);
+      const next = currentQuestion + 1;
+      setCurrentQuestion(next);
+      setSelectedAnswer(questionAnswers[next] ?? "");
+      setShowResult(answeredQuestions.has(next));
+      if (questionAnswers[next] !== undefined) {
+        const prevQ = shuffledQuestions[next];
+        setIsCorrect(parseInt(questionAnswers[next]) === prevQ.correctAnswer);
+      }
     } else {
       setQuizComplete(true);
       onComplete?.(score, shuffledQuestions.length);
     }
   };
 
+  const handlePrevious = () => {
+    if (currentQuestion > 0) {
+      const prev = currentQuestion - 1;
+      setCurrentQuestion(prev);
+      setSelectedAnswer(questionAnswers[prev] ?? "");
+      setShowResult(answeredQuestions.has(prev));
+      if (questionAnswers[prev] !== undefined) {
+        const prevQ = shuffledQuestions[prev];
+        setIsCorrect(parseInt(questionAnswers[prev]) === prevQ.correctAnswer);
+      }
+    }
+  };
+
   const handleRestart = () => {
-    const categories = ["architecture", "clarity", "defi", "nft", "security", "advanced"];
-    const questionsPerCategory: Record<string, QuizQuestion[]> = {};
-    
-    categories.forEach(cat => {
-      questionsPerCategory[cat] = quizQuestions.filter(q => q.category === cat);
-    });
-    
-    const selected: QuizQuestion[] = [];
-    const distribution: Record<string, number> = {
-      architecture: 5,
-      clarity: 6,
-      defi: 5,
-      nft: 3,
-      security: 3,
-      advanced: 3
-    };
-    
-    categories.forEach(cat => {
-      const available = [...questionsPerCategory[cat]].sort(() => Math.random() - 0.5);
-      const count = Math.min(distribution[cat], available.length);
-      selected.push(...available.slice(0, count));
-    });
-    
-    setShuffledQuestions(selected.sort(() => Math.random() - 0.5));
     setCurrentQuestion(0);
     setSelectedAnswer("");
     setShowResult(false);
     setScore(0);
     setQuizComplete(false);
     setAnsweredQuestions(new Set());
+    setQuestionAnswers({});
     setTimeLeft(QUESTION_TIME_LIMIT);
     setTimedOutQuestions(0);
     setQuizStarted(false);
+    // Re-trigger question build
+    const buildQuestions = (topic: TopicFilter) => {
+      if (topic !== "all") {
+        const pool = quizQuestions.filter(q => q.category === topic).sort(() => Math.random() - 0.5);
+        return pool.slice(0, Math.min(15, pool.length));
+      }
+      const categories = ["architecture", "clarity", "defi", "nft", "security", "advanced"] as const;
+      const distribution: Record<string, number> = { architecture: 5, clarity: 6, defi: 5, nft: 3, security: 3, advanced: 3 };
+      const selected: QuizQuestion[] = [];
+      categories.forEach(cat => {
+        const available = quizQuestions.filter(q => q.category === cat).sort(() => Math.random() - 0.5);
+        selected.push(...available.slice(0, Math.min(distribution[cat], available.length)));
+      });
+      return selected.sort(() => Math.random() - 0.5);
+    };
+    setShuffledQuestions(buildQuestions(selectedTopic));
   };
 
   const startQuiz = () => {
@@ -980,23 +995,51 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
         animate={{ opacity: 1, y: 0 }}
         className="bg-card border border-border rounded-xl p-8 max-w-2xl mx-auto"
       >
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <BookOpen className="w-12 h-12 mx-auto mb-4 text-primary" />
           <h2 className="text-2xl font-bold text-foreground mb-2">Stacks Knowledge Assessment</h2>
-          <p className="text-muted-foreground">
-            Test your understanding across {shuffledQuestions.length} questions covering architecture, Clarity, DeFi, NFTs, security, and advanced topics.
+          <p className="text-muted-foreground text-sm">
+            Choose a topic to focus on, or test across all categories.
           </p>
         </div>
 
-        <div className="bg-muted/30 rounded-lg p-6 mb-6">
+        {/* Topic selector */}
+        <div className="mb-6">
+          <p className="text-sm font-medium text-foreground mb-3">Select Topic</p>
+          <div className="grid grid-cols-2 gap-2">
+            {topicOptions.map((topic) => (
+              <button
+                key={topic.value}
+                type="button"
+                onClick={() => setSelectedTopic(topic.value)}
+                className={`flex items-center gap-2 p-3 rounded-lg border text-left transition-all ${
+                  selectedTopic === topic.value
+                    ? "border-primary bg-primary/10"
+                    : "border-border hover:border-primary/50"
+                }`}
+              >
+                <span className="text-base">{topic.emoji}</span>
+                <div>
+                  <p className="text-xs font-semibold text-foreground">{topic.label}</p>
+                  <p className="text-[10px] text-muted-foreground leading-tight">{topic.description}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-muted-foreground mt-2">
+            {selectedTopic === "all" ? `${shuffledQuestions.length} questions across all topics` : `${shuffledQuestions.length} questions on ${topicOptions.find(t => t.value === selectedTopic)?.label}`}
+          </p>
+        </div>
+
+        <div className="bg-muted/30 rounded-lg p-4 mb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Timer className={`w-5 h-5 ${timedMode ? "text-primary" : "text-muted-foreground"}`} />
               <div>
-                <p className="font-medium text-foreground">Timed Exam Mode</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="font-medium text-foreground text-sm">Timed Exam Mode</p>
+                <p className="text-xs text-muted-foreground">
                   {timedMode 
-                    ? `${QUESTION_TIME_LIMIT} seconds per question. Unanswered questions count as incorrect.`
+                    ? `${QUESTION_TIME_LIMIT}s per question. Unanswered = incorrect.`
                     : "Take your time with no time pressure."}
                 </p>
               </div>
@@ -1197,20 +1240,30 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
       </AnimatePresence>
 
       {/* Actions */}
-      <div className="flex justify-end gap-3 mt-6">
-        {!showResult ? (
-          <Button 
-            onClick={handleSubmit} 
-            disabled={!selectedAnswer}
-            className="px-6"
-          >
-            Submit Answer
-          </Button>
-        ) : (
-          <Button onClick={handleNext} className="px-6">
-            {currentQuestion < shuffledQuestions.length - 1 ? "Continue" : "View Results"}
-          </Button>
-        )}
+      <div className="flex justify-between gap-3 mt-6">
+        <Button
+          variant="outline"
+          onClick={handlePrevious}
+          disabled={currentQuestion === 0}
+          className="px-4 gap-2"
+        >
+          ← Previous
+        </Button>
+        <div>
+          {!showResult ? (
+            <Button 
+              onClick={handleSubmit} 
+              disabled={!selectedAnswer}
+              className="px-6"
+            >
+              Submit Answer
+            </Button>
+          ) : (
+            <Button onClick={handleNext} className="px-6">
+              {currentQuestion < shuffledQuestions.length - 1 ? "Continue" : "View Results"}
+            </Button>
+          )}
+        </div>
       </div>
     </motion.div>
   );

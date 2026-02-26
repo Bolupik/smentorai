@@ -6,9 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, User } from "lucide-react";
+import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, User, Baby, Sparkles, GraduationCap, Brain } from "lucide-react";
 import aiCharacter from "@/assets/ai-character.png";
 import { z } from "zod";
+
+type AgeLevel = "child" | "teen" | "adult" | "expert";
+
+const ageLevels: { value: AgeLevel; label: string; icon: React.ReactNode; description: string; age: string }[] = [
+  { value: "child", label: "Kid Mode", icon: <Baby className="w-4 h-4" />, description: "Super simple & fun!", age: "6–10" },
+  { value: "teen", label: "Teen Mode", icon: <Sparkles className="w-4 h-4" />, description: "Clear & engaging", age: "11–17" },
+  { value: "adult", label: "Adult Mode", icon: <GraduationCap className="w-4 h-4" />, description: "Detailed explanations", age: "18+" },
+  { value: "expert", label: "Expert Mode", icon: <Brain className="w-4 h-4" />, description: "Technical & precise", age: "Dev" },
+];
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -21,6 +30,7 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [ageLevel, setAgeLevel] = useState<AgeLevel>("adult");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string; username?: string }>({});
@@ -120,7 +130,7 @@ const Auth = () => {
       } else {
         const redirectUrl = `${window.location.origin}/`;
         
-        const { error } = await supabase.auth.signUp({
+        const { data: signUpData, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -147,6 +157,15 @@ const Auth = () => {
             });
           }
           return;
+        }
+
+        // Store age_level in profile after signup
+        if (signUpData.user) {
+          await supabase.from('profiles').upsert({
+            user_id: signUpData.user.id,
+            age_level: ageLevel,
+            username: username || email.split("@")[0],
+          }, { onConflict: 'user_id' });
         }
 
         toast({
@@ -254,6 +273,35 @@ const Auth = () => {
                 {errors.username && (
                   <p className="text-sm text-destructive">{errors.username}</p>
                 )}
+              </div>
+            )}
+
+            {!isLogin && (
+              <div className="space-y-2">
+                <Label>Learning Level <span className="text-muted-foreground text-xs">(cannot be changed later)</span></Label>
+                <div className="grid grid-cols-2 gap-2">
+                  {ageLevels.map((level) => (
+                    <button
+                      key={level.value}
+                      type="button"
+                      onClick={() => setAgeLevel(level.value)}
+                      className={`flex items-center gap-2 p-3 rounded-lg border text-left transition-all ${
+                        ageLevel === level.value
+                          ? "border-primary bg-primary/10"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <span className={`${ageLevel === level.value ? "text-primary" : "text-muted-foreground"}`}>
+                        {level.icon}
+                      </span>
+                      <div>
+                        <p className="text-xs font-semibold text-foreground">{level.label}</p>
+                        <p className="text-[10px] text-muted-foreground">{level.age}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground">{ageLevels.find(l => l.value === ageLevel)?.description}</p>
               </div>
             )}
 

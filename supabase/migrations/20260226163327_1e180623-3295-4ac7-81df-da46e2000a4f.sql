@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS age_level text DEFAULT 'adult' CHECK (age_level IN ('child', 'teen', 'adult', 'expert'));
