@@ -16,7 +16,7 @@ interface QuizQuestion {
   options: string[];
   correctAnswer: number;
   explanation: string;
-  simpleExplanation: string; // for child/teen mode
+  simpleExplanation?: string; // for child/teen mode — falls back to explanation if absent
   category: "architecture" | "clarity" | "defi" | "nft" | "security" | "advanced";
 }
 
