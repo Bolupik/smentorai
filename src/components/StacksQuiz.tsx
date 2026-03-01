@@ -1307,21 +1307,23 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             className={`mt-6 p-4 rounded-lg ${
-              isCorrect ? "bg-green-500/10 border border-green-500/30" : "bg-destructive/10 border border-destructive/30"
+              isCorrect ? "bg-primary/10 border border-primary/30" : "bg-destructive/10 border border-destructive/30"
             }`}
           >
             <div className="flex items-start gap-3">
               {isCorrect ? (
-                <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
               ) : (
                 <XCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
               )}
               <div>
-                <p className={`font-medium mb-1 ${isCorrect ? "text-green-500" : "text-destructive"}`}>
-                  {isCorrect ? "Precisely correct." : "Not quite."}
+                <p className={`font-medium mb-1 ${isCorrect ? "text-primary" : "text-destructive"}`}>
+                  {isCorrect
+                    ? (ageLevel === "child" ? "🎉 Yes! That's right!" : ageLevel === "teen" ? "✓ Correct!" : "Precisely correct.")
+                    : (ageLevel === "child" ? "😅 Not quite — here's why:" : ageLevel === "teen" ? "Not quite — here's the explanation:" : "Not quite.")}
                 </p>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  {question.explanation}
+                  {getExplanation(question)}
                 </p>
               </div>
             </div>
