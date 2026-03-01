@@ -899,6 +899,8 @@ const topicOptions: { value: TopicFilter; label: string; emoji: string; descript
 ];
 
 const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
+  const { user } = useAuth();
+  const [ageLevel, setAgeLevel] = useState<AgeLevel>("adult");
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string>("");
   const [showResult, setShowResult] = useState(false);
@@ -914,6 +916,29 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
   const [selectedTopic, setSelectedTopic] = useState<TopicFilter>("all");
   // Track answers per question index for back-navigation
   const [questionAnswers, setQuestionAnswers] = useState<Record<number, string>>({});
+
+  // Fetch age level from profile (server-side, not from localStorage)
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from('profiles')
+      .select('age_level')
+      .eq('user_id', user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data?.age_level) {
+          setAgeLevel(data.age_level as AgeLevel);
+        }
+      });
+  }, [user]);
+
+  // Helper: pick explanation based on age level
+  const getExplanation = (q: QuizQuestion) => {
+    if ((ageLevel === "child" || ageLevel === "teen") && q.simpleExplanation) {
+      return q.simpleExplanation;
+    }
+    return q.explanation;
+  };
 
   // Shuffle and select questions based on topic filter
   useEffect(() => {
