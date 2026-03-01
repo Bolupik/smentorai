@@ -1179,10 +1179,10 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
           
           <p className="text-muted-foreground mb-6">
             {percentage >= 80 
-              ? "Exceptional comprehension. You possess the foundational knowledge to navigate this ecosystem with confidence."
+              ? (ageLevel === "child" ? "🌟 Amazing! You really know your Stacks stuff!" : ageLevel === "teen" ? "🔥 Great job! You've got solid Stacks knowledge!" : "Exceptional comprehension. You possess the foundational knowledge to navigate this ecosystem with confidence.")
               : percentage >= 60
-              ? "Commendable effort. A deeper study of the core concepts shall prove beneficial."
-              : "The journey of mastery demands persistence. Consider revisiting the foundational topics."}
+              ? (ageLevel === "child" ? "👍 Pretty good! Keep learning and you'll be a Stacks expert!" : ageLevel === "teen" ? "Good effort! Review the topics you missed to level up." : "Commendable effort. A deeper study of the core concepts shall prove beneficial.")
+              : (ageLevel === "child" ? "💪 Don't give up! Try again and you'll do better!" : ageLevel === "teen" ? "Keep at it! Revisit the basics and try again." : "The journey of mastery demands persistence. Consider revisiting the foundational topics.")}
           </p>
           
           <Button onClick={handleRestart} variant="outline" className="gap-2">
