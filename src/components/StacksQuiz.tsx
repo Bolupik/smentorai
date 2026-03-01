@@ -5,6 +5,10 @@ import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
 import { CheckCircle, XCircle, BookOpen, Trophy, RotateCcw, Timer, Clock } from "lucide-react";
 import { Switch } from "./ui/switch";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+
+type AgeLevel = "child" | "teen" | "adult" | "expert";
 
 interface QuizQuestion {
   id: number;
@@ -12,6 +16,7 @@ interface QuizQuestion {
   options: string[];
   correctAnswer: number;
   explanation: string;
+  simpleExplanation?: string; // for child/teen mode — falls back to explanation if absent
   category: "architecture" | "clarity" | "defi" | "nft" | "security" | "advanced";
 }
 
@@ -27,6 +32,7 @@ const quizQuestions: QuizQuestion[] = [
       "Anchoring transactions to Ethereum for cross-chain security"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Instead of wasting electricity, Stacks miners pay with real Bitcoin! That Bitcoin goes to people who lock up their STX — so you earn Bitcoin just by holding STX.",
     explanation: "PoX recycles Bitcoin's existing proof-of-work. STX miners bid Bitcoin, which transfers to STX stackers as yield, while the winning miner produces the next Stacks block. This anchors Stacks to Bitcoin without expending additional energy.",
     category: "architecture"
   },
@@ -40,6 +46,7 @@ const quizQuestions: QuizQuestion[] = [
       "Block reorganizations occur independently of Bitcoin's chain"
     ],
     correctAnswer: 1,
+    simpleExplanation: "After the Nakamoto upgrade, once your Stacks transaction is recorded on Bitcoin it can never be undone — just like how Bitcoin transactions are permanent!",
     explanation: "With Nakamoto, Stacks transactions inherit Bitcoin's finality. Once the anchoring Bitcoin block achieves sufficient confirmations, the corresponding Stacks transactions cannot be reorganized without also reorganizing Bitcoin itself.",
     category: "architecture"
   },
@@ -53,6 +60,7 @@ const quizQuestions: QuizQuestion[] = [
       "Distribute mining rewards to pool participants"
     ],
     correctAnswer: 0,
+    simpleExplanation: "Signers are like referees — they check that new blocks of transactions are valid and sign off on them. If enough signers agree, the block becomes permanent.",
     explanation: "Signers are Stackers who validate blocks and provide cryptographic signatures. At least 70% of stacked STX must sign for a block to achieve finality, creating a robust consensus mechanism tied to Bitcoin's security.",
     category: "architecture"
   },
@@ -66,6 +74,7 @@ const quizQuestions: QuizQuestion[] = [
       "1,000,000 STX"
     ],
     correctAnswer: 2,
+    simpleExplanation: "To stack on your own you need at least 100,000 STX — that's a lot! If you have less, you can join a pool where many people combine their STX together.",
     explanation: "Solo stacking requires a minimum of 100,000 STX. Users with smaller amounts can participate through pooled stacking services which aggregate STX from multiple participants.",
     category: "architecture"
   },
@@ -79,6 +88,7 @@ const quizQuestions: QuizQuestion[] = [
       "State channel network similar to Lightning"
     ],
     correctAnswer: 2,
+    simpleExplanation: "Stacks is its own full blockchain (Layer 1) — not a shortcut built on top of Bitcoin. But it links to Bitcoin for safety, like having its own house next to a very secure bank vault.",
     explanation: "Stacks is NOT a Layer 2. It's an independent Layer 1 blockchain with its own consensus mechanism (PoX), miners, and token (STX). However, it settles on Bitcoin for security through cryptographic anchoring.",
     category: "architecture"
   },
@@ -92,6 +102,7 @@ const quizQuestions: QuizQuestion[] = [
       "All Stacks transactions are processed on Bitcoin"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Every batch of Stacks transactions leaves a fingerprint on Bitcoin. So to fake Stacks history, you'd have to fake Bitcoin history — which is basically impossible!",
     explanation: "Each Stacks block's hash is cryptographically committed to Bitcoin. This creates an immutable record where Stacks history cannot be changed without changing Bitcoin's history, inheriting Bitcoin's security.",
     category: "architecture"
   },
@@ -105,6 +116,7 @@ const quizQuestions: QuizQuestion[] = [
       "Store only token transfer transactions"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Microblocks are like quick receipts that appear every few seconds so you don't have to wait forever. They're temporary until the next main block confirms everything properly.",
     explanation: "Microblocks are produced approximately every 5 seconds between anchor blocks, providing fast transaction confirmations. They're provisional until confirmed by the next anchor block.",
     category: "architecture"
   },
@@ -118,6 +130,7 @@ const quizQuestions: QuizQuestion[] = [
       "January 2024"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Stacks opened to the public in January 2021 — that's when anyone could start using it to build apps and earn Bitcoin rewards!",
     explanation: "Stacks 2.0 mainnet launched in January 2021, enabling Proof of Transfer consensus and Clarity smart contracts. The project originated from Blockstack, founded in 2013.",
     category: "architecture"
   },
@@ -131,6 +144,7 @@ const quizQuestions: QuizQuestion[] = [
       "It allowed institutional investors exclusive access"
     ],
     correctAnswer: 1,
+    simpleExplanation: "In 2019 Stacks (called Blockstack back then) became the very first crypto project to get the US government's official OK to sell tokens to regular people. A big deal!",
     explanation: "Blockstack conducted the first-ever SEC-qualified crypto token offering using Regulation A+, raising $23 million. This set a precedent for compliant crypto fundraising in the United States.",
     category: "architecture"
   },
@@ -144,6 +158,7 @@ const quizQuestions: QuizQuestion[] = [
       "Own 51% of the total STX supply"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Because Stacks is connected to Bitcoin, to attack Stacks you'd have to attack Bitcoin first — which would cost billions of dollars. That makes Stacks extremely safe!",
     explanation: "Because Stacks blocks are anchored to Bitcoin, reorganizing Stacks history requires reorganizing Bitcoin. The cost to attack Stacks equals the cost to attack Bitcoin, making it economically infeasible.",
     category: "architecture"
   },
@@ -159,6 +174,7 @@ const quizQuestions: QuizQuestion[] = [
       "Gas fees remain constant regardless of computation"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Clarity lets experts check every possible thing a smart contract could do BEFORE it goes live — like reading every page of a book before publishing it, so no nasty surprises.",
     explanation: "Decidability means the behavior of Clarity contracts can be fully analyzed statically before execution. This eliminates an entire class of runtime vulnerabilities since all execution paths are knowable and verifiable upfront.",
     category: "clarity"
   },
@@ -172,6 +188,7 @@ const quizQuestions: QuizQuestion[] = [
       "Specifying the original deployer's privileges"
     ],
     correctAnswer: 1,
+    simpleExplanation: "A 'principal' in Clarity is like a name tag — it uniquely identifies a person's wallet or a smart contract. Only that specific identity can own things or take actions.",
     explanation: "The principal type in Clarity represents unique identities on the network. Standard principals represent wallet addresses, while contract principals identify deployed contracts. Both can own assets and participate in transactions.",
     category: "clarity"
   },
@@ -185,6 +202,7 @@ const quizQuestions: QuizQuestion[] = [
       "A public function returning unsigned zero"
     ],
     correctAnswer: 1,
+    simpleExplanation: "This code creates a counter that starts at zero and can be changed later — like a scoreboard that anyone running the contract can update.",
     explanation: "The `define-data-var` expression creates mutable contract state. The variable `counter` is typed as `uint` (unsigned integer) and initialized to `u0`. Unlike `define-constant`, data vars can be modified via `var-set`.",
     category: "clarity"
   },
@@ -198,6 +216,7 @@ const quizQuestions: QuizQuestion[] = [
       "Logs an error message without halting execution"
     ],
     correctAnswer: 1,
+    simpleExplanation: "If a Clarity function might return 'nothing', `unwrap-panic` forces it to give you the real value — or it stops everything and cancels the transaction if there's nothing there.",
     explanation: "The `unwrap-panic` function extracts the inner value from an Optional or Response type. If the value is `none` or `err`, the entire transaction aborts. For graceful handling, use `unwrap!` or `match` instead.",
     category: "clarity"
   },
@@ -211,6 +230,7 @@ const quizQuestions: QuizQuestion[] = [
       "External iterator contracts called via inter-contract calls"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Clarity doesn't have regular for-loops. Instead it uses special helper functions like `map` (do something to each item) and `filter` (keep only matching items) to work through lists.",
     explanation: "Clarity lacks traditional loops to ensure decidability. Instead, it provides functional constructs: `map` transforms each element, `fold` accumulates a result, and `filter` selects elements matching a predicate.",
     category: "clarity"
   },
@@ -224,6 +244,7 @@ const quizQuestions: QuizQuestion[] = [
       "The last principal in the contract call chain"
     ],
     correctAnswer: 1,
+    simpleExplanation: "`tx-sender` always tells you WHO originally started the transaction — like knowing whose ID is on the package, no matter how many hands it passed through.",
     explanation: "The `tx-sender` always references the original transaction signer, regardless of nested contract calls. This differs from `contract-caller`, which reflects the immediate calling principal (contract or user).",
     category: "clarity"
   },
@@ -237,6 +258,7 @@ const quizQuestions: QuizQuestion[] = [
       "Schedule delayed transaction execution"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Post-conditions are like a promise checker — you say 'I should only lose 10 STX', and if a contract tries to take more, the whole transaction is automatically cancelled. Super protective!",
     explanation: "Post-conditions are user-specified assertions about asset transfers. If the actual transfers don't match expectations (e.g., losing more STX than expected), the transaction aborts, protecting users from malicious contracts.",
     category: "clarity"
   },
@@ -250,6 +272,7 @@ const quizQuestions: QuizQuestion[] = [
       "Assert that the caller is a specific contract"
     ],
     correctAnswer: 1,
+    simpleExplanation: "`as-contract` lets a smart contract act on its own behalf — like giving a robot permission to handle tasks using its own identity instead of yours.",
     explanation: "The `as-contract` expression temporarily changes `tx-sender` to the contract's own principal. This enables contracts to perform actions on their own behalf, such as transferring assets they hold.",
     category: "clarity"
   },
@@ -263,6 +286,7 @@ const quizQuestions: QuizQuestion[] = [
       "The hash of the parent block"
     ],
     correctAnswer: 1,
+    simpleExplanation: "`block-height` gives you the current Stacks block number — like a page number in the blockchain's book. It counts Stacks blocks, not Bitcoin blocks.",
     explanation: "The `block-height` variable returns the current Stacks block number, not Bitcoin's. For time-dependent logic, developers often use block heights as a proxy for time since Stacks blocks anchor to Bitcoin blocks.",
     category: "clarity"
   },
@@ -276,6 +300,7 @@ const quizQuestions: QuizQuestion[] = [
       "Optimizing gas consumption through bytecode sharing"
     ],
     correctAnswer: 0,
+    simpleExplanation: "A trait is like a job description — it says 'any contract that claims to be an NFT MUST have these specific functions'. It keeps everything organized and consistent.",
     explanation: "Traits define interfaces—function signatures that implementing contracts must provide. This enables polymorphism: code can accept any contract implementing a trait, enabling standardization like SIP-009 and SIP-010.",
     category: "clarity"
   },
@@ -289,6 +314,7 @@ const quizQuestions: QuizQuestion[] = [
       "Converts STX to sBTC at a fixed ratio"
     ],
     correctAnswer: 0,
+    simpleExplanation: "`stx-burn?` permanently destroys STX tokens — like shredding money. Once burned, those tokens are gone forever, which can make the remaining tokens slightly more valuable.",
     explanation: "The `stx-burn?` function permanently removes STX from circulation, reducing the total supply. This is an irreversible operation often used for deflationary mechanics or destroying wrapped assets.",
     category: "clarity"
   },
@@ -302,6 +328,7 @@ const quizQuestions: QuizQuestion[] = [
       "`tx-sender` can be spoofed while `contract-caller` cannot"
     ],
     correctAnswer: 1,
+    simpleExplanation: "`tx-sender` = who originally pressed the button. `contract-caller` = who (or what contract) called this specific function right now. They can be different in chain reactions.",
     explanation: "`tx-sender` always returns the original transaction signer regardless of call depth. `contract-caller` returns the immediate calling principal, which could be another contract in a nested call chain.",
     category: "clarity"
   },
@@ -315,6 +342,7 @@ const quizQuestions: QuizQuestion[] = [
       "A reference to an external data source"
     ],
     correctAnswer: 0,
+    simpleExplanation: "`define-map` creates a lookup table — like a dictionary where you can store and find data using a key. For example, storing each user's balance using their address as the key.",
     explanation: "`define-map` creates a persistent key-value store where both keys and values are strongly typed. Maps are modified using `map-set`, `map-insert`, and `map-delete`.",
     category: "clarity"
   },
@@ -328,6 +356,7 @@ const quizQuestions: QuizQuestion[] = [
       "It's required for Bitcoin compatibility"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Clarity puts the function name first, like `(add 1 2)` instead of `1 + 2`. This removes all ambiguity — the computer always knows exactly what to do and in what order.",
     explanation: "Prefix notation eliminates ambiguity in expression parsing and ensures predictable, left-to-right evaluation order. This contributes to Clarity's decidability and makes contracts easier to analyze statically.",
     category: "clarity"
   },
@@ -341,6 +370,7 @@ const quizQuestions: QuizQuestion[] = [
       "Unlimited precision"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Clarity can handle numbers up to 128 bits long — that's a number with 38 digits! More than enough for any real-world amount of tokens.",
     explanation: "Clarity integers are 128-bit, providing a range from -2^127 to 2^127-1 for signed ints and 0 to 2^128-1 for unsigned ints. This is smaller than Solidity's 256-bit but sufficient for most applications.",
     category: "clarity"
   },
@@ -356,6 +386,7 @@ const quizQuestions: QuizQuestion[] = [
       "STX tokens for network security participation"
     ],
     correctAnswer: 2,
+    simpleExplanation: "sBTC is like a digital version of Bitcoin that you can use in apps — and you don't need to trust any company or middleman to hold your Bitcoin for you. It's fully automatic!",
     explanation: "sBTC is a decentralized 1:1 Bitcoin peg that operates without trusted third parties. Unlike wrapped Bitcoin solutions requiring custodians, sBTC uses threshold signatures and economic incentives to maintain the peg trustlessly.",
     category: "defi"
   },
@@ -369,6 +400,7 @@ const quizQuestions: QuizQuestion[] = [
       "10,000 BTC"
     ],
     correctAnswer: 2,
+    simpleExplanation: "When sBTC first launched in late 2024, only 1,000 Bitcoin could be put in. People filled it up in just 4 days — showing how excited everyone was!",
     explanation: "sBTC Phase 1 launched in December 2024 with a 1,000 BTC deposit cap. This cap was filled in just 4 days, demonstrating massive demand for trustless Bitcoin DeFi.",
     category: "defi"
   },
@@ -382,6 +414,7 @@ const quizQuestions: QuizQuestion[] = [
       "Lock both BTC and STX in equal amounts"
     ],
     correctAnswer: 1,
+    simpleExplanation: "You send your Bitcoin to a special address controlled by many people at once (no single person can steal it). Then the same amount of sBTC appears in your Stacks wallet.",
     explanation: "Users deposit BTC to an address controlled by a decentralized threshold signature scheme. Once confirmed on Bitcoin, an equivalent amount of sBTC is minted on Stacks, maintaining the 1:1 peg.",
     category: "defi"
   },
@@ -395,6 +428,7 @@ const quizQuestions: QuizQuestion[] = [
       "Not yet activated"
     ],
     correctAnswer: 2,
+    simpleExplanation: "In April 2025, Stacks turned on the ability to convert sBTC back to real Bitcoin. Up to 150 BTC per day can leave the system, completing the full cycle.",
     explanation: "sBTC withdrawals were activated in April 2025, initially capped at 150 BTC per day. This completed the bidirectional peg, allowing users to redeem their sBTC for Bitcoin.",
     category: "defi"
   },
@@ -410,6 +444,7 @@ const quizQuestions: QuizQuestion[] = [
       "Leveraging liquidation cascades in DeFi lending protocols"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Dual stacking is like a combo bonus — lock your STX AND hold sBTC at the same time, and you earn way more Bitcoin rewards (up to 5% per year instead of about 0.5%)!",
     explanation: "Dual stacking allows users to lock STX tokens while simultaneously holding sBTC. The sBTC holdings directly influence the reward multiplier, enabling yields up to 5% APY compared to base rates of approximately 0.5%.",
     category: "defi"
   },
@@ -423,6 +458,7 @@ const quizQuestions: QuizQuestion[] = [
       "USDC stablecoins"
     ],
     correctAnswer: 1,
+    simpleExplanation: "When you stack STX, you earn real Bitcoin as a reward — not more STX or fake tokens. It's one of the only ways to earn BTC without selling anything!",
     explanation: "Stackers receive Bitcoin as rewards, paid by miners who commit BTC to produce Stacks blocks. This unique mechanism allows STX holders to earn Bitcoin yield without selling their STX.",
     category: "defi"
   },
@@ -436,6 +472,7 @@ const quizQuestions: QuizQuestion[] = [
       "90 days"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Each stacking cycle lasts about 2 weeks. During that time your STX is locked, and at the end you receive Bitcoin rewards based on how much you stacked.",
     explanation: "Each stacking cycle lasts approximately 2 weeks (2,100 Bitcoin blocks). Stackers commit their STX for one or more cycles and receive proportional Bitcoin rewards based on their stake.",
     category: "defi"
   },
@@ -449,6 +486,7 @@ const quizQuestions: QuizQuestion[] = [
       "Enable instant unstacking without any protocol fees"
     ],
     correctAnswer: 1,
+    simpleExplanation: "When you use StackingDAO, you get stSTX tokens as a receipt for your locked STX. You can trade or use these tokens in apps while your original STX still earns Bitcoin rewards!",
     explanation: "stSTX tokens represent stacked STX positions, allowing holders to trade or use them in DeFi while the underlying STX earns Bitcoin rewards. The token value appreciates relative to STX as rewards accumulate.",
     category: "defi"
   },
@@ -464,6 +502,7 @@ const quizQuestions: QuizQuestion[] = [
       "Yield-bearing stable assets through automated arbitrage"
     ],
     correctAnswer: 1,
+    simpleExplanation: "USDCx lets the USDC dollar-coin move to Stacks safely, without trusting a middleman bridge that could be hacked. It uses Circle's own official system.",
     explanation: "USDCx leverages Circle's xReserve for cryptographic attestations and CCTP for crosschain transfers. This eliminates the security risks inherent in third-party bridges while maintaining full USDC interoperability across supported chains.",
     category: "defi"
   },
@@ -477,6 +516,7 @@ const quizQuestions: QuizQuestion[] = [
       "Dutch auction mechanics for price discovery"
     ],
     correctAnswer: 2,
+    simpleExplanation: "ALEX is like a vending machine for tokens — it uses a math formula (x×y=k) to set prices automatically. The more of one token you buy, the more expensive it gets.",
     explanation: "ALEX employs an AMM model with constant product invariant (x*y=k) enhanced by dynamic fees. Liquidity providers deposit paired assets, and trades occur against the pool with prices determined by the ratio of reserves.",
     category: "defi"
   },
@@ -490,6 +530,7 @@ const quizQuestions: QuizQuestion[] = [
       "Central bank-style interest rate adjustments"
     ],
     correctAnswer: 1,
+    simpleExplanation: "USDA stays worth $1 because you have to lock up MORE than $1 worth of STX to create each USDA. If the value drops too low, the system automatically sells some collateral to protect the peg.",
     explanation: "USDA is a crypto-collateralized stablecoin backed by STX deposits exceeding 100%. Users mint USDA by locking STX in vaults. If collateral ratios fall below thresholds, liquidations occur to protect the peg.",
     category: "defi"
   },
@@ -503,6 +544,7 @@ const quizQuestions: QuizQuestion[] = [
       "Offering insurance against smart contract exploits"
     ],
     correctAnswer: 0,
+    simpleExplanation: "Zest lets you borrow money using your Bitcoin as collateral — so you can get cash without selling your BTC. It's like getting a loan with your Bitcoin as the 'security deposit'.",
     explanation: "Zest Protocol specializes in lending markets where users can borrow against Bitcoin collateral (via sBTC). This unlocks capital efficiency for Bitcoin holders seeking liquidity without selling their BTC holdings.",
     category: "defi"
   },
@@ -516,6 +558,7 @@ const quizQuestions: QuizQuestion[] = [
       "Enabling cross-chain swaps with Ethereum assets"
     ],
     correctAnswer: 0,
+    simpleExplanation: "Granite lets Bitcoin holders borrow dollar-coins (USDC) using their BTC as collateral. You keep your Bitcoin exposure while getting cash to use right now.",
     explanation: "Granite focuses on capital efficiency for Bitcoin holders, allowing them to borrow against BTC collateral. With USDCx integration, users can access stablecoin liquidity without selling their Bitcoin.",
     category: "defi"
   },
@@ -529,6 +572,7 @@ const quizQuestions: QuizQuestion[] = [
       "Stacking pool management"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Velar is a trading platform on Stacks where you can swap tokens AND trade with leverage (bets that multiply your gains — or losses). Think of it as a crypto trading app built on Bitcoin.",
     explanation: "Velar is a DeFi protocol on Stacks offering decentralized exchange functionality with an emphasis on perpetual futures trading, allowing users to trade with leverage on Bitcoin-based assets.",
     category: "defi"
   },
@@ -544,6 +588,7 @@ const quizQuestions: QuizQuestion[] = [
       "Fractional ownership capabilities"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Every NFT on Stacks must be able to: say who owns it (`get-owner`), point to its picture/metadata (`get-token-uri`), and let the owner send it to someone else (`transfer`).",
     explanation: "SIP-009 defines the minimal NFT interface: `get-owner` returns the owner principal, `get-token-uri` provides metadata location, and `transfer` moves ownership. Additional functionality is optional but these three are required.",
     category: "nft"
   },
@@ -557,6 +602,7 @@ const quizQuestions: QuizQuestion[] = [
       "Built-in fractionalization at the protocol level"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Stacks NFTs are connected to Bitcoin, so who owns them is recorded on the most secure blockchain in the world. Your digital art can't be lost or faked even in 100 years.",
     explanation: "Stacks NFTs are anchored to Bitcoin through PoX consensus. This means NFT ownership records inherit Bitcoin's security and immutability, making them more resistant to chain reorganizations than assets on independent blockchains.",
     category: "nft"
   },
@@ -570,6 +616,7 @@ const quizQuestions: QuizQuestion[] = [
       "Enabling native stacking functionality"
     ],
     correctAnswer: 1,
+    simpleExplanation: "SIP-009 is for unique items (NFTs — like trading cards). SIP-010 is for coins (like money) that can be split into tiny pieces. One is for collectibles, the other is for currency.",
     explanation: "SIP-010 defines fungible tokens with decimal precision for divisibility. While SIP-009 NFTs are unique and indivisible, SIP-010 tokens support fractional amounts, making them suitable for currencies and utility tokens.",
     category: "nft"
   },
@@ -583,6 +630,7 @@ const quizQuestions: QuizQuestion[] = [
       "Both use identical technical implementations"
     ],
     correctAnswer: 0,
+    simpleExplanation: "Bitcoin Ordinals are images stamped directly onto Bitcoin (permanent but static). Stacks NFTs use smart contracts so they can have rules, royalties, and special abilities.",
     explanation: "Ordinals inscribe data directly into Bitcoin transactions using witness data, making them immutable but non-programmable. Stacks NFTs use Clarity smart contracts, enabling complex logic, royalties, and dynamic metadata.",
     category: "nft"
   },
@@ -596,6 +644,7 @@ const quizQuestions: QuizQuestion[] = [
       "A governance token for Stacks Foundation"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Gamma.io is the main place to buy and sell NFTs on Stacks — like an eBay or Amazon for digital art and collectibles on the Stacks blockchain.",
     explanation: "Gamma.io is the premier NFT marketplace on Stacks, allowing users to create, buy, and sell NFTs. It supports SIP-009 standard tokens and provides tools for artists and collectors in the ecosystem.",
     category: "nft"
   },
@@ -609,6 +658,7 @@ const quizQuestions: QuizQuestion[] = [
       "Exchange BTC for STX directly"
     ],
     correctAnswer: 1,
+    simpleExplanation: "BNS lets you get a simple name like 'alice.btc' instead of a long confusing address. It's like getting a personal domain name — and it lives on the blockchain!",
     explanation: "BNS is a decentralized naming system on Stacks that allows users to register .btc names (like yourname.btc) that resolve to addresses. Names are NFTs that can be transferred and traded.",
     category: "nft"
   },
@@ -624,6 +674,7 @@ const quizQuestions: QuizQuestion[] = [
       "Compiler-injected checks at each external call site"
     ],
     correctAnswer: 1,
+    simpleExplanation: "A reentrancy attack is when a bad contract calls itself over and over to steal money (it hacked $60M from Ethereum once!). Clarity prevents this completely because it literally cannot call itself in a loop.",
     explanation: "Clarity is deliberately non-Turing complete with no unbounded loops or recursion. This design makes reentrancy impossible since contracts cannot call back into themselves in unexpected ways during execution.",
     category: "security"
   },
@@ -637,6 +688,7 @@ const quizQuestions: QuizQuestion[] = [
       "Automatic bug bounty integration"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Unlike Ethereum contracts that get converted to machine code (which is hard to read), Clarity runs its original readable code directly on-chain. You can always check EXACTLY what a contract does!",
     explanation: "Clarity is interpreted, not compiled to bytecode. This means the actual source code runs on-chain and can be inspected by anyone, eliminating compiler bugs and ensuring what you see is what executes.",
     category: "security"
   },
@@ -650,6 +702,7 @@ const quizQuestions: QuizQuestion[] = [
       "Only affects unsigned integers in Clarity"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Integer overflow is when a number gets so big it 'wraps around' to zero — like an odometer. Hackers have exploited this in other chains, but Clarity catches it automatically and stops the transaction.",
     explanation: "Clarity has built-in overflow/underflow protection. Arithmetic operations that would cause overflow fail explicitly rather than wrapping around silently, preventing a common class of vulnerabilities.",
     category: "security"
   },
@@ -663,6 +716,7 @@ const quizQuestions: QuizQuestion[] = [
       "Limiting maximum gas expenditure"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Before you send a transaction you can say 'I must not lose more than X STX'. If the contract tries to take more, EVERYTHING cancels automatically. It's a built-in safety net!",
     explanation: "Post-conditions let users specify expected outcomes (e.g., 'I should not lose more than 100 STX'). If the actual result differs, the transaction is aborted, protecting against malicious or buggy contracts.",
     category: "security"
   },
@@ -676,6 +730,7 @@ const quizQuestions: QuizQuestion[] = [
       "Require special permissions from Stacks Foundation"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Flash loans borrow millions, manipulate prices, and pay back in one transaction — a sneaky attack used to steal from DeFi apps. Clarity's design makes this kind of trick impossible!",
     explanation: "Clarity's design makes traditional flash loans impossible. The language lacks the ability to perform atomic multi-step operations that flash loans require, eliminating this attack vector by design.",
     category: "security"
   },
@@ -691,6 +746,7 @@ const quizQuestions: QuizQuestion[] = [
       "A multi-signature treasury solution"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Leather is a browser extension (like a plugin) that acts as your Stacks wallet. It lets you store STX, NFTs, and connect to Stacks apps — similar to how MetaMask works for Ethereum.",
     explanation: "Leather (previously called Hiro Wallet) is the primary browser extension wallet for Stacks. It supports STX, SIP-010 tokens, NFTs, and integrates with dApps for transaction signing.",
     category: "advanced"
   },
@@ -704,6 +760,7 @@ const quizQuestions: QuizQuestion[] = [
       "Offering built-in exchange functionality only"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Xverse works on your phone AND as a browser extension, and it handles both Stacks AND Bitcoin (including Ordinals). It's like a Swiss Army knife wallet for the Bitcoin ecosystem.",
     explanation: "Xverse is a popular wallet available as both a mobile app and browser extension. It supports Stacks, Bitcoin, and Ordinals, making it a comprehensive solution for Bitcoin ecosystem users.",
     category: "advanced"
   },
@@ -717,6 +774,7 @@ const quizQuestions: QuizQuestion[] = [
       "Official price oracles for DeFi"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Hiro builds the tools that developers need: a blockchain explorer (to see all transactions), Clarinet (to test smart contracts), and APIs. Think of them as the toolmakers for Stacks builders.",
     explanation: "Hiro Systems is a core developer organization providing essential infrastructure: the Stacks Explorer for viewing on-chain data, Clarinet for local development and testing, and various APIs for developers.",
     category: "advanced"
   },
@@ -730,6 +788,7 @@ const quizQuestions: QuizQuestion[] = [
       "Manage stacking pools"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Clarinet is like a practice sandbox for Stacks developers — you can write smart contracts, test them locally on a fake blockchain, and fix bugs before anyone's real money is at stake.",
     explanation: "Clarinet is a command-line tool and VS Code extension for Clarity development. It provides a local simulated blockchain, unit testing framework, and debugging tools for smart contract development.",
     category: "advanced"
   },
@@ -745,6 +804,7 @@ const quizQuestions: QuizQuestion[] = [
       "Subsidized transactions for new users"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Right now you need STX to pay for Stacks transactions, even if you only have Bitcoin. Fee abstraction will let you pay using sBTC instead — much friendlier for Bitcoin-first users!",
     explanation: "Fee abstraction will permit users to pay Stacks network fees using sBTC instead of requiring STX. This significantly improves user experience for Bitcoin-native users entering the ecosystem.",
     category: "advanced"
   },
@@ -758,6 +818,7 @@ const quizQuestions: QuizQuestion[] = [
       "Native support for non-fungible tokens"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Clarity 4 will add WebAssembly support — a technology that makes code run much faster, like upgrading from a bicycle to a car, while keeping all the same safety guarantees.",
     explanation: "Clarity 4 will add WebAssembly compilation support, significantly improving contract execution performance while maintaining Clarity's security guarantees and decidability properties.",
     category: "advanced"
   },
@@ -771,6 +832,7 @@ const quizQuestions: QuizQuestion[] = [
       "Applying for Stacks Foundation grants"
     ],
     correctAnswer: 1,
+    simpleExplanation: "A SIP is like a formal suggestion box for improving Stacks. Anyone can write one to propose a new feature or standard. The community reviews and votes — if approved, it becomes part of Stacks!",
     explanation: "SIPs are the formal mechanism for proposing changes to Stacks. They cover everything from token standards (SIP-009, SIP-010) to consensus changes, and require community review and approval.",
     category: "advanced"
   },
@@ -784,6 +846,7 @@ const quizQuestions: QuizQuestion[] = [
       "Unlimited sBTC creation by verified users"
     ],
     correctAnswer: 1,
+    simpleExplanation: "Currently converting BTC to sBTC involves some coordination. Self-minting means you'll be able to do it all yourself, directly — no waiting, no middlemen, full control.",
     explanation: "Self-minting sBTC will enable users to convert BTC to sBTC directly without relying on a third party. This enhances decentralization and makes the peg-in process more trustless.",
     category: "advanced"
   },
@@ -797,6 +860,7 @@ const quizQuestions: QuizQuestion[] = [
       "Set STX token prices on exchanges"
     ],
     correctAnswer: 1,
+    simpleExplanation: "The Stacks Foundation is like a support organization — it gives out grants to builders, helps with community decisions, and promotes Stacks. But it doesn't control the network; that's decentralized.",
     explanation: "The Stacks Foundation is a non-profit supporting the ecosystem through developer grants, governance facilitation, marketing, and community building. It does not control the protocol, which is decentralized.",
     category: "advanced"
   },
@@ -810,6 +874,7 @@ const quizQuestions: QuizQuestion[] = [
       "Decreases over time through mandatory burning"
     ],
     correctAnswer: 1,
+    simpleExplanation: "STX started with about 1.32 billion tokens. New ones are slowly released on a predictable schedule (getting smaller each year), similar to how Bitcoin halves its mining rewards.",
     explanation: "STX launched with ~1.32 billion tokens. The supply increases through mining rewards (decreasing over time) and token unlocks from the genesis block. The emission schedule creates predictable, diminishing inflation.",
     category: "advanced"
   }
@@ -834,6 +899,8 @@ const topicOptions: { value: TopicFilter; label: string; emoji: string; descript
 ];
 
 const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
+  const { user } = useAuth();
+  const [ageLevel, setAgeLevel] = useState<AgeLevel>("adult");
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string>("");
   const [showResult, setShowResult] = useState(false);
@@ -849,6 +916,29 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
   const [selectedTopic, setSelectedTopic] = useState<TopicFilter>("all");
   // Track answers per question index for back-navigation
   const [questionAnswers, setQuestionAnswers] = useState<Record<number, string>>({});
+
+  // Fetch age level from profile (server-side, not from localStorage)
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from('profiles')
+      .select('age_level')
+      .eq('user_id', user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data?.age_level) {
+          setAgeLevel(data.age_level as AgeLevel);
+        }
+      });
+  }, [user]);
+
+  // Helper: pick explanation based on age level
+  const getExplanation = (q: QuizQuestion) => {
+    if ((ageLevel === "child" || ageLevel === "teen") && q.simpleExplanation) {
+      return q.simpleExplanation;
+    }
+    return q.explanation;
+  };
 
   // Shuffle and select questions based on topic filter
   useEffect(() => {
@@ -1089,10 +1179,10 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
           
           <p className="text-muted-foreground mb-6">
             {percentage >= 80 
-              ? "Exceptional comprehension. You possess the foundational knowledge to navigate this ecosystem with confidence."
+              ? (ageLevel === "child" ? "🌟 Amazing! You really know your Stacks stuff!" : ageLevel === "teen" ? "🔥 Great job! You've got solid Stacks knowledge!" : "Exceptional comprehension. You possess the foundational knowledge to navigate this ecosystem with confidence.")
               : percentage >= 60
-              ? "Commendable effort. A deeper study of the core concepts shall prove beneficial."
-              : "The journey of mastery demands persistence. Consider revisiting the foundational topics."}
+              ? (ageLevel === "child" ? "👍 Pretty good! Keep learning and you'll be a Stacks expert!" : ageLevel === "teen" ? "Good effort! Review the topics you missed to level up." : "Commendable effort. A deeper study of the core concepts shall prove beneficial.")
+              : (ageLevel === "child" ? "💪 Don't give up! Try again and you'll do better!" : ageLevel === "teen" ? "Keep at it! Revisit the basics and try again." : "The journey of mastery demands persistence. Consider revisiting the foundational topics.")}
           </p>
           
           <Button onClick={handleRestart} variant="outline" className="gap-2">
@@ -1217,21 +1307,23 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             className={`mt-6 p-4 rounded-lg ${
-              isCorrect ? "bg-green-500/10 border border-green-500/30" : "bg-destructive/10 border border-destructive/30"
+              isCorrect ? "bg-primary/10 border border-primary/30" : "bg-destructive/10 border border-destructive/30"
             }`}
           >
             <div className="flex items-start gap-3">
               {isCorrect ? (
-                <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
               ) : (
                 <XCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
               )}
               <div>
-                <p className={`font-medium mb-1 ${isCorrect ? "text-green-500" : "text-destructive"}`}>
-                  {isCorrect ? "Precisely correct." : "Not quite."}
+                <p className={`font-medium mb-1 ${isCorrect ? "text-primary" : "text-destructive"}`}>
+                  {isCorrect
+                    ? (ageLevel === "child" ? "🎉 Yes! That's right!" : ageLevel === "teen" ? "✓ Correct!" : "Precisely correct.")
+                    : (ageLevel === "child" ? "😅 Not quite — here's why:" : ageLevel === "teen" ? "Not quite — here's the explanation:" : "Not quite.")}
                 </p>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  {question.explanation}
+                  {getExplanation(question)}
                 </p>
               </div>
             </div>
