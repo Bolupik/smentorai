@@ -25,6 +25,7 @@ const quizQuestions: QuizQuestion[] = [
   {
     id: 1,
     question: "The Proof of Transfer (PoX) consensus mechanism distinguishes itself from traditional proof-of-work by:",
+    simpleExplanation: "Instead of using electricity like Bitcoin mining, Stacks miners pay with real Bitcoin! The Bitcoin goes to people who lock up their STX coins — so everyone wins.",
     options: [
       "Eliminating the need for miners entirely through delegated validation",
       "Recycling Bitcoin's proof-of-work by transferring BTC to STX stackers",
