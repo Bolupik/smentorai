@@ -5,6 +5,10 @@ import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
 import { CheckCircle, XCircle, BookOpen, Trophy, RotateCcw, Timer, Clock } from "lucide-react";
 import { Switch } from "./ui/switch";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+
+type AgeLevel = "child" | "teen" | "adult" | "expert";
 
 interface QuizQuestion {
   id: number;
@@ -12,6 +16,7 @@ interface QuizQuestion {
   options: string[];
   correctAnswer: number;
   explanation: string;
+  simpleExplanation: string; // for child/teen mode
   category: "architecture" | "clarity" | "defi" | "nft" | "security" | "advanced";
 }
 
