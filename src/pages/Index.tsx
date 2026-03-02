@@ -373,7 +373,7 @@ const Index = () => {
                   transition={{ duration: 0.8, delay: 0.5 }}
                   className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-foreground mb-4 sm:mb-6 leading-none"
                 >
-                  {"THE ARCHITECT".split("").map((char, index) => (
+                  {"SAMMY".split("").map((char, index) => (
                     <motion.span
                       key={index}
                       initial={{ opacity: 0, y: 20, rotateX: -90 }}
@@ -545,10 +545,10 @@ const Index = () => {
                   className="flex items-center gap-3"
                 >
                   <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary shadow-lg shadow-primary/20">
-                    <img src={aiCharacter} alt="The Architect" className="w-full h-full object-cover" />
+                    <img src={aiCharacter} alt="Sammy" className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <h1 className="text-lg font-bold tracking-tight text-primary">THE ARCHITECT</h1>
+                    <h1 className="text-lg font-bold tracking-tight text-primary">SAMMY</h1>
                     <p className="text-xs text-muted-foreground">Your Guide to Mastery</p>
                   </div>
                 </motion.div>
