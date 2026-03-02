@@ -6,18 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, User, Baby, Sparkles, GraduationCap, Brain } from "lucide-react";
+import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, User, Mail, CheckCircle } from "lucide-react";
 import aiCharacter from "@/assets/ai-character.png";
 import { z } from "zod";
-
-type AgeLevel = "child" | "teen" | "adult" | "expert";
-
-const ageLevels: { value: AgeLevel; label: string; icon: React.ReactNode; description: string; age: string }[] = [
-  { value: "child", label: "Kid Mode", icon: <Baby className="w-4 h-4" />, description: "Super simple & fun!", age: "6–10" },
-  { value: "teen", label: "Teen Mode", icon: <Sparkles className="w-4 h-4" />, description: "Clear & engaging", age: "11–17" },
-  { value: "adult", label: "Adult Mode", icon: <GraduationCap className="w-4 h-4" />, description: "Detailed explanations", age: "18+" },
-  { value: "expert", label: "Expert Mode", icon: <Brain className="w-4 h-4" />, description: "Technical & precise", age: "Dev" },
-];
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -30,11 +21,12 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
-  const [ageLevel, setAgeLevel] = useState<AgeLevel>("adult");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string; username?: string }>({});
   const [isGuestLoading, setIsGuestLoading] = useState(false);
+  const [signupComplete, setSignupComplete] = useState(false);
+  const [signupEmail, setSignupEmail] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -42,27 +34,14 @@ const Auth = () => {
     setIsGuestLoading(true);
     try {
       const { error } = await supabase.auth.signInAnonymously();
-      
       if (error) {
-        toast({
-          title: "Guest access failed",
-          description: error.message,
-          variant: "destructive",
-        });
+        toast({ title: "Guest access failed", description: error.message, variant: "destructive" });
         return;
       }
-
-      toast({
-        title: "Welcome, Guest",
-        description: "You may explore freely. Create an account to preserve your progress.",
-      });
+      toast({ title: "Welcome, Guest", description: "You may explore freely. Create an account to preserve your progress." });
       navigate("/");
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
-      });
+    } catch {
+      toast({ title: "Error", description: "An unexpected error occurred. Please try again.", variant: "destructive" });
     } finally {
       setIsGuestLoading(false);
     }
@@ -81,9 +60,7 @@ const Auth = () => {
       if (error instanceof z.ZodError) {
         const fieldErrors: { email?: string; password?: string; username?: string } = {};
         error.errors.forEach((err) => {
-          if (err.path[0]) {
-            fieldErrors[err.path[0] as keyof typeof fieldErrors] = err.message;
-          }
+          if (err.path[0]) fieldErrors[err.path[0] as keyof typeof fieldErrors] = err.message;
         });
         setErrors(fieldErrors);
       }
@@ -93,107 +70,113 @@ const Auth = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!validateForm()) return;
-    
     setIsLoading(true);
 
     try {
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) {
-          if (error.message.includes("Invalid login credentials")) {
-            toast({
-              title: "Login failed",
-              description: "Invalid email or password. Please try again.",
-              variant: "destructive",
-            });
-          } else {
-            toast({
-              title: "Login failed",
-              description: error.message,
-              variant: "destructive",
-            });
-          }
+          toast({
+            title: "Login failed",
+            description: error.message.includes("Invalid login credentials")
+              ? "Invalid email or password. Please try again."
+              : error.message,
+            variant: "destructive",
+          });
           return;
         }
-
-        toast({
-          title: "Welcome back!",
-          description: "You've successfully logged in.",
-        });
+        toast({ title: "Welcome back!", description: "You've successfully logged in." });
         navigate("/");
       } else {
-        const redirectUrl = `${window.location.origin}/`;
-        
+        const redirectUrl = `${window.location.origin}/onboarding`;
+
         const { data: signUpData, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
             emailRedirectTo: redirectUrl,
-            data: {
-              username: username || email.split("@")[0],
-            },
+            data: { username: username || email.split("@")[0] },
           },
         });
 
         if (error) {
           if (error.message.includes("already registered")) {
-            toast({
-              title: "Account exists",
-              description: "This email is already registered. Please log in instead.",
-              variant: "destructive",
-            });
+            toast({ title: "Account exists", description: "This email is already registered. Please log in instead.", variant: "destructive" });
             setIsLogin(true);
           } else {
-            toast({
-              title: "Sign up failed",
-              description: error.message,
-              variant: "destructive",
-            });
+            toast({ title: "Sign up failed", description: error.message, variant: "destructive" });
           }
           return;
         }
 
-        // Store age_level in profile after signup
+        // Create profile row (age_level will be set during onboarding)
         if (signUpData.user) {
-          await supabase.from('profiles').upsert({
+          await supabase.from("profiles").upsert({
             user_id: signUpData.user.id,
-            age_level: ageLevel,
             username: username || email.split("@")[0],
-          }, { onConflict: 'user_id' });
+          }, { onConflict: "user_id" });
         }
 
-        toast({
-          title: "Account created!",
-          description: "You can now start tracking your progress.",
-        });
-        navigate("/");
+        setSignupEmail(email);
+        setSignupComplete(true);
       }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
-      });
+    } catch {
+      toast({ title: "Error", description: "An unexpected error occurred. Please try again.", variant: "destructive" });
     } finally {
       setIsLoading(false);
     }
   };
 
+  // ── Email verification pending screen ──────────────────────────────────────
+  if (signupComplete) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-8">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="w-full max-w-md text-center"
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", delay: 0.2 }}
+            className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-6"
+          >
+            <Mail className="w-10 h-10 text-primary" />
+          </motion.div>
+          <h1 className="text-3xl font-black text-foreground mb-3">Check Your Email</h1>
+          <p className="text-muted-foreground mb-2">
+            We sent a verification link to
+          </p>
+          <p className="text-primary font-semibold text-lg mb-6">{signupEmail}</p>
+          <div className="bg-card border border-border rounded-xl p-6 mb-6 text-left space-y-3">
+            <div className="flex items-start gap-3">
+              <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-muted-foreground">Click the link in the email to verify your account.</p>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-muted-foreground">After verifying, you'll be asked to set your learning level.</p>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-muted-foreground">Check your spam folder if you don't see it.</p>
+            </div>
+          </div>
+          <Button variant="outline" onClick={() => { setSignupComplete(false); setIsLogin(true); }} className="w-full">
+            Back to Sign In
+          </Button>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex bg-background">
       {/* Left side - Hero image */}
       <div className="hidden lg:flex lg:w-1/2 relative">
-        <img
-          src={aiCharacter}
-          alt="Stacks AI"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
+        <img src={aiCharacter} alt="Sammy" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-transparent to-background" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
         <div className="absolute bottom-12 left-12 max-w-md z-10">
@@ -213,51 +196,38 @@ const Auth = () => {
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md"
         >
-          {/* Back button */}
-          <Button
-            variant="ghost"
-            onClick={() => navigate("/")}
-            className="mb-8 text-muted-foreground hover:text-foreground"
-          >
+          <Button variant="ghost" onClick={() => navigate("/")} className="mb-8 text-muted-foreground hover:text-foreground">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Home
           </Button>
 
-          {/* Logo */}
           <div className="mb-8">
-            <h1 className="text-3xl font-black text-primary mb-2">STACKS AI</h1>
+            <h1 className="text-3xl font-black text-primary mb-2">SAMMY</h1>
             <p className="text-muted-foreground">
               {isLogin ? "Welcome back! Sign in to continue." : "Create an account to get started."}
             </p>
           </div>
 
-          {/* Toggle buttons */}
+          {/* Toggle */}
           <div className="flex gap-2 mb-8 p-1 bg-muted/50 rounded-lg">
             <button
               onClick={() => setIsLogin(true)}
               className={`flex-1 py-3 px-4 rounded-md font-medium transition-all ${
-                isLogin
-                  ? "bg-primary text-primary-foreground shadow-lg"
-                  : "text-muted-foreground hover:text-foreground"
+                isLogin ? "bg-primary text-primary-foreground shadow-lg" : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <LogIn className="w-4 h-4 inline mr-2" />
-              Sign In
+              <LogIn className="w-4 h-4 inline mr-2" />Sign In
             </button>
             <button
               onClick={() => setIsLogin(false)}
               className={`flex-1 py-3 px-4 rounded-md font-medium transition-all ${
-                !isLogin
-                  ? "bg-primary text-primary-foreground shadow-lg"
-                  : "text-muted-foreground hover:text-foreground"
+                !isLogin ? "bg-primary text-primary-foreground shadow-lg" : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <UserPlus className="w-4 h-4 inline mr-2" />
-              Sign Up
+              <UserPlus className="w-4 h-4 inline mr-2" />Sign Up
             </button>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             {!isLogin && (
               <div className="space-y-2">
@@ -270,38 +240,7 @@ const Auth = () => {
                   onChange={(e) => setUsername(e.target.value)}
                   className={`bg-card border-border ${errors.username ? "border-destructive" : ""}`}
                 />
-                {errors.username && (
-                  <p className="text-sm text-destructive">{errors.username}</p>
-                )}
-              </div>
-            )}
-
-            {!isLogin && (
-              <div className="space-y-2">
-                <Label>Learning Level <span className="text-muted-foreground text-xs">(cannot be changed later)</span></Label>
-                <div className="grid grid-cols-2 gap-2">
-                  {ageLevels.map((level) => (
-                    <button
-                      key={level.value}
-                      type="button"
-                      onClick={() => setAgeLevel(level.value)}
-                      className={`flex items-center gap-2 p-3 rounded-lg border text-left transition-all ${
-                        ageLevel === level.value
-                          ? "border-primary bg-primary/10"
-                          : "border-border hover:border-primary/50"
-                      }`}
-                    >
-                      <span className={`${ageLevel === level.value ? "text-primary" : "text-muted-foreground"}`}>
-                        {level.icon}
-                      </span>
-                      <div>
-                        <p className="text-xs font-semibold text-foreground">{level.label}</p>
-                        <p className="text-[10px] text-muted-foreground">{level.age}</p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-                <p className="text-xs text-muted-foreground">{ageLevels.find(l => l.value === ageLevel)?.description}</p>
+                {errors.username && <p className="text-sm text-destructive">{errors.username}</p>}
               </div>
             )}
 
@@ -316,9 +255,7 @@ const Auth = () => {
                 className={`bg-card border-border ${errors.email ? "border-destructive" : ""}`}
                 required
               />
-              {errors.email && (
-                <p className="text-sm text-destructive">{errors.email}</p>
-              )}
+              {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
             </div>
 
             <div className="space-y-2">
@@ -341,16 +278,10 @@ const Auth = () => {
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
-              {errors.password && (
-                <p className="text-sm text-destructive">{errors.password}</p>
-              )}
+              {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
             </div>
 
-            <Button
-              type="submit"
-              className="w-full py-6 text-lg font-bold"
-              disabled={isLoading}
-            >
+            <Button type="submit" className="w-full py-6 text-lg font-bold" disabled={isLoading}>
               {isLoading ? (
                 <span className="flex items-center gap-2">
                   <motion.span
@@ -366,17 +297,15 @@ const Auth = () => {
             </Button>
           </form>
 
-          {/* Divider */}
           <div className="relative my-8">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-border"></div>
+              <div className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-background px-2 text-muted-foreground">Or</span>
             </div>
           </div>
 
-          {/* Guest Login */}
           <Button
             type="button"
             variant="outline"
@@ -405,13 +334,9 @@ const Auth = () => {
             Guest progress is temporary. Create an account to persist your journey.
           </p>
 
-          {/* Footer text */}
           <p className="text-center text-sm text-muted-foreground mt-6">
             {isLogin ? "Don't have an account? " : "Already have an account? "}
-            <button
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-primary hover:underline font-medium"
-            >
+            <button onClick={() => setIsLogin(!isLogin)} className="text-primary hover:underline font-medium">
               {isLogin ? "Sign up" : "Sign in"}
             </button>
           </p>
