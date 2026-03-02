@@ -1,4 +1,4 @@
-# The Architect — Whitepaper
+# Sammy — Whitepaper
 
 ### AI-Powered Onboarding for the Stacks Ecosystem
 
