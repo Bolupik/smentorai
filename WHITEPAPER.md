@@ -20,8 +20,7 @@ New users trying to join the Stacks ecosystem face three barriers:
 
 ## 2. Proposed Solution
 
-**The Architect** is an AI chatbot that teaches people about Stacks in plain, simple language.
-+ **Sammy** is an AI chatbot that teaches people about Stacks in plain, simple language.
+**Sammy** is an AI chatbot that teaches people about Stacks in plain, simple language.
 
 - Ask any question → get a clear answer
 - Pick a topic → follow a guided lesson
@@ -125,6 +124,6 @@ It works for beginners (even kids) and experienced users alike.
 
 ---
 
-**Website:** [smentorai.lovable.app](https://smentorai.lovable.app)
+**Website:** [smentorai.lovable.app](https://smentorai.lovable.app) | **AI:** Sammy
 
 *Last updated: February 2026*
