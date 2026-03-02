@@ -274,7 +274,7 @@ const Index = () => {
               >
                 <img 
                   src={aiCharacter} 
-                  alt="The Architect" 
+                  alt="Sammy" 
                   className="w-full h-full object-cover object-top"
                 />
               </motion.div>
@@ -299,8 +299,8 @@ const Index = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  <span className="hidden sm:inline">THE ARCHITECT</span>
-                  <span className="sm:hidden">ARCHITECT</span>
+                  <span className="hidden sm:inline">SAMMY</span>
+                  <span className="sm:hidden">SAMMY</span>
                 </motion.div>
                 <div className="flex items-center gap-2 sm:gap-6">
                   <motion.span 
