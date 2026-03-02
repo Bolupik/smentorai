@@ -202,7 +202,7 @@ const Auth = () => {
           </Button>
 
           <div className="mb-8">
-            <h1 className="text-3xl font-black text-primary mb-2">SAMMY</h1>
+            <h1 className="text-3xl font-black text-primary mb-2">SAMMY THE AI</h1>
             <p className="text-muted-foreground">
               {isLogin ? "Welcome back! Sign in to continue." : "Create an account to get started."}
             </p>
