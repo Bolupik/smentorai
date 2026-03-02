@@ -100,7 +100,7 @@ const ChatMessage = ({ role, content, images = [] }: ChatMessageProps) => {
           transition={{ delay: 0.1, type: "spring" }}
           className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary flex-shrink-0 shadow-lg shadow-primary/20"
         >
-          <img src={aiCharacter} alt="Stacks AI Guide" className="w-full h-full object-cover" />
+          <img src={aiCharacter} alt="Sammy" className="w-full h-full object-cover" />
         </motion.div>
       )}
       <motion.div

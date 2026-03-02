@@ -273,7 +273,7 @@ const ChatInterface = () => {
                 transition={{ delay: 0.2, type: "spring" }}
                 className="w-24 h-24 mx-auto mb-6 rounded-full overflow-hidden border-2 border-primary shadow-lg shadow-primary/20"
               >
-                <img src={aiCharacter} alt="The Architect" className="w-full h-full object-cover" />
+                <img src={aiCharacter} alt="Sammy" className="w-full h-full object-cover" />
               </motion.div>
               
               <motion.h2

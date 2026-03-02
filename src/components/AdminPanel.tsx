@@ -525,7 +525,7 @@ const AdminPanel = () => {
           <Bot className="w-4 h-4 text-primary mt-0.5" />
           <div className="text-sm">
             <span className="font-medium text-primary">AI Review Workflow:</span>
-            <span className="text-muted-foreground"> Click "AI Review" to analyze contributions for accuracy and quality. Approved content is added to The Architect's knowledge base.</span>
+            <span className="text-muted-foreground"> Click "AI Review" to analyze contributions for accuracy and quality. Approved content is added to Sammy's knowledge base.</span>
           </div>
         </div>
       </div>

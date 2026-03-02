@@ -63,7 +63,7 @@ const Index = () => {
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
             className="w-12 h-12 border-2 border-primary border-t-transparent rounded-full"
           />
-          <p className="text-muted-foreground text-sm font-light tracking-wide">Initializing the Archive...</p>
+          <p className="text-muted-foreground text-sm font-light tracking-wide">Loading Sammy…</p>
         </motion.div>
       </div>
     );
@@ -274,7 +274,7 @@ const Index = () => {
               >
                 <img 
                   src={aiCharacter} 
-                  alt="The Architect" 
+                  alt="Sammy" 
                   className="w-full h-full object-cover object-top"
                 />
               </motion.div>
@@ -299,8 +299,8 @@ const Index = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  <span className="hidden sm:inline">THE ARCHITECT</span>
-                  <span className="sm:hidden">ARCHITECT</span>
+                  <span className="hidden sm:inline">SAMMY</span>
+                  <span className="sm:hidden">SAMMY</span>
                 </motion.div>
                 <div className="flex items-center gap-2 sm:gap-6">
                   <motion.span 
@@ -373,7 +373,7 @@ const Index = () => {
                   transition={{ duration: 0.8, delay: 0.5 }}
                   className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-foreground mb-4 sm:mb-6 leading-none"
                 >
-                  {"THE ARCHITECT".split("").map((char, index) => (
+                  {"SAMMY".split("").map((char, index) => (
                     <motion.span
                       key={index}
                       initial={{ opacity: 0, y: 20, rotateX: -90 }}
@@ -545,10 +545,10 @@ const Index = () => {
                   className="flex items-center gap-3"
                 >
                   <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary shadow-lg shadow-primary/20">
-                    <img src={aiCharacter} alt="The Architect" className="w-full h-full object-cover" />
+                    <img src={aiCharacter} alt="Sammy" className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <h1 className="text-lg font-bold tracking-tight text-primary">THE ARCHITECT</h1>
+                    <h1 className="text-lg font-bold tracking-tight text-primary">SAMMY</h1>
                     <p className="text-xs text-muted-foreground">Your Guide to Mastery</p>
                   </div>
                 </motion.div>
