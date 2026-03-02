@@ -299,7 +299,7 @@ const Index = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  <span className="hidden sm:inline">SAMMY</span>
+                  <span className="hidden sm:inline">SAMMY THE AI</span>
                   <span className="sm:hidden">SAMMY</span>
                 </motion.div>
                 <div className="flex items-center gap-2 sm:gap-6">
@@ -373,7 +373,7 @@ const Index = () => {
                   transition={{ duration: 0.8, delay: 0.5 }}
                   className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-foreground mb-4 sm:mb-6 leading-none"
                 >
-                  {"SAMMY".split("").map((char, index) => (
+                  {"SAMMY THE AI".split("").map((char, index) => (
                     <motion.span
                       key={index}
                       initial={{ opacity: 0, y: 20, rotateX: -90 }}
@@ -548,7 +548,7 @@ const Index = () => {
                     <img src={aiCharacter} alt="Sammy" className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <h1 className="text-lg font-bold tracking-tight text-primary">SAMMY</h1>
+                    <h1 className="text-lg font-bold tracking-tight text-primary">SAMMY THE AI</h1>
                     <p className="text-xs text-muted-foreground">Your Guide to Mastery</p>
                   </div>
                 </motion.div>
