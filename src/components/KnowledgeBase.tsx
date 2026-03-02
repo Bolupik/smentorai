@@ -358,7 +358,7 @@ const KnowledgeBase = () => {
         <div>
           <h2 className="text-xl font-bold text-foreground">Knowledge Repository</h2>
           <p className="text-sm text-muted-foreground">
-            Contribute to The Architect's growing wisdom
+            Contribute to Sammy's growing wisdom
           </p>
         </div>
       </div>
