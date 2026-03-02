@@ -77,7 +77,7 @@ const PreviewModal = ({ isOpen, onClose, onStartLearning }: PreviewModalProps) =
                 >
                   <img
                     src={aiCharacter}
-                    alt="Stacks AI"
+                   alt="Sammy"
                     className="w-full h-full object-cover object-top"
                   />
                 </motion.div>
@@ -145,7 +145,7 @@ const PreviewModal = ({ isOpen, onClose, onStartLearning }: PreviewModalProps) =
                   </div>
                   
                   <h2 className="text-4xl md:text-5xl font-black text-foreground mb-4">
-                    STACKS AI
+                    SAMMY
                   </h2>
                   
                   <p className="text-lg text-foreground/80 max-w-2xl mb-8 leading-relaxed">
