@@ -500,7 +500,7 @@ const KnowledgeBase = () => {
                 </Button>
 
                 <p className="text-xs text-muted-foreground text-center">
-                  Submissions are reviewed before being added to The Architect's knowledge base
+                  Submissions are reviewed before being added to Sammy's knowledge base
                 </p>
               </div>
             </motion.div>

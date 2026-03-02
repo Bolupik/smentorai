@@ -22,9 +22,9 @@ const ShareAchievement = ({
 
   const getShareText = () => {
     if (allCompleted) {
-      return `🏆 I just became a Stacks Master! Completed all ${totalTopics} topics and unlocked ${unlockedCount}/${totalAchievements} achievements on Stacks AI.\n\nLearn about Bitcoin L2, DeFi, NFTs & more 👇`;
+      return `🏆 I just became a Stacks Master! Completed all ${totalTopics} topics and unlocked ${unlockedCount}/${totalAchievements} achievements on Sammy.\n\nLearn about Bitcoin L2, DeFi, NFTs & more 👇`;
     }
-    return `🎯 Learning about Stacks blockchain! Explored ${exploredCount}/${totalTopics} topics and unlocked ${unlockedCount}/${totalAchievements} achievements.\n\nJoin me on Stacks AI 👇`;
+    return `🎯 Learning about Stacks blockchain! Explored ${exploredCount}/${totalTopics} topics and unlocked ${unlockedCount}/${totalAchievements} achievements.\n\nJoin me on Sammy 👇`;
   };
 
   const shareUrl = typeof window !== "undefined" ? window.location.origin : "";
@@ -46,7 +46,7 @@ const ShareAchievement = ({
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "Stacks AI Achievement",
+          title: "Sammy Achievement",
           text: shareText,
           url: shareUrl,
         });
