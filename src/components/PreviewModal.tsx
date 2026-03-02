@@ -145,7 +145,7 @@ const PreviewModal = ({ isOpen, onClose, onStartLearning }: PreviewModalProps) =
                   </div>
                   
                   <h2 className="text-4xl md:text-5xl font-black text-foreground mb-4">
-                    SAMMY
+                    SAMMY THE AI
                   </h2>
                   
                   <p className="text-lg text-foreground/80 max-w-2xl mb-8 leading-relaxed">

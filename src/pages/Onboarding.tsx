@@ -72,7 +72,7 @@ const Onboarding = () => {
         console.warn("Profile upsert note:", error.message);
       }
 
-      toast({ title: "All set! 🎉", description: `Welcome to Sammy — your journey starts now.` });
+      toast({ title: "All set! 🎉", description: `Welcome to Sammy the AI — your journey starts now.` });
       navigate("/");
     } catch {
       toast({ title: "Error", description: "Something went wrong. Please try again.", variant: "destructive" });
@@ -104,7 +104,7 @@ const Onboarding = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-transparent to-background" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
         <div className="absolute bottom-12 left-12 max-w-sm z-10">
-          <h2 className="text-3xl font-black text-foreground mb-3">Meet <span className="text-primary">Sammy</span></h2>
+          <h2 className="text-3xl font-black text-foreground mb-3">Meet <span className="text-primary">Sammy the AI</span></h2>
           <p className="text-muted-foreground">Your AI guide to the Stacks ecosystem — personalised for the way you learn.</p>
         </div>
       </div>
