@@ -74,7 +74,7 @@ const Index = () => {
     );
   }
 
-  if (!user) {
+  if (!isAuthorized) {
     return null;
   }
 
