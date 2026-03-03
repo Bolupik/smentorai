@@ -11,7 +11,11 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    nodePolyfills({ include: ["crypto", "stream", "buffer", "process"] }),
+    nodePolyfills({
+      // Polyfill specific globals and modules needed by @stacks/connect
+      globals: { process: true, Buffer: true, global: true },
+      include: ["crypto", "stream", "buffer", "process", "events", "util"],
+    }),
     react(),
     mode === "development" && componentTagger(),
   ].filter(Boolean),
@@ -22,12 +26,7 @@ export default defineConfig(({ mode }) => ({
   },
   optimizeDeps: {
     include: ["refractor"],
-  },
-  define: {
-    global: "globalThis",
-    "process.env": "{}",
-    "process.browser": "true",
-    "process.version": '"v18.0.0"',
-    "process.versions": "{}",
+    // Force Vite to re-bundle @stacks/connect with polyfills applied
+    exclude: [],
   },
 }));
