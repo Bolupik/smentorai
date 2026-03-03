@@ -27,6 +27,23 @@ const ChatInterface = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [ageLevel, setAgeLevel] = useState<AgeLevel>("adult");
   const [showNFTExplorer, setShowNFTExplorer] = useState(false);
+
+  // Fetch user's age_level from profile on mount
+  useEffect(() => {
+    const fetchAgeLevel = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) return;
+      const { data } = await supabase
+        .from("profiles")
+        .select("age_level")
+        .eq("user_id", session.user.id)
+        .single();
+      if (data?.age_level) {
+        setAgeLevel(data.age_level as AgeLevel);
+      }
+    };
+    fetchAgeLevel();
+  }, []);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { progress, markExplored, isExplored, exploredCount } = useTopicProgressDB();
