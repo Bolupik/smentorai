@@ -40,18 +40,22 @@ const Index = () => {
   const [showSentiment, setShowSentiment] = useState(false);
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
+  const { isAuthenticated: isWalletConnected, isLoading: isWalletLoading } = useStacksAuth();
   const { exploredCount } = useTopicProgressDB();
   const { isAdmin } = useAdminRole();
 
-  // Redirect to auth if not logged in
+  const isAuthorized = !!user || isWalletConnected;
+  const authLoading = isLoading || isWalletLoading;
+
+  // Redirect to auth if not logged in via email or wallet
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (!authLoading && !isAuthorized) {
       navigate("/auth");
     }
-  }, [user, isLoading, navigate]);
+  }, [isAuthorized, authLoading, navigate]);
 
   // Show loading while checking auth
-  if (isLoading) {
+  if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <motion.div
