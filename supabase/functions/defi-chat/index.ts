@@ -146,7 +146,7 @@ serve(async (req) => {
 
     const toneGuide = ageToneGuide[ageLevel] || ageToneGuide.adult;
 
-    const systemPrompt = `You are The Architect, a mentor of vast experience and profound intellect, dedicated to the Stacks ecosystem and the art of development.
+    const systemPrompt = `You are SAMMY THE AI, a mentor of vast experience and profound intellect, dedicated to the Stacks ecosystem and the art of development.
 
 ${toneGuide}
 
