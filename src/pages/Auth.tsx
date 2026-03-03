@@ -316,6 +316,42 @@ const Auth = () => {
               <div className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+            </div>
+          </div>
+
+          {/* Stacks Wallet Connect */}
+          <Button
+            type="button"
+            onClick={handleWalletConnect}
+            disabled={isWalletLoading}
+            className="w-full py-6 text-base font-semibold mb-3 bg-[hsl(var(--primary))] hover:bg-primary/90 text-primary-foreground rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-primary/20 transition-all duration-300 hover:scale-[1.02]"
+          >
+            {isWalletLoading ? (
+              <span className="flex items-center gap-2">
+                <motion.span
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full"
+                />
+                Connecting Wallet…
+              </span>
+            ) : (
+              <>
+                <Wallet className="w-5 h-5" />
+                Connect Stacks Wallet
+              </>
+            )}
+          </Button>
+          <p className="text-center text-xs text-muted-foreground mb-6">
+            Xverse · Leather · Asigna supported
+          </p>
+
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-border/50" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-background px-2 text-muted-foreground">Or</span>
             </div>
           </div>
