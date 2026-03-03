@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, User, Mail, CheckCircle } from "lucide-react";
+import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, User, Mail, CheckCircle, Wallet } from "lucide-react";
 import aiCharacter from "@/assets/ai-character.png";
 import { z } from "zod";
+import { useStacksAuth } from "@/hooks/useStacksAuth";
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
