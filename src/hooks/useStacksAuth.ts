@@ -7,69 +7,75 @@ export interface StacksUserData {
   bnsName?: string;
 }
 
+const fetchBnsName = async (address: string): Promise<string | undefined> => {
+  try {
+    const res = await fetch(`https://api.bnsv2.com/names/address/${address}/valid`);
+    if (!res.ok) return undefined;
+    const data = await res.json();
+    return data?.names?.[0] ?? undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+const getAddressFromStorage = (): string | undefined => {
+  try {
+    const localData = getLocalStorage();
+    return (localData as { addresses?: { stx?: { address: string }[] } })?.addresses?.stx?.[0]?.address;
+  } catch {
+    return undefined;
+  }
+};
+
 export const useStacksAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userData, setUserData] = useState<StacksUserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  const fetchBnsName = async (address: string): Promise<string | undefined> => {
-    try {
-      const res = await fetch(`https://api.bnsv2.com/names/address/${address}/valid`);
-      if (!res.ok) return undefined;
-      const data = await res.json();
-      return data?.names?.[0] ?? undefined;
-    } catch {
-      return undefined;
-    }
-  };
-
-  const loadSession = useCallback(async () => {
-    try {
-      if (isConnected()) {
-        const localData = getLocalStorage();
-        const address = localData?.addresses?.stx?.[0]?.address;
-        if (address) {
-          const bnsName = await fetchBnsName(address);
-          setUserData({ address, bnsName });
-          setIsAuthenticated(true);
-        }
-      }
-    } catch {
-      // no persisted session
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
-    loadSession();
-  }, [loadSession]);
-
-  const signIn = useCallback(async () => {
-    try {
-      await connect({
-        onFinish: async (payload) => {
-          const address =
-            payload?.userSession?.loadUserData()?.profile?.stxAddress?.mainnet ??
-            getLocalStorage()?.addresses?.stx?.[0]?.address;
-
+    const loadSession = async () => {
+      try {
+        if (isConnected()) {
+          const address = getAddressFromStorage();
           if (address) {
             const bnsName = await fetchBnsName(address);
             setUserData({ address, bnsName });
             setIsAuthenticated(true);
-            navigate("/");
           }
-        },
-      });
+        }
+      } catch {
+        // no session
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadSession();
+  }, []);
+
+  const signIn = useCallback(async () => {
+    try {
+      // connect() in v8 is async — resolves when the user approves
+      await connect();
+      const address = getAddressFromStorage();
+      if (address) {
+        const bnsName = await fetchBnsName(address);
+        setUserData({ address, bnsName });
+        setIsAuthenticated(true);
+        navigate("/");
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      if (msg.toLowerCase().includes("wallet") || msg.toLowerCase().includes("extension")) {
+      if (
+        msg.toLowerCase().includes("wallet") ||
+        msg.toLowerCase().includes("extension") ||
+        msg.toLowerCase().includes("provider")
+      ) {
         alert(
           "No compatible Stacks wallet detected. Please install Xverse, Leather, or Asigna and try again."
         );
       }
-      throw err;
+      console.error("Stacks sign-in error:", err);
     }
   }, [navigate]);
 
