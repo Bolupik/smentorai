@@ -13,6 +13,7 @@ import ProfileEditor from "@/components/ProfileEditor";
 import DappShowcase from "@/components/DappShowcase";
 import { CommunitySentiment } from "@/components/CommunitySentiment";
 import { useAuth } from "@/contexts/AuthContext";
+import { useStacksAuth } from "@/hooks/useStacksAuth";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
 import { useAdminRole } from "@/hooks/useAdminRole";
 import { topicsList } from "@/components/TopicCards";
