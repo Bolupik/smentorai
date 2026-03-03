@@ -26,7 +26,6 @@ export default defineConfig(({ mode }) => ({
   },
   optimizeDeps: {
     include: ["refractor"],
-    // Force Vite to re-bundle @stacks/connect with polyfills applied
-    exclude: [],
+    force: true,
   },
 }));
