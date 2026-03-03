@@ -28,8 +28,21 @@ const Auth = () => {
   const [isGuestLoading, setIsGuestLoading] = useState(false);
   const [signupComplete, setSignupComplete] = useState(false);
   const [signupEmail, setSignupEmail] = useState("");
+  const [isWalletLoading, setIsWalletLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { signIn: stacksSignIn } = useStacksAuth();
+
+  const handleWalletConnect = async () => {
+    setIsWalletLoading(true);
+    try {
+      await stacksSignIn();
+    } catch {
+      toast({ title: "Wallet connection failed", description: "Could not connect wallet. Please try again.", variant: "destructive" });
+    } finally {
+      setIsWalletLoading(false);
+    }
+  };
 
   const handleGuestLogin = async () => {
     setIsGuestLoading(true);
