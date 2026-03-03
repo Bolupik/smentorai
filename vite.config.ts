@@ -13,9 +13,15 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // Polyfill Node's crypto for @stacks/connect in the browser
+      crypto: "crypto-browserify",
     },
   },
   optimizeDeps: {
     include: ['refractor'],
+  },
+  define: {
+    // required by some stacks internals
+    global: "globalThis",
   },
 }));
