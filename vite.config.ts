@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    nodePolyfills({ include: ["crypto", "stream", "buffer"] }),
+    nodePolyfills({ include: ["crypto", "stream", "buffer", "process"] }),
     react(),
     mode === "development" && componentTagger(),
   ].filter(Boolean),
