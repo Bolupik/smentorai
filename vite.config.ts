@@ -16,6 +16,17 @@ export default defineConfig(({ mode }) => ({
     },
   },
   optimizeDeps: {
-    include: ['refractor'],
+    include: ["refractor"],
+    // Exclude @stacks/connect from pre-bundling so it runs after polyfills
+    exclude: ["@stacks/connect"],
+  },
+  define: {
+    // Inject Node globals needed by @stacks/connect CJS deps
+    global: "globalThis",
+    "process.env": "{}",
+    "process.browser": "true",
+    "process.version": '"v18.0.0"',
+    "process.versions": "{}",
+    "process.nextTick": "((fn) => setTimeout(fn, 0))",
   },
 }));

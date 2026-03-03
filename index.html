@@ -22,6 +22,15 @@
 </head>
 
   <body>
+    <!-- Polyfill process for @stacks/connect Node.js CJS dependencies -->
+    <script>
+      if (typeof globalThis.process === 'undefined') {
+        globalThis.process = { env: {}, browser: true, version: 'v18.0.0', versions: {}, nextTick: function(fn) { setTimeout(fn, 0); } };
+      }
+      if (typeof window.global === 'undefined') {
+        window.global = globalThis;
+      }
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
