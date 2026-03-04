@@ -1,11 +1,35 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { connect, disconnect, isConnected, getLocalStorage } from "@stacks/connect";
+import { connect, disconnect, isConnected } from "@stacks/connect";
 
 export interface StacksUserData {
   address: string;
   bnsName?: string;
 }
+
+const STACKS_CONNECT_KEY = "@stacks/connect";
+
+/** Read the stored session from localStorage (hex-encoded JSON) */
+const readLocalStorage = (): { addresses?: { stx?: { address: string }[] } } | null => {
+  try {
+    const raw = localStorage.getItem(STACKS_CONNECT_KEY);
+    if (!raw) return null;
+    // @stacks/connect v8 stores as hex-encoded UTF-8 JSON
+    const bytes = new Uint8Array(raw.match(/.{1,2}/g)!.map((b) => parseInt(b, 16)));
+    return JSON.parse(new TextDecoder().decode(bytes));
+  } catch {
+    return null;
+  }
+};
+
+const getAddressFromStorage = (): string | undefined => {
+  try {
+    const data = readLocalStorage();
+    return data?.addresses?.stx?.[0]?.address;
+  } catch {
+    return undefined;
+  }
+};
 
 const fetchBnsName = async (address: string): Promise<string | undefined> => {
   try {
@@ -13,15 +37,6 @@ const fetchBnsName = async (address: string): Promise<string | undefined> => {
     if (!res.ok) return undefined;
     const data = await res.json();
     return data?.names?.[0] ?? undefined;
-  } catch {
-    return undefined;
-  }
-};
-
-const getAddressFromStorage = (): string | undefined => {
-  try {
-    const localData = getLocalStorage();
-    return (localData as { addresses?: { stx?: { address: string }[] } })?.addresses?.stx?.[0]?.address;
   } catch {
     return undefined;
   }
@@ -55,7 +70,6 @@ export const useStacksAuth = () => {
 
   const signIn = useCallback(async () => {
     try {
-      // connect() in v8 is async — resolves when the user approves
       await connect();
       const address = getAddressFromStorage();
       if (address) {
@@ -69,18 +83,22 @@ export const useStacksAuth = () => {
       if (
         msg.toLowerCase().includes("wallet") ||
         msg.toLowerCase().includes("extension") ||
-        msg.toLowerCase().includes("provider")
+        msg.toLowerCase().includes("provider") ||
+        msg.toLowerCase().includes("canceled")
       ) {
-        alert(
-          "No compatible Stacks wallet detected. Please install Xverse, Leather, or Asigna and try again."
-        );
+        // User canceled or no wallet — silently ignore
+        return;
       }
       console.error("Stacks sign-in error:", err);
     }
   }, [navigate]);
 
   const signOut = useCallback(() => {
-    disconnect();
+    try {
+      disconnect();
+    } catch {
+      // ignore
+    }
     setIsAuthenticated(false);
     setUserData(null);
     navigate("/auth");
