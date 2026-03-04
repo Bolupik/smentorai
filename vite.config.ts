@@ -13,8 +13,9 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      // Force CJS version of c32check so ESM named exports resolve correctly
-      "c32check": path.resolve(__dirname, "node_modules/c32check/lib/index.js"),
+      // Force CJS builds to avoid ESM/CJS named-export mismatch in c32check
+      "@stacks/transactions": path.resolve(__dirname, "node_modules/@stacks/transactions/dist/index.js"),
+      "@stacks/connect": path.resolve(__dirname, "node_modules/@stacks/connect/dist/index.js"),
     },
   },
   optimizeDeps: {
@@ -26,7 +27,6 @@ export default defineConfig(({ mode }) => ({
     ],
   },
   define: {
-    // Inject Node globals needed by @stacks/connect CJS deps
     global: "globalThis",
     "process.env": "{}",
     "process.browser": "true",
