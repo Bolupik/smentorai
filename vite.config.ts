@@ -13,12 +13,17 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // Force CJS version of c32check so ESM named exports resolve correctly
+      "c32check": path.resolve(__dirname, "node_modules/c32check/lib/index.js"),
     },
   },
   optimizeDeps: {
-    include: ["refractor"],
-    // Exclude @stacks/connect from pre-bundling so it runs after polyfills
-    exclude: ["@stacks/connect"],
+    include: [
+      "refractor",
+      "c32check",
+      "@stacks/transactions",
+      "@stacks/connect",
+    ],
   },
   define: {
     // Inject Node globals needed by @stacks/connect CJS deps
