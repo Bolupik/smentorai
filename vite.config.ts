@@ -27,6 +27,6 @@ export default defineConfig(({ mode }) => ({
     "process.browser": "true",
     "process.version": '"v18.0.0"',
     "process.versions": "{}",
-    "process.nextTick": "((fn) => setTimeout(fn, 0))",
+    "process.nextTick": "globalThis.setTimeout",
   },
 }));
