@@ -76,7 +76,16 @@ export const useStacksAuth = () => {
         const bnsName = await fetchBnsName(address);
         setUserData({ address, bnsName });
         setIsAuthenticated(true);
-        navigate("/");
+
+        // Route new wallets to onboarding, returning wallets to home
+        const onboardedKey = `stacks_onboarded_${address}`;
+        const hasOnboarded = localStorage.getItem(onboardedKey);
+        if (!hasOnboarded) {
+          localStorage.setItem(onboardedKey, "true");
+          navigate("/onboarding");
+        } else {
+          navigate("/");
+        }
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
