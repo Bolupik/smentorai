@@ -37,7 +37,7 @@ const HangingBear = ({ left, delay, size, amp, dur }: typeof HANGING_BEARS[0]) =
     style={{ left: `${left}%` }}
     animate={{ rotate: [amp / 2, -amp / 2, amp / 2] }}
     transition={{ duration: dur, delay, repeat: Infinity, ease: "easeInOut" }}
-    transformOrigin="top center"
+    style={{ left: `${left}%`, transformOrigin: "top center" }}
   >
     {/* Rope */}
     <motion.div
