@@ -34,10 +34,9 @@ const HANGING_BEARS = [
 const HangingBear = ({ left, delay, size, amp, dur }: typeof HANGING_BEARS[0]) => (
   <motion.div
     className="absolute top-0 flex flex-col items-center pointer-events-none select-none"
-    style={{ left: `${left}%` }}
+    style={{ left: `${left}%`, transformOrigin: "top center" }}
     animate={{ rotate: [amp / 2, -amp / 2, amp / 2] }}
     transition={{ duration: dur, delay, repeat: Infinity, ease: "easeInOut" }}
-    style={{ left: `${left}%`, transformOrigin: "top center" }}
   >
     {/* Rope */}
     <motion.div
