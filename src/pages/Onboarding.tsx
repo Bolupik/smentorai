@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Baby, Sparkles, GraduationCap, Brain, CheckCircle } from "lucide-react";
+import { Baby, Sparkles, GraduationCap, Brain, CheckCircle, Wallet } from "lucide-react";
 import aiCharacter from "@/assets/ai-character.png";
+import { useStacksAuth } from "@/hooks/useStacksAuth";
 
 type AgeLevel = "child" | "teen" | "adult" | "expert";
 
@@ -22,20 +23,28 @@ const Onboarding = () => {
   const [checkingAuth, setCheckingAuth] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { isAuthenticated: isWalletConnected, userData: walletData, isLoading: walletLoading } = useStacksAuth();
 
   useEffect(() => {
-    // Wait for session to be established after email confirmation
     const checkSession = async () => {
+      // If Stacks wallet is connected, no need to check Supabase session
+      if (!walletLoading && isWalletConnected) {
+        setCheckingAuth(false);
+        return;
+      }
+
+      // Wait for wallet check to complete before falling back to Supabase
+      if (walletLoading) return;
+
+      // Fallback: check Supabase session (email-auth users)
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        // Listen for auth state change (email confirmation triggers this)
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, sess) => {
           if (sess) {
             setCheckingAuth(false);
             subscription.unsubscribe();
           }
         });
-        // Timeout fallback — redirect to auth if no session after 5s
         setTimeout(() => {
           subscription.unsubscribe();
           setCheckingAuth(false);
@@ -45,7 +54,7 @@ const Onboarding = () => {
       }
     };
     checkSession();
-  }, []);
+  }, [isWalletConnected, walletLoading]);
 
   const handleContinue = async () => {
     if (!selectedLevel) {
@@ -55,6 +64,15 @@ const Onboarding = () => {
 
     setIsLoading(true);
     try {
+      // Stacks wallet user — persist age_level to localStorage
+      if (isWalletConnected && walletData?.address) {
+        localStorage.setItem(`stacks_age_level_${walletData.address}`, selectedLevel);
+        toast({ title: "All set! 🎉", description: "Welcome to Sammy the AI — your journey starts now." });
+        navigate("/");
+        return;
+      }
+
+      // Email-auth user — persist to database profile
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         toast({ title: "Not signed in", description: "Please sign in to continue.", variant: "destructive" });
@@ -68,11 +86,10 @@ const Onboarding = () => {
       );
 
       if (error) {
-        // If trigger blocks it (already set), proceed anyway
         console.warn("Profile upsert note:", error.message);
       }
 
-      toast({ title: "All set! 🎉", description: `Welcome to Sammy the AI — your journey starts now.` });
+      toast({ title: "All set! 🎉", description: "Welcome to Sammy the AI — your journey starts now." });
       navigate("/");
     } catch {
       toast({ title: "Error", description: "Something went wrong. Please try again.", variant: "destructive" });
@@ -95,6 +112,8 @@ const Onboarding = () => {
       </div>
     );
   }
+
+  const isWalletFlow = isWalletConnected && !!walletData?.address;
 
   return (
     <div className="min-h-screen flex bg-background">
@@ -120,11 +139,16 @@ const Onboarding = () => {
               transition={{ type: "spring", delay: 0.2 }}
               className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4"
             >
-              <CheckCircle className="w-8 h-8 text-primary" />
+              {isWalletFlow ? <Wallet className="w-8 h-8 text-primary" /> : <CheckCircle className="w-8 h-8 text-primary" />}
             </motion.div>
-            <h1 className="text-3xl font-black text-foreground mb-2">Email Verified! 🎉</h1>
+            <h1 className="text-3xl font-black text-foreground mb-2">
+              {isWalletFlow ? "Wallet Connected! 🎉" : "Email Verified! 🎉"}
+            </h1>
             <p className="text-muted-foreground">One last step — choose your learning level.</p>
-            <p className="text-xs text-muted-foreground/70 mt-1">This shapes how Sammy explains concepts to you and <strong>cannot be changed later</strong>.</p>
+            {isWalletFlow && walletData?.bnsName && (
+              <p className="text-xs text-primary/80 mt-1 font-medium">Welcome, {walletData.bnsName} 👋</p>
+            )}
+            <p className="text-xs text-muted-foreground/70 mt-1">This shapes how Sammy explains concepts to you.</p>
           </div>
 
           {/* Level grid */}
