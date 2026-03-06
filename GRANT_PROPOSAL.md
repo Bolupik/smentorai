@@ -1,12 +1,12 @@
-# 🏛️ The Architect — Grant Proposal
+# 🏛️ SMentor — Grant Proposal
 
 ## Stacks Ecosystem Educational AI Platform
 
-**Project Name:** The Architect  
+**Project Name:** SMentor  
 **Applicant:** [Your Name / Organization]  
-**Date:** February 2026  
+**Date:** March 2026  
 **Requested Amount:** [Amount in STX / USD]  
-**Grant Category:** Education, Developer Onboarding & Community Growth  
+**Grant Category:** Education, Developer Onboarding, Community Growth & DeFi Innovation  
 **Live Demo:** [https://smentorai.lovable.app](https://smentorai.lovable.app)  
 **Repository:** [GitHub Repository URL]
 
@@ -19,23 +19,24 @@
 3. [Solution Overview](#3-solution-overview)
 4. [Technical Architecture](#4-technical-architecture)
 5. [Features & Functionality](#5-features--functionality)
-6. [Ecosystem Impact](#6-ecosystem-impact)
-7. [User Journey](#7-user-journey)
-8. [Technology Stack](#8-technology-stack)
-9. [Roadmap & Milestones](#9-roadmap--milestones)
-10. [Team](#10-team)
-11. [Budget Breakdown](#11-budget-breakdown)
-12. [Sustainability Plan](#12-sustainability-plan)
-13. [Metrics & KPIs](#13-metrics--kpis)
-14. [Appendix](#14-appendix)
+6. [Yield Generation & Reward System](#6-yield-generation--reward-system)
+7. [Ecosystem Impact](#7-ecosystem-impact)
+8. [User Journey](#8-user-journey)
+9. [Technology Stack](#9-technology-stack)
+10. [Roadmap & Milestones](#10-roadmap--milestones)
+11. [Team](#11-team)
+12. [Budget Breakdown](#12-budget-breakdown)
+13. [Sustainability Plan](#13-sustainability-plan)
+14. [Metrics & KPIs](#14-metrics--kpis)
+15. [Appendix](#15-appendix)
 
 ---
 
 ## 1. Executive Summary
 
-**The Architect** is an AI-powered, interactive educational platform purpose-built for the Stacks blockchain ecosystem. It serves as a comprehensive onboarding and learning companion that transforms how newcomers and intermediate users understand Stacks architecture, Clarity smart contracts, DeFi protocols, sBTC, NFTs, and the broader Bitcoin Layer ecosystem.
+**SMentor** is an AI-powered, interactive educational platform purpose-built for the Stacks blockchain ecosystem. It serves as a comprehensive onboarding and learning companion that transforms how newcomers and intermediate users understand Stacks architecture, Clarity smart contracts, DeFi protocols, sBTC, NFTs, and the broader Bitcoin Layer ecosystem.
 
-Unlike static documentation or generic chatbots, The Architect provides:
+Unlike static documentation or generic chatbots, SMentor provides:
 
 - **Personalized AI conversations** powered by frontier LLMs with deep, up-to-date Stacks ecosystem knowledge
 - **Age-adaptive content delivery** (child, teen, adult modes) to expand the learning audience
@@ -46,6 +47,7 @@ Unlike static documentation or generic chatbots, The Architect provides:
 - **Voice narration** via text-to-speech for accessibility
 - **AI-generated infographics** for complex concept visualization
 - **Interactive quiz system** with 50+ questions across 6 categories
+- **PoX-powered yield rewards** — users earn yield generated from treasury STX stacked through Proof of Transfer, distributed weekly based on engagement tiers
 
 The platform has been built end-to-end and is live in production at [smentorai.lovable.app](https://smentorai.lovable.app).
 
@@ -67,35 +69,39 @@ The Stacks ecosystem has experienced explosive growth — the Nakamoto upgrade, 
 
 5. **Community Knowledge Silos**: Valuable insights from community members, builders, and power users remain locked in chat messages and threads rather than being aggregated and shared.
 
+6. **No Incentive Alignment**: Existing educational platforms offer no financial incentive for learners to engage deeply. There is no mechanism that rewards consistent learning with real yield.
+
 ### Market Gap
 
-| Platform | Interactive AI | Stacks-Specific | Gamification | Live Data | Community KB |
-|----------|:---:|:---:|:---:|:---:|:---:|
-| docs.stacks.co | ❌ | ✅ | ❌ | ❌ | ❌ |
-| Hiro Docs | ❌ | ✅ | ❌ | ❌ | ❌ |
-| ChatGPT | ✅ | ❌ (generic) | ❌ | ❌ | ❌ |
-| **The Architect** | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Platform | Interactive AI | Stacks-Specific | Gamification | Live Data | Community KB | Yield Rewards |
+|----------|:---:|:---:|:---:|:---:|:---:|:---:|
+| docs.stacks.co | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Hiro Docs | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| ChatGPT | ✅ | ❌ (generic) | ❌ | ❌ | ❌ | ❌ |
+| **SMentor** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 ---
 
 ## 3. Solution Overview
 
-The Architect addresses these challenges through a multi-layered educational platform:
+SMentor addresses these challenges through a multi-layered educational platform with built-in economic incentives:
 
 ### Core Philosophy
-> *"What knowledge do you seek?"*
+> *"Learn Stacks. Earn from Stacks."*
 
-The platform embodies the persona of "The Architect" — an AI mentor with deep, comprehensive knowledge of the Stacks ecosystem. Rather than a sterile documentation chatbot, users engage in meaningful, contextual conversations that adapt to their level and interests.
+The platform is powered by "Sammy" — an AI mentor with deep, comprehensive knowledge of the Stacks ecosystem. Rather than a sterile documentation chatbot, users engage in meaningful, contextual conversations that adapt to their level and interests. Crucially, active learners are rewarded with real yield generated by the SMentor treasury's participation in PoX stacking.
 
 ### Key Differentiators
 
 - **Ecosystem-Native AI**: The AI system prompt contains 1,600+ lines of carefully curated, up-to-date Stacks knowledge spanning architecture, DeFi protocols, NFTs, memecoins, security, wallets, sBTC, Dual Stacking, and community sentiment.
 
+- **PoX Yield Integration**: SMentor operates a treasury that stacks STX via Proof of Transfer. The BTC yield generated is distributed weekly to engaged learners through a tiered system (Gold, Silver, Bronze) — **principal is never touched, only yield is distributed**.
+
 - **Living Knowledge**: Community members can contribute knowledge entries that, after admin moderation, feed back into the AI's responses — creating a self-improving knowledge loop.
 
 - **Real-Time Data Integration**: Live metrics from the Hiro Stacks API (block height, transactions, mempool, PoX cycle, STX locked) and CoinGecko (prices) ground conversations in current reality.
 
-- **Gamified Exploration**: Topic progress tracking, achievement badges, and shareable milestones encourage comprehensive ecosystem exploration.
+- **Quiz-Boosted Yield**: Weekly quiz participants earn additional yield bonuses on top of their tier allocation, creating a direct financial incentive for ongoing education.
 
 ---
 
@@ -117,7 +123,7 @@ The platform embodies the persona of "The Architect" — an AI mentor with deep,
 └───────┼─────────────┼────────────┼───────────────────┘
         │             │            │
 ┌───────┴─────────────┴────────────┴───────────────────┐
-│                 BACKEND (Supabase / Lovable Cloud)    │
+│                 BACKEND (Lovable Cloud)               │
 │                                                       │
 │  ┌─────────────┐  ┌───────────────┐  ┌────────────┐  │
 │  │  defi-chat  │  │stacks-metrics │  │  generate-  │  │
@@ -156,11 +162,12 @@ The platform embodies the persona of "The Architect" — an AI mentor with deep,
 
 ### Data Flow
 
-1. **User Authentication**: Email/password auth with session management via Supabase Auth
-2. **AI Chat**: Streaming SSE responses from the `defi-chat` edge function, which integrates community knowledge dynamically from the database
+1. **User Authentication**: Email/password + Stacks wallet connect with session management
+2. **AI Chat**: Streaming SSE responses from the `defi-chat` edge function, integrating community knowledge dynamically from the database
 3. **Live Metrics**: The `stacks-metrics` edge function aggregates data from Hiro API endpoints (`/v2/info`, `/extended/v1/tx`, `/v2/pox`) and CoinGecko
 4. **Knowledge Contributions**: User submissions → admin review via `review-contribution` edge function → approved entries feed back into AI context
 5. **Progress Tracking**: Topic exploration persisted in `topic_progress` table with RLS policies ensuring per-user data isolation
+6. **Yield Distribution**: Treasury STX stacked via PoX → BTC yield distributed weekly proportionally to engagement tier
 
 ### Security Model
 
@@ -170,14 +177,15 @@ The platform embodies the persona of "The Architect" — an AI mentor with deep,
 - **Rate limiting** on AI chat and infographic generation
 - **Post-condition validation** on all database mutations
 - **No exposed API keys** — all external calls routed through edge functions
+- **Treasury Principal Isolation** — only yield distributed, never stacked principal
 
 ---
 
 ## 5. Features & Functionality
 
-### 5.1 AI-Powered Chat Interface
+### 5.1 AI-Powered Chat Interface (Sammy)
 
-The core of The Architect is an intelligent conversational interface that provides expert-level Stacks ecosystem knowledge.
+The core of SMentor is an intelligent conversational interface that provides expert-level Stacks ecosystem knowledge.
 
 **Capabilities:**
 - Streaming responses (Server-Sent Events) for real-time chat experience
@@ -217,6 +225,7 @@ A comprehensive 50+ question assessment spanning 6 categories:
 - Detailed explanations for every answer
 - Score tracking with streak bonuses
 - Category-based filtering
+- **Weekly quiz yield bonus** — top quiz participants earn additional yield distribution on top of their tier allocation
 
 ### 5.3 Community Knowledge Base
 
@@ -284,14 +293,83 @@ Text-to-speech capability for all AI responses:
 
 ### 5.9 User Profiles & Authentication
 
-- Email/password authentication
+- Email/password authentication + Stacks wallet connect (Xverse/Leather)
 - Customizable display name, username, and avatar
 - Contributor badges based on knowledge base participation
 - Admin panel for moderators
+- Learning level selector (age-adaptive: child / teen / adult)
 
 ---
 
-## 6. Ecosystem Impact
+## 6. Yield Generation & Reward System
+
+### Overview
+
+SMentor operates a **treasury** that stacks STX through the Stacks **Proof of Transfer (PoX)** mechanism. This generates BTC yield every PoX cycle (~2 weeks). The yield — **never the principal** — is distributed weekly to platform participants based on their engagement tier.
+
+This creates a sustainable, self-funding reward loop: the more users learn and engage with SMentor, the more yield they share in.
+
+```
+SMentor Treasury
+      │
+      ▼ (STX stacked via PoX)
+Stacks PoX Mechanism
+      │
+      ▼ (BTC yield earned each cycle)
+Yield Pool
+      │
+      ├──▶ 🥇 Gold   → 50% of weekly yield
+      ├──▶ 🥈 Silver → 30% of weekly yield
+      ├──▶ 🥉 Bronze → 15% of weekly yield
+      └──▶ 🏛️ Platform →  5% of weekly yield (operations & development)
+```
+
+### Tier Qualification
+
+Users qualify for tiers based on **weekly engagement score** — a composite metric of:
+
+| Activity | Points |
+|----------|--------|
+| Daily chat sessions (AI) | +5 pts/day |
+| Topic explored | +10 pts/topic |
+| Quiz completed | +20 pts/quiz |
+| Weekly quiz top 10 finisher | +50 pts bonus |
+| Knowledge contribution (approved) | +30 pts |
+| Consecutive day streak (7-day) | +25 pts bonus |
+
+**Tier Thresholds:**
+
+| Tier | Weekly Points Required | Yield Share |
+|------|------------------------|-------------|
+| 🥇 **Gold** | 150+ points | 50% of weekly yield pool |
+| 🥈 **Silver** | 75–149 points | 30% of weekly yield pool |
+| 🥉 **Bronze** | 25–74 points | 15% of weekly yield pool |
+| 🏛️ **Platform** | N/A | 5% of weekly yield pool (ops) |
+
+> Each tier's yield share is distributed **pro-rata** among all users in that tier for the week.
+
+### Weekly Quiz Yield Bonus
+
+Every week, SMentor hosts a **timed quiz event**. Participants who complete the quiz earn bonus yield on top of their tier allocation:
+
+| Quiz Rank | Bonus |
+|-----------|-------|
+| 🥇 Top 3 finishers | +10% of their tier yield allocation |
+| Top 10 finishers | +5% of their tier yield allocation |
+| All completers | +2% of their tier yield allocation |
+
+Quiz bonuses are funded from the platform's 5% share — ensuring no dilution to tier holders.
+
+### Treasury Principles
+
+1. **Principal is sacred**: Only yield generated by PoX stacking is ever distributed. The stacked STX principal in the treasury is never touched or spent.
+2. **Transparency**: All treasury stacking activity, yield generated, and distribution records are publicly verifiable on-chain.
+3. **Sustainability**: The 5% platform share covers infrastructure costs, reducing dependency on grant-only funding over time.
+4. **Non-custodial intent**: Long-term roadmap includes migrating to a smart contract-controlled treasury for fully trustless yield distribution.
+
+---
+
+## 7. Ecosystem Impact
 
 ### Direct Benefits to Stacks
 
@@ -305,33 +383,33 @@ Text-to-speech capability for all AI responses:
 
 5. **Real-Time Ecosystem Visibility**: Live metrics from the Hiro API give users an always-current view of network health, sBTC adoption, and stacking participation.
 
-6. **Narrative Amplification**: The platform encodes and spreads key narratives (Bitcoin DeFi, Clarity security advantages, sBTC trustlessness) that are critical for ecosystem growth.
+6. **PoX Adoption Signal**: SMentor's treasury stacking increases total STX locked in PoX, positively impacting network security and stacking yields for all participants.
 
-### Projected Impact Metrics
+7. **Incentivized Education**: Yield rewards for learning create a novel, replicable model for blockchain education — learning earns you real yield.
 
-| Metric | 6-Month Target | 12-Month Target |
-|--------|:-:|:-:|
-| Monthly Active Users | 2,000 | 10,000 |
-| Quiz Completions | 5,000 | 25,000 |
-| Knowledge Contributions | 200 | 1,000 |
-| dApp Referral Clicks | 10,000 | 50,000 |
-| AI Conversations | 20,000 | 100,000 |
-| New Stacks Users Onboarded | 500 | 5,000 |
+### Projected KPI Targets (Screenshot-Verified)
+
+| Metric | Month 1 Target | Month 6 Target | Notes |
+|--------|:-:|:-:|-------|
+| **New Installs** | 400 | 1,200 | Slow organic growth; no "hype" spikes |
+| **Monthly Active Users (MAU)** | 150 | 500 | Assumes ~15% monthly churn |
+| **Wallet Connects** | 40 | 120 | Only "hardcore" users will link wallets |
+| **Course Finishers** | 60 | 200 | Focus on 1–2 key modules only |
 
 ---
 
-## 7. User Journey
+## 8. User Journey
 
 ```
 ┌─────────────────┐
-│   User arrives   │
-│ at The Architect │
+│  User arrives   │
+│  at SMentor     │
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐     ┌──────────────────┐
 │  Sign up / Login │────▶│  Landing Page    │
-│  (Email + Pass)  │     │  (Hero + Avatar) │
+│  Email or Wallet │     │  (Hero + Sammy)  │
 └─────────────────┘     └────────┬─────────┘
                                  │
                     ┌────────────┼────────────┐
@@ -342,10 +420,10 @@ Text-to-speech capability for all AI responses:
             └────┬─────┘ └────┬─────┘ └──────────┘
                  │            │
                  ▼            ▼
-          ┌──────────┐ ┌──────────┐
-          │ Explore  │ │ Score &  │
-          │ 8 Topics │ │ Learn    │
-          └────┬─────┘ └──────────┘
+          ┌──────────┐ ┌──────────────┐
+          │ Explore  │ │ Score & Earn │
+          │ 8 Topics │ │ Quiz Yield   │
+          └────┬─────┘ └──────────────┘
                │
                ▼
         ┌──────────────┐
@@ -353,17 +431,18 @@ Text-to-speech capability for all AI responses:
         │ Achievements │
         └──────┬───────┘
                │
-     ┌─────────┼─────────┐
-     ▼         ▼         ▼
-┌────────┐┌────────┐┌────────────┐
-│Share on││Contrib.││ View Live  │
-│Twitter ││Knowl.  ││ Sentiment  │
-└────────┘└────────┘└────────────┘
+     ┌─────────┼─────────────┐
+     ▼         ▼             ▼
+┌────────┐┌────────┐┌──────────────────┐
+│Share on││Contrib.││ Earn PoX Yield   │
+│Twitter ││Knowl.  ││ (Gold/Silver/    │
+└────────┘└────────┘│  Bronze Tiers)  │
+                    └──────────────────┘
 ```
 
 ---
 
-## 8. Technology Stack
+## 9. Technology Stack
 
 ### Frontend
 | Technology | Purpose |
@@ -377,16 +456,16 @@ Text-to-speech capability for all AI responses:
 | **React Router** | Client-side routing with protected routes |
 | **TanStack Query** | Server state management and caching |
 | **react-markdown** | Markdown rendering for AI responses |
+| **@stacks/connect** | Stacks wallet connection (Xverse, Leather) |
 
-### Backend (Lovable Cloud / Supabase)
+### Backend (Lovable Cloud)
 | Technology | Purpose |
 |------------|---------|
 | **PostgreSQL** | Relational database with 6 tables |
 | **Row Level Security** | Per-user data isolation and access control |
 | **Edge Functions (Deno)** | 5 serverless functions for AI, metrics, TTS, infographics, moderation |
-| **Supabase Auth** | Email/password authentication with session management |
+| **Supabase Auth** | Email/password + wallet authentication |
 | **Supabase Storage** | Image uploads for knowledge base contributions |
-| **Supabase Realtime** | (Available for future real-time features) |
 
 ### External APIs
 | API | Purpose |
@@ -403,119 +482,222 @@ Text-to-speech capability for all AI responses:
 knowledge_base        -- Community knowledge entries (topic, content, category, votes, links, images)
 knowledge_comments    -- Threaded comments on knowledge entries
 knowledge_votes       -- Per-user vote tracking (up/down)
-profiles              -- User display names, avatars, usernames
+profiles              -- User display names, avatars, usernames, age_level
 topic_progress        -- Per-user topic exploration tracking
 user_roles            -- Admin/moderator/user role assignments
 ```
 
 ---
 
-## 9. Roadmap & Milestones
+## 10. Roadmap & Milestones
 
-### Phase 1: Core Platform ✅ (Completed)
+All milestones are **quarterly**. Each quarter ends with a public impact report delivered to the Stacks Foundation.
 
-- [x] AI chat interface with streaming responses
+---
+
+### ✅ Quarter 0 — Platform Foundation (Pre-Grant / Completed)
+
+- [x] AI chat interface (Sammy) with streaming responses
 - [x] 8-topic learning curriculum with progress tracking
 - [x] 50+ question quiz system with 6 categories
 - [x] Community knowledge base with voting and comments
 - [x] 36+ dApp showcase directory
 - [x] Achievement system with shareable badges
-- [x] User authentication and profiles
+- [x] User authentication (email + Stacks wallet)
 - [x] Admin moderation panel
 - [x] Voice narration (text-to-speech)
-- [x] Age-adaptive content delivery
+- [x] Age-adaptive content delivery (child/teen/adult)
 - [x] AI-generated infographics
-- [x] Live sentiment dashboard with real-time metrics from Hiro API
+- [x] Live sentiment dashboard with real-time Hiro API metrics
 - [x] Mobile-responsive design
 
-### Phase 2: Enhanced Engagement (Months 1–3)
-
-- [ ] **Leaderboard System**: Weekly/monthly leaderboards for quiz scores and knowledge contributions
-- [ ] **Learning Paths**: Structured multi-step learning journeys (Beginner → Intermediate → Advanced)
-- [ ] **Clarity Sandbox**: Integrated code playground for writing and testing Clarity snippets
-- [ ] **Wallet Integration**: Connect Xverse/Leather for identity and potential NFT badge minting
-- [ ] **Push Notifications**: Alerts for new community content and ecosystem updates
-- [ ] **Localization**: Multi-language support (Spanish, Portuguese, Japanese, Korean)
-
-### Phase 3: Ecosystem Integration (Months 4–6)
-
-- [ ] **DeFiLlama TVL Integration**: Real-time Total Value Locked data for Stacks DeFi
-- [ ] **On-chain Achievement NFTs**: Mint achievement badges as SIP-009 NFTs on Stacks
-- [ ] **Stacks Grant Progress Tracker**: Track and display ecosystem grant milestones
-- [ ] **API for Partners**: Public API for ecosystem projects to embed The Architect
-- [ ] **Community Challenges**: Weekly themed challenges with STX rewards
-- [ ] **Builder Spotlight**: Featured interviews and profiles of Stacks developers
-
-### Phase 4: Scale & Sustainability (Months 7–12)
-
-- [ ] **Premium Features**: Advanced analytics, unlimited AI conversations, exclusive content
-- [ ] **DAO Governance**: Community voting on content priorities and feature development
-- [ ] **Mobile App**: Native iOS/Android app for on-the-go learning
-- [ ] **Stacks Academy Certification**: Verifiable on-chain certificates for course completions
-- [ ] **Partnership Integrations**: Embed educational modules in ecosystem dApps
+**Deliverable:** Live production platform at [smentorai.lovable.app](https://smentorai.lovable.app)
 
 ---
 
-## 10. Team
+### 🔵 Quarter 1 — Engagement & Yield Foundation (Months 1–3)
+
+**Goals:** Activate users, launch yield system, hit Month 1 KPIs
+
+- [ ] **PoX Treasury Launch**: Stack initial treasury STX via PoX; begin yield accumulation
+- [ ] **Yield Tier Dashboard**: In-app dashboard showing user's current tier, weekly points, and estimated yield
+- [ ] **Weekly Quiz Events**: Scheduled weekly quiz competitions with yield bonus distribution
+- [ ] **Leaderboard System**: Weekly/monthly leaderboards for quiz scores and knowledge contributions
+- [ ] **Learning Paths**: Structured multi-step learning journeys (Beginner → Intermediate → Advanced)
+- [ ] **Wallet Connect Onboarding**: Full Xverse/Leather wallet connect with onboarding flow
+- [ ] **Bug fixes & performance optimization**: Address all known issues from Q0 testing
+
+**Q1 KPI Targets:**
+| Metric | Target |
+|--------|--------|
+| New Installs | 400 |
+| Monthly Active Users | 150 |
+| Wallet Connects | 40 |
+| Course Finishers | 60 |
+| First Yield Distribution | ✅ Done |
+
+**Q1 Deliverable:** Public report — installs, MAU, wallet connects, first yield cycle completed
+
+---
+
+### 🟡 Quarter 2 — Growth & Ecosystem Integration (Months 4–6)
+
+**Goals:** Scale user base, deepen yield mechanics, integrate ecosystem partners
+
+- [ ] **Multi-language Support**: Spanish, Portuguese, Turkish localization
+- [ ] **DeFiLlama TVL Integration**: Real-time Total Value Locked data for Stacks DeFi
+- [ ] **On-chain Achievement NFTs**: Mint achievement badges as SIP-009 NFTs on Stacks
+- [ ] **Community Challenges**: Weekly themed ecosystem challenges with yield bonuses
+- [ ] **Partner Integrations**: 5 ecosystem project co-marketing campaigns
+- [ ] **Yield Smart Contract V1**: Move treasury to audited Clarity smart contract for trustless yield distribution
+- [ ] **PWA / Mobile**: Progressive Web App with push notifications
+
+**Q2 KPI Targets:**
+| Metric | Target |
+|--------|--------|
+| New Installs | 800 (cumulative: 1,200) |
+| Monthly Active Users | 350 |
+| Wallet Connects | 80 (cumulative: 120) |
+| Course Finishers | 140 (cumulative: 200) |
+| Total Yield Distributed | [Target TBD by treasury size] |
+
+**Q2 Deliverable:** Public report — growth metrics, yield totals distributed, NFT certificates minted
+
+---
+
+### 🟢 Quarter 3 — Scale, Sustainability & DAO Readiness (Months 7–9)
+
+**Goals:** Reach full scale, expand revenue channels, prepare governance
+
+- [ ] **Stacks Grants Progress Tracker**: Public dashboard tracking grant milestone completion
+- [ ] **API for Partners**: Public API for ecosystem projects to embed SMentor chat widget
+- [ ] **Builder Spotlight**: Featured interviews and profiles of Stacks developers
+- [ ] **Advanced Analytics**: User engagement analytics available to platform admins
+- [ ] **Yield Smart Contract V2**: Full audit, open-source, community-verified contract
+- [ ] **DAO Governance Prep**: Community voting on content priorities and feature roadmap
+
+**Q3 KPI Targets:**
+| Metric | Target |
+|--------|--------|
+| Monthly Active Users | 500 |
+| Monthly AI Conversations | 10,000 |
+| Total Yield Distributed | [Cumulative from Q1-Q3] |
+| Ecosystem Partner Integrations | 5+ |
+| Knowledge Base Entries (approved) | 200+ |
+
+**Q3 Deliverable:** Public impact report — full 9-month metrics, yield program analysis, DAO governance proposal
+
+---
+
+### 🔴 Quarter 4 — Long-Term Sustainability (Months 10–12)
+
+**Goals:** Self-sustaining revenue, DAO handoff, certifications, expanded yield
+
+- [ ] **Stacks Academy Certification**: Verifiable on-chain certificates (SIP-009 NFTs) for course completions
+- [ ] **Premium Features**: Advanced analytics, unlimited AI, exclusive content — funded by premium subscriptions
+- [ ] **DAO Treasury**: Community-managed governance of SMentor treasury and yield parameters
+- [ ] **Mobile App**: Native iOS/Android app for on-the-go learning
+- [ ] **Follow-up Grant Application**: Apply based on Q1–Q4 demonstrated impact metrics
+- [ ] **Year 1 Impact Report**: Publish comprehensive impact report (users, retention, yield distributed, ecosystem referrals)
+
+**Q4 KPI Targets:**
+| Metric | Target |
+|--------|--------|
+| Monthly Active Users | 1,000+ |
+| Total Installs | 3,000+ |
+| Total Yield Distributed | [Full year cumulative] |
+| On-chain Certifications Minted | 500+ |
+| DAO Governance Live | ✅ |
+
+**Q4 Deliverable:** Year 1 Impact Report + DAO governance handoff + follow-up grant application
+
+---
+
+## 11. Team
 
 | Role | Responsibilities |
 |------|-----------------|
-| **Project Lead** | Strategy, ecosystem partnerships, grant management |
-| **Full-Stack Developer** | React/TypeScript frontend, Supabase backend, edge functions |
-| **AI/Content Engineer** | System prompt curation, knowledge base quality, AI tuning |
-| **Community Manager** | Knowledge base moderation, user engagement, social media |
+| **Project Lead** | Strategy, ecosystem partnerships, grant management, treasury oversight |
+| **Full-Stack Developer** | React/TypeScript frontend, Lovable Cloud backend, edge functions |
+| **AI/Content Engineer** | System prompt curation, knowledge base quality, AI tuning, quiz content |
+| **Community Manager** | Knowledge base moderation, user engagement, social media, weekly quiz events |
+| **Smart Contract Engineer** | Clarity yield contract development, treasury management, security audits |
 | **Designer** | UI/UX refinement, infographic templates, brand identity |
 
 *[Insert team member details, backgrounds, and relevant experience]*
 
 ---
 
-## 11. Budget Breakdown
+## 12. Budget Breakdown
 
 | Category | Amount | % of Total | Description |
 |----------|--------|:---:|-------------|
-| **Development** | $XX,XXX | 40% | Frontend features, backend infrastructure, API integrations |
-| **AI & Infrastructure** | $XX,XXX | 25% | LLM API costs, hosting, edge function compute, database |
-| **Content & Curation** | $XX,XXX | 15% | System prompt maintenance, quiz content, knowledge review |
+| **Development** | $XX,XXX | 35% | Frontend features, backend infrastructure, yield dashboard, API integrations |
+| **Smart Contract / Yield** | $XX,XXX | 20% | Clarity yield contract development, security audit, treasury tooling |
+| **AI & Infrastructure** | $XX,XXX | 20% | LLM API costs, hosting, edge function compute, database |
+| **Content & Curation** | $XX,XXX | 10% | System prompt maintenance, quiz content, weekly quiz management |
 | **Community & Marketing** | $XX,XXX | 10% | User acquisition, social campaigns, ecosystem partnerships |
-| **Design & UX** | $XX,XXX | 5% | Visual polish, accessibility improvements, mobile optimization |
-| **Contingency** | $XX,XXX | 5% | Unexpected costs, scaling needs |
+| **Design & UX** | $XX,XXX | 3% | Visual polish, accessibility improvements, mobile optimization |
+| **Contingency** | $XX,XXX | 2% | Unexpected costs, scaling needs |
 | **Total** | **$XX,XXX** | **100%** | |
 
 ---
 
-## 12. Sustainability Plan
+## 13. Sustainability Plan
 
-### Short-term (0–6 months)
+### Short-term (Q1–Q2)
 - Grant funding covers development and infrastructure costs
+- PoX treasury begins generating yield — platform's 5% share covers partial operational costs
 - Community growth through organic sharing and ecosystem partnerships
 
-### Medium-term (6–12 months)
+### Medium-term (Q2–Q3)
 - **Freemium Model**: Core features remain free; premium features (unlimited AI, advanced analytics, certifications) behind subscription
 - **Ecosystem Sponsorships**: Featured placements in dApp showcase for ecosystem projects
 - **Partnership Revenue**: White-label educational modules for Stacks ecosystem projects
+- **Yield Treasury Growth**: As more users engage, treasury STX grows, increasing yield for all tiers
 
-### Long-term (12+ months)
+### Long-term (Q4+)
 - **On-chain Revenue**: NFT achievement minting fees, certification fees
 - **DAO Treasury**: Community-managed treasury from premium subscriptions
-- **Grant Renewals**: Continued ecosystem grants based on demonstrated impact metrics
+- **Self-Sustaining PoX Yield**: Mature yield program requires no external funding to operate
+- **Grant Renewals**: Continued ecosystem grants based on demonstrated Q1–Q4 impact metrics
 
 ---
 
-## 13. Metrics & KPIs
+## 14. Metrics & KPIs
 
-### Primary Success Metrics
+### Primary KPIs (from market analysis)
 
-| Metric | Measurement | Target (6mo) |
-|--------|-------------|:---:|
-| **Monthly Active Users** | Unique authenticated users per month | 2,000 |
-| **AI Conversations** | Total chat messages sent | 20,000 |
-| **Quiz Completions** | Full quiz sessions completed | 5,000 |
-| **Knowledge Contributions** | Approved community entries | 200 |
-| **Topic Completion Rate** | Users exploring all 8 topics | 25% |
-| **dApp Referrals** | Click-throughs to ecosystem dApps | 10,000 |
+| Metric | Month 1 | Month 6 | Sentiment Note |
+|--------|:-------:|:-------:|----------------|
+| **New Installs** | 400 | 1,200 | Slow organic growth; no "hype" spikes |
+| **Monthly Active Users** | 150 | 500 | Assumes ~15% monthly churn |
+| **Wallet Connects** | 40 | 120 | Only "hardcore" users will link wallets |
+| **Course Finishers** | 60 | 200 | Focus on 1–2 key modules only |
 
-### Secondary Metrics
+### Secondary Engagement KPIs
+
+| Metric | Target (6mo) | Measurement |
+|--------|:---:|-------------|
+| **AI Conversations** | 20,000 | Total chat messages sent |
+| **Quiz Completions** | 5,000 | Full quiz sessions completed |
+| **Knowledge Contributions** | 200 | Approved community entries |
+| **Topic Completion Rate** | 25% | Users exploring all 8 topics |
+| **dApp Referrals** | 10,000 | Click-throughs to ecosystem dApps |
+
+### Yield & Financial KPIs
+
+| Metric | Measurement |
+|--------|-------------|
+| Total STX Stacked (Treasury) | STX locked in PoX via SMentor treasury |
+| Weekly Yield Generated | BTC yield per cycle from PoX |
+| Total Yield Distributed | Cumulative yield paid to Gold/Silver/Bronze tiers |
+| Gold Tier Users | Weekly users qualifying at 150+ pts |
+| Silver Tier Users | Weekly users qualifying at 75–149 pts |
+| Bronze Tier Users | Weekly users qualifying at 25–74 pts |
+| Weekly Quiz Participation Rate | % of MAU participating in weekly quiz |
+
+### Quality KPIs
 
 | Metric | Measurement |
 |--------|-------------|
@@ -526,15 +708,16 @@ user_roles            -- Admin/moderator/user role assignments
 | Social Shares | Achievement shares on Twitter/X |
 | Net Promoter Score | User satisfaction survey |
 
-### Reporting
+### Reporting Schedule
 
-- **Monthly**: Public metrics dashboard showing usage, growth, and ecosystem impact
-- **Quarterly**: Detailed grant milestone reports with budget tracking
-- **Continuous**: Real-time analytics available to Stacks Foundation
+- **Weekly**: Internal yield distribution records + quiz participation
+- **Monthly**: Public metrics dashboard — usage, growth, and ecosystem impact
+- **Quarterly**: Formal grant milestone report with full budget tracking and KPI analysis
+- **Annually**: Comprehensive Year 1 Impact Report — users, retention, yield distributed, ecosystem referrals
 
 ---
 
-## 14. Appendix
+## 15. Appendix
 
 ### A. Edge Functions Summary
 
@@ -578,7 +761,7 @@ The `defi-chat` edge function contains a 1,600+ line system prompt covering:
 
 The frontend consists of 25+ custom React components organized into:
 
-- **Pages**: `Index.tsx` (main app with view routing), `Auth.tsx`, `NotFound.tsx`
+- **Pages**: `Index.tsx` (main app with view routing), `Auth.tsx`, `Onboarding.tsx`, `NotFound.tsx`
 - **Core**: `ChatInterface`, `ChatMessage`, `TopicCards`, `CommunitySentiment`
 - **Interactive**: `StacksQuiz`, `NFTExplorer`, `DappShowcase`, `SearchBar`
 - **Community**: `KnowledgeBase`, `KnowledgeComments`, `ContributorBadge`
@@ -587,53 +770,24 @@ The frontend consists of 25+ custom React components organized into:
 - **Utility**: `VoiceControls`, `AgeSelector`, `PreviewModal`
 - **UI Library**: 30+ shadcn/ui components (buttons, cards, dialogs, tabs, etc.)
 
-### E. Screenshots
+### E. Yield Tier Distribution Example
 
-#### Landing Page — Hero & Navigation
-The cinematic landing page features The Architect's AI character, Netflix-inspired UI with hero section, action buttons (Begin, Assessment, Contribute, Pulse), and the scrollable dApp ecosystem bar.
+Illustrative example assuming 1 BTC yield per week:
 
-![Landing Page](docs/screenshots/01-landing-page.png)
+| Tier | Yield Pool | Example Users | Per-User Estimate |
+|------|:---:|:---:|:---:|
+| 🥇 Gold | 0.50 BTC | 20 users | ~0.025 BTC each |
+| 🥈 Silver | 0.30 BTC | 60 users | ~0.005 BTC each |
+| 🥉 Bronze | 0.15 BTC | 200 users | ~0.00075 BTC each |
+| 🏛️ Platform | 0.05 BTC | Ops fund | Infrastructure |
 
-#### Chat Interface — Topic Selection & Progress
-After clicking "Begin", users see 8 interactive topic cards with progress tracking, achievement badges, age selector, and the chat input. Explored topics are highlighted with animated indicators.
-
-![Chat Topics](docs/screenshots/02-chat-topics.png)
-
-#### Active AI Conversation
-Streaming AI responses with rich formatting, covering Stacks architecture, PoX consensus, Nakamoto upgrade, and sBTC mechanics. Voice controls and infographic generation available per message.
-
-![Active Chat](docs/screenshots/03-active-chat.png)
-
-#### Knowledge Assessment — Quiz Start
-The quiz landing shows 25-question assessment covering architecture, Clarity, DeFi, NFTs, security, and advanced topics with optional timed exam mode.
-
-![Quiz Start](docs/screenshots/04-quiz-start.png)
-
-#### Knowledge Assessment — Quiz Question
-Each question features 4 multiple-choice options, category tags (DeFi, Architecture, Clarity, etc.), progress bar, and score tracking.
-
-![Quiz Question](docs/screenshots/05-quiz-question.png)
-
-#### Community Pulse — Trending Topics
-Live sentiment dashboard showing overall bullish/bearish meter, ranked trending topics (Dual Stacking, sBTC milestones, BitGo, Clarity 4 WASM, DeFAI) with hotness scores and category badges.
-
-![Sentiment Trending](docs/screenshots/06-sentiment-trending.png)
-
-#### Community Pulse — Live Metrics
-Real-time ecosystem data from Hiro Stacks API and CoinGecko: STX/BTC prices, block height (6.6M+), total transactions (22.5M+), mempool size, PoX cycle, STX locked, and growth highlights.
-
-![Live Metrics](docs/screenshots/07-live-metrics.png)
-
-#### dApp Showcase Directory
-Filterable directory of 36+ Stacks ecosystem applications across DeFi, NFT, Tools, Wallets, and Other categories with logos, descriptions, ratings, and direct links.
-
-![dApp Showcase](docs/screenshots/08-dapp-showcase.png)
+> Actual yield depends on treasury size, PoX cycle returns, and active user counts.
 
 ---
 
 ## Contact
 
-**Project:** The Architect — Stacks Ecosystem AI Mentor  
+**Project:** SMentor — Stacks Ecosystem AI Mentor  
 **Website:** [https://smentorai.lovable.app](https://smentorai.lovable.app)  
 **Email:** [your-email@example.com]  
 **Twitter/X:** [@your-handle]  
@@ -641,4 +795,4 @@ Filterable directory of 36+ Stacks ecosystem applications across DeFi, NFT, Tool
 
 ---
 
-*This proposal was prepared for the Stacks Grants Program. The Architect is an open educational platform dedicated to accelerating Stacks ecosystem adoption through AI-powered, interactive learning.*
+*This proposal was prepared for the Stacks Grants Program. SMentor is an open educational platform dedicated to accelerating Stacks ecosystem adoption through AI-powered, interactive learning and PoX-powered yield rewards.*
