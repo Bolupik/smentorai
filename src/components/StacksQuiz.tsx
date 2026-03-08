@@ -1162,6 +1162,7 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
           {timedMode ? "Start Timed Exam" : "Start Assessment"}
         </Button>
       </motion.div>
+      </GuestGate>
     );
   }
 
