@@ -675,8 +675,8 @@ const Dashboard = () => {
       <OnboardingModal
         open={showOnboarding}
         onComplete={() => {
-          if (user && !user.is_anonymous) {
-            localStorage.setItem(`email_onboarded_${user.id}`, "true");
+          if (user) {
+            localStorage.setItem(`onboarded_${user.id}`, "true");
           }
           setShowOnboarding(false);
         }}

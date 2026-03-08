@@ -370,9 +370,18 @@ const ProfileEditor = () => {
     ?? walletData?.bnsName?.[0]?.toUpperCase()
     ?? "?";
 
-  // Show nothing if completely unauthenticated
-  if (!user && !isWalletConnected) return null;
+  // Only block pure guests (no wallet, no email, just anonymous with nothing linked)
+  if (isGuest && !isWalletConnected) return <GuestGate feature="profile editing" />;
 
+  // Show nothing if completely unauthenticated (redirect handled by Dashboard)
+  if (!user && !isWalletConnected) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 gap-4 text-center">
+        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+        <p className="text-sm text-muted-foreground">Loading profile…</p>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -381,9 +390,6 @@ const ProfileEditor = () => {
       </div>
     );
   }
-
-  // Only block pure guests (no wallet, no email, just anonymous with nothing linked)
-  if (isGuest && !isWalletConnected) return <GuestGate feature="profile editing" />;
 
   return (
     <div className="space-y-4">
