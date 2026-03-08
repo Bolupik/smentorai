@@ -2,7 +2,7 @@
 
 ### AI-Powered Onboarding & Yield Rewards for the Stacks Ecosystem
 
-**Version 2.0 | March 2026 | 12-Month Plan**
+**Version 2.1 | March 2026 | 12-Month Plan**
 
 ---
 
@@ -10,75 +10,172 @@
 
 New users trying to join the Stacks ecosystem face four barriers:
 
-1. **Too complicated** — Concepts like Proof of Transfer, Clarity smart contracts, and sBTC have no simple explanations aimed at everyday people.
-2. **Information is everywhere** — Useful content is scattered across GitHub, Discord, Twitter, and blogs. There's no single place to learn.
+1. **Too complicated** — Concepts like Proof of Transfer, Clarity smart contracts, and sBTC have no simple, accessible explanations aimed at everyday people.
+2. **Information is scattered** — Useful content is spread across GitHub, Discord, Twitter/X, and various blogs. There is no single place to learn everything.
 3. **People leave** — Without guided help, most newcomers get overwhelmed and never come back.
 4. **No incentive to learn** — There is no financial reward for investing time and effort in learning about the Stacks ecosystem.
 
-**Bottom line:** Stacks has great technology, but not enough people understand it — and nothing currently pays them to try.
+**Bottom line:** Stacks has world-class technology but not enough people understand it — and nothing currently rewards them for trying.
 
 ---
 
 ## 2. Proposed Solution
 
-**SMentor** is an AI chatbot (powered by "Sammy") that teaches people about Stacks in plain, simple language — and rewards them with real yield for doing so.
+**SMentor** is an AI-powered interactive learning platform featuring **SAMMY THE AI** — a knowledgeable AI mentor that teaches Stacks in plain, adaptive language — and rewards learners with real Bitcoin yield for engaging.
 
-- Ask any question → get a clear answer from Sammy
-- Pick a topic → follow a guided lesson
-- Take a quiz → test what you learned, earn bonus yield
-- See live data → real-time STX prices and network stats
-- Browse dApps → discover what's built on Stacks
-- **Earn yield** → treasury STX stacked via PoX distributes BTC rewards weekly to learners
+| Action | Result |
+|--------|--------|
+| Ask any question | Get a clear, level-adapted answer from SAMMY |
+| Pick a topic | Follow one of 8 guided learning paths |
+| Take a quiz | Test knowledge across 50+ questions in 6 categories |
+| See live data | Real-time STX/BTC prices, block height, PoX cycle, mempool |
+| Browse dApps | Explore 36+ curated Stacks projects |
+| **Earn yield** *(Q1)* | Treasury STX stacked via PoX → BTC rewards distributed weekly |
 
-It works for beginners (even kids) and experienced users alike.
+The platform works for beginners (including children) through expert developers.
 
 ---
 
 ## 3. Key Beneficiaries
 
 | Who | How They Benefit |
-|---|---|
+|-----|-----------------|
 | **New users** | Learn Stacks without reading technical docs; earn yield while doing it |
 | **STX holders** | Understand stacking, yield, and ecosystem news; access PoX yield rewards |
-| **Developers** | Get code examples and Clarity explanations |
-| **Stacks projects** | Gain visibility through the dApp directory |
-| **Stacks Foundation** | More educated, incentivized users = stronger ecosystem |
+| **Developers** | Get Clarity code examples and architecture deep-dives |
+| **Stacks projects** | Gain visibility through the 36+ dApp showcase directory |
+| **Stacks Foundation** | More educated, incentivized users = stronger, more resilient ecosystem |
 
 ---
 
-## 4. Yield Generation & Reward System
+## 4. Platform Features
 
-### How It Works
+### 4.1 SAMMY THE AI — Chat Interface
 
-SMentor operates a **treasury** that stacks STX through the Stacks **Proof of Transfer (PoX)** mechanism. The BTC yield generated each cycle is distributed weekly to users based on their learning engagement.
+The core of SMentor is an intelligent conversational interface:
 
-> **The principal is never touched — only yield is distributed.**
+- **Streaming responses** via Server-Sent Events (SSE) for a real-time feel
+- **1,600+ lines** of curated system prompt covering all major Stacks topics
+- **Community knowledge injection** — approved knowledge base entries are dynamically included in the AI context
+- **Age-adaptive responses** — Kid, Teen, Adult, and Expert modes change language and complexity
+- **Auto-infographic generation** — complex topics trigger AI-generated visual explanations
+- **Voice narration** — text-to-speech for all responses
 
-### Weekly Yield Distribution
+**Topics the AI covers deeply:**
 
-| Tier | Weekly Points | Share of Weekly Yield |
-|------|:---:|:---:|
+| Domain | Key Areas |
+|--------|-----------|
+| Architecture | PoX, Nakamoto upgrade, Bitcoin finality, Signers, microblocks, Satoshi roadmap |
+| Clarity | Decidability, post-conditions, traits, SIP standards, principals, data types |
+| DeFi | Zest, Granite, Bitflow, ALEX, Arkadiko, Velar, Hermetica, USDCx (Circle) |
+| sBTC | Peg mechanism, deposit caps (150 BTC/day withdrawal), security partnerships |
+| NFTs | Gamma marketplace, The Guests, Leo Cats, BNS, SpaghettiPunk Club, Ordinals bridge |
+| Memecoins | WELSH, LEO, NOT, DOG, Teiko, PEPE, sAI — traded on Bitflow, Velar, ALEX |
+| Tools | BNS (bns.one), BoostX, Hiro Platform, STXTools, STX City, Stacks Explorer |
+| Wallets | Xverse, Leather, Asigna, Fordefi — security models and use cases |
+| Security | Smart contract audits, Immunefi bug bounty, Clarity safety, DeFi best practices |
+
+### 4.2 Interactive Quiz System
+
+50+ questions across 6 categories, each with detailed explanations and age-adapted simple explanations:
+
+| Category | Questions |
+|----------|:---------:|
+| Architecture & Consensus | 10 |
+| Clarity Language | 15 |
+| DeFi & sBTC | 10 |
+| NFTs | 5 |
+| Security | 5 |
+| Advanced | 5 |
+
+Features: optional timed mode, score persistence, category filtering, **weekly quiz yield bonus** for top performers.
+
+### 4.3 Community Knowledge Base
+
+A collaborative, moderated repository:
+
+- Users submit knowledge entries (topic, content, category, optional link and image)
+- Admin review pipeline: submit → review → approve/reject
+- Community upvote/downvote system to surface quality content
+- Threaded comments on entries
+- **Approved entries are dynamically injected into SAMMY's AI context** — creating a self-improving knowledge loop
+- Categories: General, NFTs, DeFi, Stacking, Clarity, sBTC, Security, Architecture
+
+### 4.4 Live Community Sentiment Dashboard
+
+Real-time ecosystem pulse:
+
+- **Live Metrics**: STX price, BTC price, block height, transactions, mempool, PoX cycle, STX locked, signers count — sourced from Hiro API and CoinGecko
+- **Trending Topics**: Dual Stacking, sBTC milestones, BitGo partnership, Clarity 4 WASM, DeFAI
+- **Auto-refresh** every 60 seconds
+- **Sentiment Meter**: community bullish/bearish indicator
+
+### 4.5 dApp Showcase — 36+ Projects
+
+Curated directory filterable by category:
+
+| Category | Projects |
+|----------|---------|
+| **DeFi** | Zest Protocol, Bitflow, ALEX, Arkadiko, Velar, Hermetica, Granite, FastPool, Brotocol, Charisma, STX City, Moonlabs |
+| **NFT** | Gamma, BNS Market, Boom, Tradeport |
+| **Wallets** | Xverse, Leather, Asigna, Ryder |
+| **Tools** | Hiro, STX Tools, BoostX, BlockSurvey, LunarCrush, STX20, STX Watch, Indexer, BNS One, SMentor AI |
+| **Other** | Sigle, FAK, Zero Authority DAO, Chess on Chain, Stone Zone, Deorganized, Skullcoin |
+
+Each entry shows: logo, tagline, description, highlights, rating, and external link.
+
+### 4.6 Gamification & Achievements
+
+- **8 topic progress tracking** with visual progress bar persisted in database
+- **Unlockable achievement badges** (Explorer, Scholar, DeFi Degen, etc.)
+- **Animated badge reveals** with spring physics
+- **Shareable achievements** via Twitter/X
+- **Profile achievement wall** showing earned badges across topics, quizzes, and contributions
+
+### 4.7 Age-Adaptive Learning Modes
+
+Selected once during onboarding — locked to prevent gaming the system:
+
+| Mode | Age | Style |
+|------|-----|-------|
+| **Kid Mode** | 6–10 | Simple, fun, emoji-rich explanations |
+| **Teen Mode** | 11–17 | Clear, engaging, relatable |
+| **Adult Mode** | 18+ | Detailed with real-world examples |
+| **Expert Mode** | Developers | Technical, precise, developer-focused |
+
+---
+
+## 5. Yield Generation & Reward System
+
+### Overview
+
+SMentor operates a **treasury** that stacks STX through the Stacks **Proof of Transfer (PoX)** mechanism, generating BTC yield every PoX cycle (~2 weeks). That yield — **never the principal** — is distributed weekly to platform participants based on engagement tier.
+
+### Weekly Yield Tiers
+
+| Tier | Weekly Points Required | Share of Weekly Yield |
+|------|:----------------------:|:---------------------:|
 | 🥇 **Gold** | 150+ pts | **50%** |
 | 🥈 **Silver** | 75–149 pts | **30%** |
 | 🥉 **Bronze** | 25–74 pts | **15%** |
 | 🏛️ **Platform** | N/A | **5%** (operations) |
 
-Each tier's yield is distributed **pro-rata** among all users in that tier for that week.
+Each tier's allocation is distributed **pro-rata** among all users in that tier for that week.
 
 ### Earning Points
 
 | Activity | Points |
-|----------|--------|
-| Daily AI chat session | +5 pts |
-| Topic explored | +10 pts |
-| Quiz completed | +20 pts |
-| Weekly quiz top 10 | +50 pts bonus |
-| Knowledge contribution (approved) | +30 pts |
-| 7-day streak bonus | +25 pts |
+|----------|:------:|
+| Daily AI chat session | +5 |
+| Topic explored | +10 |
+| Quiz completed | +20 |
+| Weekly quiz top 10 | +50 bonus |
+| Knowledge contribution approved | +30 |
+| 7-day streak | +25 |
 
 ### Weekly Quiz Yield Bonus
 
-Top performers in the weekly timed quiz event earn bonus yield on top of their tier share:
+Top performers in the weekly timed quiz earn **additional yield on top of their tier share**:
 
 | Result | Bonus |
 |--------|-------|
@@ -88,29 +185,97 @@ Top performers in the weekly timed quiz event earn bonus yield on top of their t
 
 Quiz bonuses are funded from the platform's 5% share — no dilution to tier holders.
 
+### Treasury Safety
+
+> **The principal is never touched — only yield is distributed.**
+
+- Treasury STX is stacked via audited PoX protocol
+- Smart contract V1 (Clarity) launches Q2
+- Independent audit before V2 deployment (Q3)
+- DAO governance handoff planned for Q4
+
 ---
 
-## 5. Roadmap (Quarterly)
+## 6. Technology Stack
 
-### Q0 — Foundation ✅ (Completed)
-- [x] AI chat with streaming responses (Sammy)
-- [x] 8 topic learning paths with progress tracking
-- [x] 50+ question quiz system
-- [x] Live metrics dashboard (STX price, block height, PoX cycle)
-- [x] dApp showcase (36+ projects)
-- [x] User accounts, achievements, and admin moderation
-- [x] Voice narration and AI-generated infographics
-- [x] Stacks wallet connect (Xverse/Leather) with onboarding flow
+### Frontend
 
-### Q1 — Engagement & Yield Foundation (Months 1–3)
-- [ ] PoX treasury launch — begin stacking and yield accumulation
-- [ ] Yield tier dashboard — in-app Gold/Silver/Bronze tracker
+| Tool | Role |
+|------|------|
+| **React 18** | UI framework |
+| **TypeScript** | Type safety |
+| **Vite** | Fast build tooling |
+| **Tailwind CSS** | Consistent styling |
+| **Framer Motion** | Smooth animations |
+| **shadcn/ui** | Component library |
+| **@stacks/connect** | Stacks wallet integration |
+| **react-markdown** | Chat message rendering |
+
+### Backend (Lovable Cloud)
+
+| Tool | Role |
+|------|------|
+| **PostgreSQL** | Profiles, progress, knowledge base |
+| **Edge Functions (Deno)** | AI chat, metrics, voice, infographics |
+| **Row Level Security** | Per-user data isolation |
+| **Auth** | Email/password + wallet connect |
+
+### Edge Functions
+
+| Function | Purpose |
+|----------|---------|
+| `defi-chat` | SAMMY streaming AI engine (SSE) |
+| `stacks-metrics` | Aggregates Hiro API + CoinGecko |
+| `text-to-speech` | Voice narration |
+| `generate-infographic` | AI visual generation |
+| `review-contribution` | Knowledge base moderation |
+
+### External APIs
+
+| Service | Data |
+|---------|------|
+| **Hiro Stacks API** | Block height, transactions, mempool, PoX cycle, STX locked, signers |
+| **CoinGecko** | STX/BTC price, market cap, 24h volume |
+
+### Database Schema
+
+| Table | Purpose |
+|-------|---------|
+| `profiles` | User data: display name, username, avatar, age level |
+| `topic_progress` | Per-user topic exploration state |
+| `knowledge_base` | Community entries (approved/pending/rejected) |
+| `knowledge_votes` | Upvote/downvote per entry |
+| `knowledge_comments` | Threaded discussions |
+| `user_roles` | Admin/moderator/user RBAC |
+
+---
+
+## 7. Roadmap
+
+### ✅ Q0 — Foundation (Completed, Live)
+- [x] SAMMY AI chat with streaming SSE
+- [x] 8 topic learning paths with persistent DB progress tracking
+- [x] 50+ question quiz with timed mode and explanations
+- [x] Live metrics dashboard (Hiro + CoinGecko, 60s refresh)
+- [x] 36+ dApp showcase with category filtering
+- [x] Email + Stacks wallet authentication
+- [x] Age-adaptive modes (locked after onboarding)
+- [x] Achievement badges and profile achievement wall
+- [x] Community knowledge base with moderation pipeline
+- [x] Voice narration (text-to-speech edge function)
+- [x] AI-generated infographics
+- [x] Admin panel with role-based content moderation
+
+### 🔄 Q1 — Engagement & Yield Foundation (Months 1–3)
+- [ ] PoX treasury launch
+- [ ] In-app Gold/Silver/Bronze yield tier dashboard
 - [ ] Weekly quiz events with yield bonuses
 - [ ] Leaderboard system
 - [ ] Structured learning paths (Beginner → Intermediate → Advanced)
 - [ ] Bug fixes and performance optimization
 
 **Q1 KPI Targets:**
+
 | Metric | Target |
 |--------|--------|
 | New Installs | 400 |
@@ -118,7 +283,7 @@ Quiz bonuses are funded from the platform's 5% share — no dilution to tier hol
 | Wallet Connects | 40 |
 | Course Finishers | 60 |
 
-### Q2 — Growth & Integration (Months 4–6)
+### 🔮 Q2 — Growth & Integration (Months 4–6)
 - [ ] Multi-language support (Spanish, Portuguese, Turkish)
 - [ ] On-chain achievement NFTs (SIP-009)
 - [ ] DeFiLlama TVL integration
@@ -127,6 +292,7 @@ Quiz bonuses are funded from the platform's 5% share — no dilution to tier hol
 - [ ] PWA / mobile-optimized experience
 
 **Q2 KPI Targets:**
+
 | Metric | Target |
 |--------|--------|
 | New Installs (cumulative) | 1,200 |
@@ -134,14 +300,15 @@ Quiz bonuses are funded from the platform's 5% share — no dilution to tier hol
 | Wallet Connects (cumulative) | 120 |
 | Course Finishers (cumulative) | 200 |
 
-### Q3 — Scale & Sustainability (Months 7–9)
-- [ ] Public API for partner embedding (embeddable Sammy widget)
+### 🔮 Q3 — Scale & Sustainability (Months 7–9)
+- [ ] Public API — embeddable SAMMY widget for partner sites
 - [ ] Builder spotlight features
 - [ ] Yield smart contract V2 (audited)
 - [ ] DAO governance preparation
-- [ ] Analytics dashboard
+- [ ] Analytics dashboard for platform insights
 
 **Q3 KPI Targets:**
+
 | Metric | Target |
 |--------|--------|
 | Monthly Active Users | 500 |
@@ -149,8 +316,8 @@ Quiz bonuses are funded from the platform's 5% share — no dilution to tier hol
 | Knowledge Base Entries | 200+ |
 | Partner Integrations | 5+ |
 
-### Q4 — Long-Term Sustainability (Months 10–12)
-- [ ] Stacks Academy Certification (on-chain NFT certificates)
+### 🔮 Q4 — Long-Term Sustainability (Months 10–12)
+- [ ] Stacks Academy Certification (on-chain NFT certificates, SIP-009)
 - [ ] Premium subscription tier
 - [ ] DAO treasury handoff
 - [ ] Native mobile app (iOS/Android)
@@ -158,6 +325,7 @@ Quiz bonuses are funded from the platform's 5% share — no dilution to tier hol
 - [ ] Follow-up grant application
 
 **Q4 KPI Targets:**
+
 | Metric | Target |
 |--------|--------|
 | Monthly Active Users | 1,000+ |
@@ -167,75 +335,31 @@ Quiz bonuses are funded from the platform's 5% share — no dilution to tier hol
 
 ---
 
-## 6. Technology Stack
-
-### What We Build With
-
-| Tool | What It Does |
-|---|---|
-| **React** | Builds the user interface |
-| **TypeScript** | Catches code errors before users see them |
-| **Vite** | Makes the app load fast |
-| **Tailwind CSS** | Styles everything consistently |
-| **Framer Motion** | Adds smooth animations |
-| **shadcn/ui** | Pre-built buttons, forms, and cards |
-| **@stacks/connect** | Stacks wallet integration |
-
-### Where Data Lives
-
-| Tool | What It Does |
-|---|---|
-| **PostgreSQL** | Stores user profiles, progress, and content |
-| **Edge Functions** | Runs AI chat, fetches live data, generates audio |
-| **Row Level Security** | Keeps each user's data private |
-
-### External Services
-
-| Service | What It Does |
-|---|---|
-| **Hiro Stacks API** | Live blockchain data (blocks, transactions, stacking) |
-| **CoinGecko** | STX price and market data |
-| **AI Models** | Powers Sammy the chat assistant |
-| **PoX Protocol** | Treasury stacking for yield generation |
-
-### Backend Functions
-
-| Function | Purpose |
-|---|---|
-| `defi-chat` | AI conversation engine (Sammy) |
-| `stacks-metrics` | Fetches live network stats |
-| `text-to-speech` | Voice narration |
-| `generate-infographic` | Visual explanations |
-| `review-contribution` | Content moderation |
-
----
-
-## 7. KPIs & Success Metrics
-
-Based on market analysis (adjusted for realistic organic growth, 15% monthly churn, and actual wallet adoption rates):
+## 8. KPIs & Success Metrics
 
 | Metric | Month 1 | Month 6 | Note |
-|---|:---:|:---:|---|
-| **New Installs** | 400 | 1,200 | No hype spikes; organic only |
-| **MAU** | 150 | 500 | ~15% monthly churn assumed |
-| **Wallet Connects** | 40 | 120 | Hardcore users only |
+|--------|:-------:|:-------:|------|
+| **New Installs** | 400 | 1,200 | Organic growth, no hype spikes assumed |
+| **MAU** | 150 | 500 | ~15% monthly churn modeled |
+| **Wallet Connects** | 40 | 120 | Committed users only |
 | **Course Finishers** | 60 | 200 | Focus on 1–2 key modules |
 
 ---
 
-## 8. Summary
+## 9. Summary
 
 | | |
 |---|---|
 | **Problem** | Stacks is hard to learn; no incentive exists to try |
-| **Solution** | AI mentor Sammy that teaches Stacks and rewards learners with PoX yield |
-| **Yield Model** | Treasury STX stacked via PoX → yield split: Gold 50%, Silver 30%, Bronze 15%, Platform 5% |
+| **Solution** | SAMMY THE AI teaches Stacks at any level and rewards learners with PoX yield |
+| **Yield Model** | Treasury STX stacked via PoX → BTC yield split: Gold 50%, Silver 30%, Bronze 15%, Platform 5% |
 | **Principal Safety** | Only yield distributed — treasury principal never touched |
-| **Who benefits** | New users, holders, developers, projects, the Foundation |
-| **Tech** | React + PostgreSQL + AI + Stacks APIs + Clarity yield contracts |
+| **Who Benefits** | New users, holders, developers, ecosystem projects, Stacks Foundation |
+| **Tech** | React 18 + PostgreSQL + AI + Hiro/CoinGecko APIs + Clarity yield contracts |
+| **Status** | Live in production at [smentorai.lovable.app](https://smentorai.lovable.app) |
 
 ---
 
-**Website:** [smentorai.lovable.app](https://smentorai.lovable.app) | **AI:** Sammy
+**Website:** [smentorai.lovable.app](https://smentorai.lovable.app) | **AI:** SAMMY THE AI | **Built on:** [Stacks](https://stacks.org/)
 
 *Last updated: March 2026*
