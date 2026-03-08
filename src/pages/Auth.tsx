@@ -100,8 +100,8 @@ const Auth = () => {
           });
           return;
         }
-        toast({ title: "Welcome back!", description: "You've successfully logged in." });
-        navigate("/");
+      toast({ title: "Welcome back!", description: "You've successfully logged in." });
+        navigate("/dashboard");
       } else {
         const redirectUrl = `${window.location.origin}/onboarding`;
 
