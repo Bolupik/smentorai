@@ -83,14 +83,14 @@ const Footer = () => {
 
           {/* Resources Column */}
           <div className="flex flex-col gap-3">
-            <h3 className="text-sm font-semibold text-foreground tracking-wide uppercase">Resources</h3>
+            <h3 className="text-sm font-semibold text-foreground tracking-wide uppercase">SMentor Resources</h3>
             <ul className="flex flex-col gap-2">
               {[
-                { label: "Stacks.org", url: "https://stacks.org" },
-                { label: "Hiro Docs", url: "https://docs.hiro.so" },
-                { label: "Stacks Explorer", url: "https://explorer.stacks.co" },
-                { label: "Leather Wallet", url: "https://leather.io" },
-                { label: "Xverse Wallet", url: "https://www.xverse.app" },
+                { label: "About SMentor", url: "https://x.com/Smentorai" },
+                { label: "Grant Proposal", url: "https://x.com/Smentorai" },
+                { label: "Whitepaper", url: "https://x.com/Smentorai" },
+                { label: "Privacy Policy", url: "https://x.com/Smentorai" },
+                { label: "Terms of Service", url: "https://x.com/Smentorai" },
               ].map((item) => (
                 <li key={item.label}>
                   <a
