@@ -226,13 +226,25 @@ export default function DailyQuizPanel() {
     ).length;
     setFinished(true);
 
+    const payload = {
+      user_id: user.id,
+      quiz_date: today,
+      score,
+      total: quiz.questions.length,
+      answers,
+    };
+
     try {
-      await supabase.from("daily_quiz_results").upsert(
-        { user_id: user.id, quiz_date: today, score, total: quiz.questions.length, answers },
-        { onConflict: "user_id,quiz_date" }
-      );
+      const { error } = await supabase
+        .from("daily_quiz_results")
+        .upsert(payload, { onConflict: "user_id,quiz_date" });
+      if (error) throw error;
     } catch (err) {
-      console.error("Save result error:", err);
+      console.warn("Save result error — queuing for later:", err);
+      enqueue({ type: "upsert_quiz_result", payload });
+      toast.warning("You're offline. Your quiz result will be saved when you reconnect.", {
+        duration: 5000,
+      });
     }
   };
 
