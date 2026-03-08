@@ -39,9 +39,18 @@ const ChatInterface = () => {
     () => THINKING_PHRASES[Math.floor(Math.random() * THINKING_PHRASES.length)]
   );
 
-  // Fetch age_level from profile on mount
+  // Fetch age_level from profile on mount (read-only — set during onboarding)
   useEffect(() => {
     const fetchAgeLevel = async () => {
+      // Wallet user: read from localStorage
+      const walletKey = Object.keys(localStorage).find(
+        (k) => k.startsWith("stacks_age_level_")
+      );
+      if (walletKey) {
+        const level = localStorage.getItem(walletKey) as AgeLevel | null;
+        if (level) { setAgeLevel(level); return; }
+      }
+      // Email user: read from DB
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) return;
       const { data } = await supabase
