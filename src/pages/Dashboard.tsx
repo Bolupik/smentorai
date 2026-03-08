@@ -40,6 +40,7 @@ const Dashboard = () => {
   const [showAdmin, setShowAdmin] = useState(false);
   const [showSentiment, setShowSentiment] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
   const { isAuthenticated: isWalletConnected, userData: walletData, isLoading: isWalletLoading } = useStacksAuth();
