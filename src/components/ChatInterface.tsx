@@ -207,6 +207,7 @@ const ChatInterface = () => {
   const handleSend = async (messageText?: string) => {
     const textToSend = messageText || input.trim();
     if (!textToSend || isLoading) return;
+    addToHistory(textToSend);
     const userMessage: Message = { role: "user", content: textToSend };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
