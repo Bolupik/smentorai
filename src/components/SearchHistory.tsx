@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { History, X, Trash2, Clock, Search } from "lucide-react";
 import { useSearchHistory } from "@/hooks/useSearchHistory";
@@ -11,7 +12,6 @@ const SearchHistory = ({ onSelectQuery }: SearchHistoryProps) => {
   const { history, removeFromHistory, clearHistory } = useSearchHistory();
   const [isOpen, setIsOpen] = useState(false);
 
-  // Need to import useState separately
   if (!isOpen) {
     return (
       <motion.button
@@ -33,13 +33,15 @@ const SearchHistory = ({ onSelectQuery }: SearchHistoryProps) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       className="fixed inset-0 z-50 flex items-start justify-center pt-16 px-4"
-      onClick={(e) => { if (e.target === e.currentTarget) setIsOpen(false); }}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-background/70 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
+      <div
+        className="absolute inset-0 bg-background/70 backdrop-blur-sm"
+        onClick={() => setIsOpen(false)}
+      />
 
       <motion.div
         initial={{ opacity: 0, y: -12 }}
@@ -76,12 +78,17 @@ const SearchHistory = ({ onSelectQuery }: SearchHistoryProps) => {
         </div>
 
         {/* Body */}
-        <div className="max-h-96 overflow-y-auto" style={{ scrollbarWidth: "thin", scrollbarColor: "hsl(var(--border)) transparent" }}>
+        <div
+          className="max-h-96 overflow-y-auto"
+          style={{ scrollbarWidth: "thin", scrollbarColor: "hsl(var(--border)) transparent" }}
+        >
           {history.length === 0 ? (
             <div className="px-5 py-10 text-center">
               <Search className="w-8 h-8 text-muted-foreground/30 mx-auto mb-3" />
               <p className="text-sm text-muted-foreground">No searches yet</p>
-              <p className="text-xs text-muted-foreground/60 mt-1">Your chat questions will appear here</p>
+              <p className="text-xs text-muted-foreground/60 mt-1">
+                Your chat questions will appear here
+              </p>
             </div>
           ) : (
             <ul className="py-2">
@@ -100,8 +107,10 @@ const SearchHistory = ({ onSelectQuery }: SearchHistoryProps) => {
                   >
                     <Clock className="w-3.5 h-3.5 text-muted-foreground/50 flex-shrink-0 mt-0.5" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-foreground leading-snug line-clamp-2">{item.query}</p>
-                      <p className="text-[11px] text-muted-foreground/60 mt-0.5">
+                      <p className="text-sm text-foreground leading-snug line-clamp-2 text-left">
+                        {item.query}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground/60 mt-0.5 text-left">
                         {formatDistanceToNow(item.timestamp, { addSuffix: true })}
                       </p>
                     </div>
@@ -125,6 +134,4 @@ const SearchHistory = ({ onSelectQuery }: SearchHistoryProps) => {
   );
 };
 
-// Re-export with useState inside component properly
-import { useState } from "react";
 export default SearchHistory;
