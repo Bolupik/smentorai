@@ -8,13 +8,14 @@ export const useAdminRole = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkAdminRole = async () => {
-      if (!user) {
-        setIsAdmin(false);
-        setLoading(false);
-        return;
-      }
+    // Anonymous/wallet users are never admins — skip the DB call entirely
+    if (!user || user.is_anonymous) {
+      setIsAdmin(false);
+      setLoading(false);
+      return;
+    }
 
+    const checkAdminRole = async () => {
       try {
         const { data, error } = await supabase
           .from('user_roles')
@@ -26,7 +27,7 @@ export const useAdminRole = () => {
         if (error) throw error;
         setIsAdmin(!!data);
       } catch (error) {
-        console.error('Error checking admin role:', error);
+        // Silently fail — non-admins don't need to see this error
         setIsAdmin(false);
       } finally {
         setLoading(false);
@@ -34,7 +35,7 @@ export const useAdminRole = () => {
     };
 
     checkAdminRole();
-  }, [user]);
+  }, [user?.id, user?.is_anonymous]);
 
   return { isAdmin, loading };
 };
