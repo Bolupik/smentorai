@@ -676,9 +676,8 @@ const Dashboard = () => {
       <OnboardingModal
         open={showOnboarding}
         onComplete={() => {
-          if (user) {
-            localStorage.setItem(`onboarded_${user.id}`, "true");
-          }
+          // OnboardingModal already persists the onboarded_ key for the current
+          // user (email or wallet anon session). We just close the modal here.
           setShowOnboarding(false);
         }}
       />
