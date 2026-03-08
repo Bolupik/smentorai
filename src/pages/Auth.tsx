@@ -10,6 +10,7 @@ import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, User, Mail, CheckCircle, Walle
 import aiCharacter from "@/assets/ai-character.png";
 import { z } from "zod";
 import { useStacksAuth } from "@/hooks/useStacksAuth";
+import { useAuth } from "@/contexts/AuthContext";
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
