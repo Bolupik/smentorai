@@ -15,6 +15,7 @@ import { User, LogOut, Trophy, Wallet, UserCircle } from "lucide-react";
 interface UserMenuProps {
   exploredCount?: number;
   totalTopics?: number;
+  onOpenProfile?: () => void;
 }
 
 const UserMenu = ({ exploredCount = 0, totalTopics = 0 }: UserMenuProps) => {
