@@ -7,15 +7,15 @@ import { Button } from "./ui/button";
 import { Lock, UserPlus, Wallet } from "lucide-react";
 
 interface GuestGateProps {
-  children: ReactNode;
+  children?: ReactNode;
   /** Short label for what is being unlocked, e.g. "submit quiz answers" */
   featureLabel?: string;
 }
 
 /**
  * Wraps any feature and replaces it with an upgrade prompt when the current
- * user is an anonymous (guest) session. Authenticated email users and
- * wallet-connected users pass through without a gate.
+ * user is an anonymous (guest) session. Can also be used standalone (no children)
+ * as a full wall. Authenticated email users and wallet-connected users pass through.
  */
 const GuestGate = ({ children, featureLabel = "use this feature" }: GuestGateProps) => {
   const { user } = useAuth();
