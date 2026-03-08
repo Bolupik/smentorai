@@ -12,6 +12,7 @@ import AdminPanel from "@/components/AdminPanel";
 import ProfileEditor from "@/components/ProfileEditor";
 import DappShowcase from "@/components/DappShowcase";
 import { CommunitySentiment } from "@/components/CommunitySentiment";
+import OnboardingModal from "@/components/OnboardingModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { useStacksAuth } from "@/hooks/useStacksAuth";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
@@ -31,16 +32,17 @@ const pageTransition = {
   duration: 0.5
 };
 
-const Index = () => {
+const Dashboard = () => {
   const [showChat, setShowChat] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
   const [showKnowledge, setShowKnowledge] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
   const [showSentiment, setShowSentiment] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
-  const { isAuthenticated: isWalletConnected, isLoading: isWalletLoading } = useStacksAuth();
+  const { isAuthenticated: isWalletConnected, userData: walletData, isLoading: isWalletLoading } = useStacksAuth();
   const { exploredCount } = useTopicProgressDB();
   const { isAdmin } = useAdminRole();
 
