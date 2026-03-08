@@ -23,6 +23,8 @@ import KnowledgeComments from "./KnowledgeComments";
 import ContributorBadge from "./ContributorBadge";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useIsGuest } from "@/hooks/useIsGuest";
+import GuestGate from "./GuestGate";
 import { toast } from "sonner";
 import {
   Select,
