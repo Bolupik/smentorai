@@ -297,7 +297,8 @@ const ProfileEditor = () => {
   const fetchProfile = async () => {
     if (!user) return;
     try {
-      const { data, error } = await supabase
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (supabase as any)
         .from("profiles")
         .select("display_name, avatar_url, username, stacks_address, bns_name")
         .eq("user_id", user.id)
@@ -308,8 +309,8 @@ const ProfileEditor = () => {
           display_name: data.display_name,
           avatar_url: data.avatar_url,
           username: data.username,
-          stacks_address: (data as Profile).stacks_address,
-          bns_name: (data as Profile).bns_name,
+          stacks_address: data.stacks_address ?? null,
+          bns_name: data.bns_name ?? null,
         });
         setDisplayName(data.display_name || "");
       }
