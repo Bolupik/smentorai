@@ -56,6 +56,24 @@ const Dashboard = () => {
     }
   }, [isAuthorized, authLoading, navigate]);
 
+  // Show onboarding modal for first-time users
+  useEffect(() => {
+    if (authLoading || !isAuthorized) return;
+
+    if (isWalletConnected && walletData?.address) {
+      const ageKey = `stacks_age_level_${walletData.address}`;
+      if (!localStorage.getItem(ageKey)) {
+        setShowOnboarding(true);
+      }
+    } else if (user && !user.is_anonymous) {
+      // Email user: check if profile has age_level set (handled by onboarding modal internally)
+      const onboardedKey = `email_onboarded_${user.id}`;
+      if (!localStorage.getItem(onboardedKey)) {
+        setShowOnboarding(true);
+      }
+    }
+  }, [authLoading, isAuthorized, isWalletConnected, walletData, user]);
+
   // Show loading while checking auth
   if (authLoading) {
     return (
