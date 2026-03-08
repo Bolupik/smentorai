@@ -10,9 +10,11 @@ import AchievementBadges from "./AchievementBadges";
 import GetStartedCTA from "./GetStartedCTA";
 import NFTExplorer from "./NFTExplorer";
 import AgeSelector, { type AgeLevel } from "./AgeSelector";
+import SearchHistory from "./SearchHistory";
 import aiCharacter from "@/assets/ai-character.png";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
 import { useAchievements } from "@/hooks/useAchievements";
+import { useSearchHistory } from "@/hooks/useSearchHistory";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
@@ -33,6 +35,7 @@ const ChatInterface = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [ageLevel, setAgeLevel] = useState<AgeLevel>("adult");
+  const { addToHistory } = useSearchHistory();
   const [showNFTExplorer, setShowNFTExplorer] = useState(false);
   const [showScrollDown, setShowScrollDown] = useState(false);
   const [thinkingPhrase] = useState(
@@ -204,6 +207,7 @@ const ChatInterface = () => {
   const handleSend = async (messageText?: string) => {
     const textToSend = messageText || input.trim();
     if (!textToSend || isLoading) return;
+    addToHistory(textToSend);
     const userMessage: Message = { role: "user", content: textToSend };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
@@ -310,8 +314,9 @@ const ChatInterface = () => {
                   {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                 </Button>
               </div>
-              <div className="mt-2.5 pl-1">
+              <div className="mt-2.5 pl-1 flex items-center justify-between">
                 <AgeSelector value={ageLevel} onChange={setAgeLevel} locked />
+                <SearchHistory onSelectQuery={(q) => { setInput(q); }} />
               </div>
             </motion.div>
 
@@ -412,9 +417,10 @@ const ChatInterface = () => {
           className="border-t border-border/25 bg-background/98 backdrop-blur-lg"
         >
           <div className="max-w-4xl mx-auto px-4 md:px-6 py-4">
-            {/* Age selector row */}
-            <div className="mb-3">
+            {/* Age selector + history row */}
+            <div className="mb-3 flex items-center justify-between gap-2">
               <AgeSelector value={ageLevel} onChange={setAgeLevel} locked />
+              <SearchHistory onSelectQuery={(q) => { setInput(q); }} />
             </div>
 
             {/* Input row */}
