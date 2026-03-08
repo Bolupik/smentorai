@@ -38,7 +38,7 @@ const ConnectionErrorBanner = () => {
               }}
             >
               <img
-                src={sammyHazard}
+                src={sammyMascot}
                 alt="Sammy warning"
                 className="w-full h-full object-contain drop-shadow-[0_0_6px_hsl(0_85%_50%/0.6)]"
               />
