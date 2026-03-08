@@ -18,8 +18,10 @@ import {
   Sparkles,
   ThumbsUp,
   ThumbsDown,
-  RefreshCw
+  RefreshCw,
+  BarChart3
 } from "lucide-react";
+import AdminAnalytics from "./AdminAnalytics";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
