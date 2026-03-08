@@ -382,7 +382,8 @@ const ProfileEditor = () => {
     );
   }
 
-  if (isGuest) return <GuestGate feature="profile editing" />;
+  // Only block pure guests (no wallet, no email, just anonymous with nothing linked)
+  if (isGuest && !isWalletConnected) return <GuestGate feature="profile editing" />;
 
   return (
     <div className="space-y-4">
