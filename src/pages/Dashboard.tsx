@@ -595,4 +595,4 @@ const Dashboard = () => {
   );
 };
 
-export default Index;
+export default Dashboard;
