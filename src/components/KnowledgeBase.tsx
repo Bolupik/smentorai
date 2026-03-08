@@ -512,8 +512,9 @@ const KnowledgeBase = () => {
                   </div>
                 </motion.div>
               )}
-
-        </AnimatePresence>
+            </AnimatePresence>
+          </>
+        )}
       </motion.div>
 
       {/* My Submissions */}
