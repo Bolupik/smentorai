@@ -32,9 +32,9 @@ const Auth = () => {
   const [isWalletLoading, setIsWalletLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { signIn: stacksSignIn } = useStacksAuth();
+  const { signIn: stacksSignIn, isAuthenticated: isWalletAuthenticated } = useStacksAuth();
   const { user } = useAuth();
-  const isAuthenticated = !!user;
+  const isAuthenticated = !!user || isWalletAuthenticated;
 
   // If already authenticated, redirect to home
   useEffect(() => {
