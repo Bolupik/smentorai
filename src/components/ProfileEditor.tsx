@@ -174,6 +174,7 @@ const LinkedAccounts = ({
 const ProfileEditor = () => {
   const { user } = useAuth();
   const { isAuthenticated: isWalletConnected, userData: walletData, signIn: connectWallet, truncateAddress } = useStacksAuth();
+  const isGuest = useIsGuest();
 
   const [profile, setProfile] = useState<Profile>({ display_name: null, avatar_url: null, username: null });
   const [displayName, setDisplayName] = useState("");
