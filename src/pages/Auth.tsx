@@ -56,7 +56,7 @@ const Auth = () => {
         return;
       }
       toast({ title: "Welcome, Guest", description: "You may explore freely. Create an account to preserve your progress." });
-      navigate("/dashboard");
+      navigate("/");
     } catch {
       toast({ title: "Error", description: "An unexpected error occurred. Please try again.", variant: "destructive" });
     } finally {
