@@ -416,9 +416,10 @@ const ChatInterface = () => {
           className="border-t border-border/25 bg-background/98 backdrop-blur-lg"
         >
           <div className="max-w-4xl mx-auto px-4 md:px-6 py-4">
-            {/* Age selector row */}
-            <div className="mb-3">
+            {/* Age selector + history row */}
+            <div className="mb-3 flex items-center justify-between gap-2">
               <AgeSelector value={ageLevel} onChange={setAgeLevel} locked />
+              <SearchHistory onSelectQuery={(q) => { setInput(q); }} />
             </div>
 
             {/* Input row */}
