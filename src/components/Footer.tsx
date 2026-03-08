@@ -87,7 +87,6 @@ const Footer = () => {
             <ul className="flex flex-col gap-2">
               {[
                 { label: "About SMentor", url: "https://x.com/Smentorai" },
-                { label: "Grant Proposal", url: "https://x.com/Smentorai" },
                 { label: "Whitepaper", url: "https://x.com/Smentorai" },
                 { label: "Privacy Policy", url: "https://x.com/Smentorai" },
                 { label: "Terms of Service", url: "https://x.com/Smentorai" },
