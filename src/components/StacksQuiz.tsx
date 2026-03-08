@@ -1011,6 +1011,10 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
       setScore(s => Math.max(0, s - 1));
     }
     setAnsweredQuestions(prev => new Set(prev).add(currentQuestion));
+    // Track guest quiz usage
+    if (isGuest && !answeredQuestions.has(currentQuestion)) {
+      incrementGuestQuiz();
+    }
   };
 
   const handleNext = () => {
