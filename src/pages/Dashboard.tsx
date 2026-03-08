@@ -587,6 +587,11 @@ const Dashboard = () => {
               <DappShowcase />
             </div>
 
+            {/* Footer */}
+            <div className="relative z-40">
+              <Footer />
+            </div>
+
             {/* Subtle particles */}
             <div className="absolute inset-0 pointer-events-none z-20">
               {[...Array(15)].map((_, i) => (
