@@ -23,6 +23,8 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useStacksAuth } from "@/hooks/useStacksAuth";
+import { useIsGuest } from "@/hooks/useIsGuest";
+import GuestGate from "@/components/GuestGate";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -172,6 +174,7 @@ const LinkedAccounts = ({
 const ProfileEditor = () => {
   const { user } = useAuth();
   const { isAuthenticated: isWalletConnected, userData: walletData, signIn: connectWallet, truncateAddress } = useStacksAuth();
+  const isGuest = useIsGuest();
 
   const [profile, setProfile] = useState<Profile>({ display_name: null, avatar_url: null, username: null });
   const [displayName, setDisplayName] = useState("");
@@ -265,6 +268,10 @@ const ProfileEditor = () => {
         <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
       </div>
     );
+  }
+
+  if (isGuest) {
+    return <GuestGate feature="profile editing" />;
   }
 
   return (

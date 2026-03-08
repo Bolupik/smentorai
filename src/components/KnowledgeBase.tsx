@@ -23,6 +23,8 @@ import KnowledgeComments from "./KnowledgeComments";
 import ContributorBadge from "./ContributorBadge";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useIsGuest } from "@/hooks/useIsGuest";
+import GuestGate from "./GuestGate";
 import { toast } from "sonner";
 import {
   Select,
@@ -64,6 +66,7 @@ const CATEGORIES = [
 
 const KnowledgeBase = () => {
   const { user } = useAuth();
+  const isGuest = useIsGuest();
   const [entries, setEntries] = useState<KnowledgeEntry[]>([]);
   const [myEntries, setMyEntries] = useState<KnowledgeEntry[]>([]);
   const [userVotes, setUserVotes] = useState<UserVote[]>([]);
@@ -238,8 +241,8 @@ const KnowledgeBase = () => {
   };
 
   const handleVote = async (entryId: string, voteType: 'up' | 'down') => {
-    if (!user) {
-      toast.error("Sign in to vote on contributions");
+    if (!user || isGuest) {
+      toast.error("Create an account to vote on contributions");
       return;
     }
 
@@ -365,147 +368,153 @@ const KnowledgeBase = () => {
 
       {/* Contribution Form Toggle */}
       <motion.div className="mb-6">
-        <Button
-          variant="outline"
-          className="w-full justify-between"
-          onClick={() => setShowForm(!showForm)}
-        >
-          <span className="flex items-center gap-2">
-            <Lightbulb className="w-4 h-4" />
-            Share Your Knowledge
-          </span>
-          {showForm ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </Button>
-
-        <AnimatePresence>
-          {showForm && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="overflow-hidden"
+        {isGuest ? (
+          <GuestGate feature="knowledge contributions" />
+        ) : (
+          <>
+            <Button
+              variant="outline"
+              className="w-full justify-between"
+              onClick={() => setShowForm(!showForm)}
             >
-              <div className="pt-4 space-y-4">
-                {/* Category Selection */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Category
-                  </label>
-                  <Select value={newCategory} onValueChange={setNewCategory}>
-                    <SelectTrigger className="bg-background">
-                      <SelectValue placeholder="Select a category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {CATEGORIES.map(cat => (
-                        <SelectItem key={cat.value} value={cat.value}>
-                          {cat.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+              <span className="flex items-center gap-2">
+                <Lightbulb className="w-4 h-4" />
+                Share Your Knowledge
+              </span>
+              {showForm ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </Button>
 
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Topic
-                  </label>
-                  <Input
-                    placeholder="e.g., Clarity Best Practices, sBTC Integration..."
-                    value={newTopic}
-                    onChange={(e) => setNewTopic(e.target.value)}
-                    className="bg-background"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Knowledge Content
-                  </label>
-                  <Textarea
-                    placeholder="Share your insights, explanations, or discoveries about the Stacks ecosystem..."
-                    value={newContent}
-                    onChange={(e) => setNewContent(e.target.value)}
-                    className="bg-background min-h-[120px]"
-                  />
-                </div>
-
-                {/* Link URL Input */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block flex items-center gap-2">
-                    <Link2 className="w-4 h-4" />
-                    Reference Link (optional)
-                  </label>
-                  <Input
-                    placeholder="https://example.com/article"
-                    value={newLinkUrl}
-                    onChange={(e) => setNewLinkUrl(e.target.value)}
-                    className="bg-background"
-                    type="url"
-                  />
-                </div>
-
-                {/* Image Upload */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block flex items-center gap-2">
-                    <ImageIcon className="w-4 h-4" />
-                    Attach Image (optional)
-                  </label>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/jpeg,image/png,image/gif,image/webp"
-                    onChange={handleImageSelect}
-                    className="hidden"
-                  />
-                  
-                  {imagePreview ? (
-                    <div className="relative rounded-lg overflow-hidden border border-border">
-                      <img 
-                        src={imagePreview} 
-                        alt="Preview" 
-                        className="w-full max-h-48 object-cover"
-                      />
-                      <button
-                        onClick={clearImage}
-                        className="absolute top-2 right-2 p-1 bg-background/80 rounded-full hover:bg-background transition-colors"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ) : (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="w-full"
-                    >
-                      <ImageIcon className="w-4 h-4 mr-2" />
-                      Choose Image
-                    </Button>
-                  )}
-                  <p className="text-xs text-muted-foreground mt-1">Max 5MB. JPG, PNG, GIF, or WebP.</p>
-                </div>
-
-                <Button
-                  onClick={handleSubmit}
-                  disabled={isSubmitting || !newTopic.trim() || !newContent.trim()}
-                  className="w-full gap-2"
+            <AnimatePresence>
+              {showForm && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="overflow-hidden"
                 >
-                  {isSubmitting ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Send className="w-4 h-4" />
-                  )}
-                  Submit for Review
-                </Button>
+                  <div className="pt-4 space-y-4">
+                    {/* Category Selection */}
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block">
+                        Category
+                      </label>
+                      <Select value={newCategory} onValueChange={setNewCategory}>
+                        <SelectTrigger className="bg-background">
+                          <SelectValue placeholder="Select a category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {CATEGORIES.map(cat => (
+                            <SelectItem key={cat.value} value={cat.value}>
+                              {cat.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
 
-                <p className="text-xs text-muted-foreground text-center">
-                  Submissions are reviewed before being added to Sammy's knowledge base
-                </p>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block">
+                        Topic
+                      </label>
+                      <Input
+                        placeholder="e.g., Clarity Best Practices, sBTC Integration..."
+                        value={newTopic}
+                        onChange={(e) => setNewTopic(e.target.value)}
+                        className="bg-background"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block">
+                        Knowledge Content
+                      </label>
+                      <Textarea
+                        placeholder="Share your insights, explanations, or discoveries about the Stacks ecosystem..."
+                        value={newContent}
+                        onChange={(e) => setNewContent(e.target.value)}
+                        className="bg-background min-h-[120px]"
+                      />
+                    </div>
+
+                    {/* Link URL Input */}
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block flex items-center gap-2">
+                        <Link2 className="w-4 h-4" />
+                        Reference Link (optional)
+                      </label>
+                      <Input
+                        placeholder="https://example.com/article"
+                        value={newLinkUrl}
+                        onChange={(e) => setNewLinkUrl(e.target.value)}
+                        className="bg-background"
+                        type="url"
+                      />
+                    </div>
+
+                    {/* Image Upload */}
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block flex items-center gap-2">
+                        <ImageIcon className="w-4 h-4" />
+                        Attach Image (optional)
+                      </label>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/gif,image/webp"
+                        onChange={handleImageSelect}
+                        className="hidden"
+                      />
+                      
+                      {imagePreview ? (
+                        <div className="relative rounded-lg overflow-hidden border border-border">
+                          <img 
+                            src={imagePreview} 
+                            alt="Preview" 
+                            className="w-full max-h-48 object-cover"
+                          />
+                          <button
+                            onClick={clearImage}
+                            className="absolute top-2 right-2 p-1 bg-background/80 rounded-full hover:bg-background transition-colors"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ) : (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => fileInputRef.current?.click()}
+                          className="w-full"
+                        >
+                          <ImageIcon className="w-4 h-4 mr-2" />
+                          Choose Image
+                        </Button>
+                      )}
+                      <p className="text-xs text-muted-foreground mt-1">Max 5MB. JPG, PNG, GIF, or WebP.</p>
+                    </div>
+
+                    <Button
+                      onClick={handleSubmit}
+                      disabled={isSubmitting || !newTopic.trim() || !newContent.trim()}
+                      className="w-full gap-2"
+                    >
+                      {isSubmitting ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Send className="w-4 h-4" />
+                      )}
+                      Submit for Review
+                    </Button>
+
+                    <p className="text-xs text-muted-foreground text-center">
+                      Submissions are reviewed before being added to Sammy's knowledge base
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </>
+        )}
       </motion.div>
 
       {/* My Submissions */}
