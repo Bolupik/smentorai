@@ -18,7 +18,7 @@ import { useStacksAuth } from "@/hooks/useStacksAuth";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
 import { useAdminRole } from "@/hooks/useAdminRole";
 import { topicsList } from "@/components/TopicCards";
-import { Play, Info, BookOpen, Library, Shield, Activity } from "lucide-react";
+import { Play, Info, BookOpen, Library, Shield, Activity, UserCircle } from "lucide-react";
 
 const pageVariants = {
   initial: { opacity: 0 },
@@ -40,6 +40,7 @@ const Dashboard = () => {
   const [showAdmin, setShowAdmin] = useState(false);
   const [showSentiment, setShowSentiment] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
   const { isAuthenticated: isWalletConnected, userData: walletData, isLoading: isWalletLoading } = useStacksAuth();
@@ -101,7 +102,49 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background overflow-hidden">
       <AnimatePresence mode="wait">
-        {showSentiment ? (
+        {showProfile ? (
+          <motion.div
+            key="profile"
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={pageTransition}
+            className="flex-1 flex flex-col"
+          >
+            <motion.header
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="border-b border-border/30 bg-background/95 backdrop-blur-md sticky top-0 z-50"
+            >
+              <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+                <motion.button
+                  whileHover={{ x: -5 }}
+                  onClick={() => setShowProfile(false)}
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+                >
+                  <span className="text-lg">←</span>
+                  <span>Return</span>
+                </motion.button>
+                <div className="flex items-center gap-3">
+                  <UserCircle className="w-5 h-5 text-primary" />
+                  <h1 className="text-lg font-semibold tracking-tight">My Profile</h1>
+                </div>
+                <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
+              </div>
+            </motion.header>
+            <main className="flex-1 flex flex-col items-center justify-start p-6 overflow-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="w-full max-w-md py-8"
+              >
+                <ProfileEditor />
+              </motion.div>
+            </main>
+          </motion.div>
+        ) : showSentiment ? (
           <motion.div
             key="sentiment"
             variants={pageVariants}
@@ -129,7 +172,7 @@ const Dashboard = () => {
                   <Activity className="w-5 h-5 text-orange-500" />
                   <h1 className="text-lg font-semibold tracking-tight">Community Pulse</h1>
                 </div>
-                <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} />
+                <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
               </div>
             </motion.header>
             <main className="flex-1 flex flex-col items-center justify-start p-6 overflow-auto">
@@ -171,7 +214,7 @@ const Dashboard = () => {
                   <Shield className="w-5 h-5 text-destructive" />
                   <h1 className="text-lg font-semibold tracking-tight">Admin Panel</h1>
                 </div>
-                <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} />
+                <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
               </div>
             </motion.header>
             <main className="flex-1 flex flex-col items-center justify-start p-6 overflow-auto">
@@ -213,7 +256,7 @@ const Dashboard = () => {
                   <Library className="w-5 h-5 text-primary" />
                   <h1 className="text-lg font-semibold tracking-tight">Knowledge Repository</h1>
                 </div>
-                <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} />
+                <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
               </div>
             </motion.header>
             <main className="flex-1 flex flex-col items-center justify-start p-6 overflow-auto">
@@ -223,7 +266,6 @@ const Dashboard = () => {
                 transition={{ delay: 0.2 }}
                 className="w-full max-w-2xl py-8 space-y-6"
               >
-                <ProfileEditor />
                 <KnowledgeBase />
               </motion.div>
             </main>
@@ -257,7 +299,7 @@ const Dashboard = () => {
                   <BookOpen className="w-5 h-5 text-primary" />
                   <h1 className="text-lg font-semibold tracking-tight">Knowledge Assessment</h1>
                 </div>
-                <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} />
+                <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
               </div>
             </motion.header>
 
@@ -365,7 +407,7 @@ const Dashboard = () => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1.1 }}
                   >
-                    <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} />
+                    <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
                   </motion.div>
                 </div>
               </div>
@@ -584,7 +626,7 @@ const Dashboard = () => {
                   className="flex items-center gap-4"
                 >
                   <SearchBar variant="chat" />
-                  <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} />
+                  <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
                 </motion.div>
               </div>
             </motion.header>
