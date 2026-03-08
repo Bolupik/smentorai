@@ -10,9 +10,11 @@ import AchievementBadges from "./AchievementBadges";
 import GetStartedCTA from "./GetStartedCTA";
 import NFTExplorer from "./NFTExplorer";
 import AgeSelector, { type AgeLevel } from "./AgeSelector";
+import SearchHistory from "./SearchHistory";
 import aiCharacter from "@/assets/ai-character.png";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
 import { useAchievements } from "@/hooks/useAchievements";
+import { useSearchHistory } from "@/hooks/useSearchHistory";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
