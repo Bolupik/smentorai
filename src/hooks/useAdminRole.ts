@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { retryWithBackoff } from '@/lib/retryWithBackoff';
 import { useAuth } from '@/contexts/AuthContext';
 
 export const useAdminRole = () => {
@@ -8,7 +9,6 @@ export const useAdminRole = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Anonymous/wallet users are never admins — skip the DB call entirely
     if (!user || user.is_anonymous) {
       setIsAdmin(false);
       setLoading(false);
@@ -17,17 +17,17 @@ export const useAdminRole = () => {
 
     const checkAdminRole = async () => {
       try {
-        const { data, error } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', user.id)
-          .eq('role', 'admin')
-          .maybeSingle();
-
+        const { data, error } = await retryWithBackoff(() =>
+          supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', user.id)
+            .eq('role', 'admin')
+            .maybeSingle()
+        );
         if (error) throw error;
         setIsAdmin(!!data);
-      } catch (error) {
-        // Silently fail — non-admins don't need to see this error
+      } catch {
         setIsAdmin(false);
       } finally {
         setLoading(false);
