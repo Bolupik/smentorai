@@ -671,6 +671,7 @@ const Dashboard = () => {
           setShowChat(true);
         }}
       />
+      <GuideTour open={showGuide} onClose={() => setShowGuide(false)} />
     </div>
   );
 };
