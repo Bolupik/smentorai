@@ -135,11 +135,18 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Use a fixed system user ID for seeded content
-    // We'll use a sentinel UUID that won't clash with real users
+    // Allow caller to pick a batch (0–3) to avoid function timeout
+    let batchIndex = 0;
+    try {
+      const body = await req.json();
+      if (typeof body?.batch === "number") batchIndex = body.batch;
+    } catch (_) { /* no body */ }
+
+    const BATCH_SIZE = 9;
+    const batch = SPONSORS.slice(batchIndex * BATCH_SIZE, (batchIndex + 1) * BATCH_SIZE);
+
     const SYSTEM_USER_ID = "00000000-0000-0000-0000-000000000001";
 
-    // Check if system profile exists, create if not
     await supabase.from("profiles").upsert(
       { user_id: SYSTEM_USER_ID, username: "smentor-system", display_name: "SMentor System" },
       { onConflict: "user_id", ignoreDuplicates: true }
@@ -150,9 +157,7 @@ serve(async (req) => {
     let skipped = 0;
     let failed = 0;
 
-    // Process sponsors in small batches to avoid timeouts
-    for (const sponsor of SPONSORS) {
-      // Check if entry already exists
+    for (const sponsor of batch) {
       const { data: existing } = await supabase
         .from("knowledge_base")
         .select("id")
@@ -175,7 +180,6 @@ serve(async (req) => {
       }
 
       const topic = TOPIC_MAP[sponsor.name] ?? "tools";
-
       const content = `## ${sponsor.name}\n\n**Website:** ${sponsor.url}\n**Category:** ${sponsor.category}\n\n${markdown}`;
 
       const { error } = await supabase.from("knowledge_base").insert({
@@ -197,12 +201,12 @@ serve(async (req) => {
         results.push({ name: sponsor.name, status: "inserted", chars: content.length });
       }
 
-      // Small delay to be polite to Firecrawl
-      await new Promise((r) => setTimeout(r, 500));
+      await new Promise((r) => setTimeout(r, 300));
     }
 
+    const totalBatches = Math.ceil(SPONSORS.length / BATCH_SIZE);
     return new Response(
-      JSON.stringify({ inserted, skipped, failed, results }),
+      JSON.stringify({ batch: batchIndex, totalBatches, inserted, skipped, failed, results }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {
