@@ -39,9 +39,18 @@ const ChatInterface = () => {
     () => THINKING_PHRASES[Math.floor(Math.random() * THINKING_PHRASES.length)]
   );
 
-  // Fetch age_level from profile on mount
+  // Fetch age_level from profile on mount (read-only — set during onboarding)
   useEffect(() => {
     const fetchAgeLevel = async () => {
+      // Wallet user: read from localStorage
+      const walletKey = Object.keys(localStorage).find(
+        (k) => k.startsWith("stacks_age_level_")
+      );
+      if (walletKey) {
+        const level = localStorage.getItem(walletKey) as AgeLevel | null;
+        if (level) { setAgeLevel(level); return; }
+      }
+      // Email user: read from DB
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) return;
       const { data } = await supabase
@@ -302,7 +311,7 @@ const ChatInterface = () => {
                 </Button>
               </div>
               <div className="mt-2.5 pl-1">
-                <AgeSelector value={ageLevel} onChange={setAgeLevel} />
+                <AgeSelector value={ageLevel} onChange={setAgeLevel} locked />
               </div>
             </motion.div>
 
@@ -405,7 +414,7 @@ const ChatInterface = () => {
           <div className="max-w-4xl mx-auto px-4 md:px-6 py-4">
             {/* Age selector row */}
             <div className="mb-3">
-              <AgeSelector value={ageLevel} onChange={setAgeLevel} />
+              <AgeSelector value={ageLevel} onChange={setAgeLevel} locked />
             </div>
 
             {/* Input row */}
