@@ -688,8 +688,9 @@ const Dashboard = () => {
         }}
       />
       <GuideTour open={showGuide} onClose={() => setShowGuide(false)} />
+
+      {/* Daily Quiz – floats on right edge of every dashboard view */}
+      <DailyQuizPanel />
     </div>
   );
 };
-
-export default Dashboard;
