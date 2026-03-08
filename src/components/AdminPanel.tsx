@@ -538,13 +538,17 @@ const AdminPanel = () => {
           Loading entries...
         </div>
       ) : (
-        <Tabs defaultValue="pending" className="w-full">
+      <Tabs defaultValue="pending" className="w-full">
           <TabsList className="w-full mb-4">
             <TabsTrigger value="pending" className="flex-1">
               Pending ({pendingEntries.length})
             </TabsTrigger>
             <TabsTrigger value="approved" className="flex-1">
               Approved ({approvedEntries.length})
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="flex-1 gap-1.5">
+              <BarChart3 className="w-3.5 h-3.5" />
+              Analytics
             </TabsTrigger>
           </TabsList>
 
@@ -571,6 +575,10 @@ const AdminPanel = () => {
                 {approvedEntries.map(entry => renderEntry(entry, false))}
               </div>
             )}
+          </TabsContent>
+
+          <TabsContent value="analytics">
+            <AdminAnalytics />
           </TabsContent>
         </Tabs>
       )}
