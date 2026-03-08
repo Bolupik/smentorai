@@ -42,6 +42,7 @@ const Dashboard = () => {
   const [showSentiment, setShowSentiment] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
   const { isAuthenticated: isWalletConnected, userData: walletData, isLoading: isWalletLoading } = useStacksAuth();
