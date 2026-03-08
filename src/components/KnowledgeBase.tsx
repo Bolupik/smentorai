@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Input } from "./ui/input";
+import GuestGate from "./GuestGate";
 import { 
   BookPlus, 
   Lightbulb, 
