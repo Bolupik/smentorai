@@ -13,12 +13,13 @@ import ProfileEditor from "@/components/ProfileEditor";
 import DappShowcase from "@/components/DappShowcase";
 import { CommunitySentiment } from "@/components/CommunitySentiment";
 import OnboardingModal from "@/components/OnboardingModal";
+import GuideTour from "@/components/GuideTour";
 import { useAuth } from "@/contexts/AuthContext";
 import { useStacksAuth } from "@/hooks/useStacksAuth";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
 import { useAdminRole } from "@/hooks/useAdminRole";
 import { topicsList } from "@/components/TopicCards";
-import { Play, Info, BookOpen, Library, Shield, Activity, UserCircle } from "lucide-react";
+import { Play, Info, BookOpen, Library, Shield, Activity, UserCircle, HelpCircle } from "lucide-react";
 
 const pageVariants = {
   initial: { opacity: 0 },
