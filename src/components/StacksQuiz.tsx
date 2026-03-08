@@ -1585,7 +1585,7 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
         return pool.slice(0, Math.min(15, pool.length));
       }
       const categories = ["architecture", "clarity", "defi", "nft", "security", "advanced"] as const;
-      const distribution: Record<string, number> = { architecture: 5, clarity: 6, defi: 5, nft: 3, security: 3, advanced: 3 };
+      const distribution: Record<string, number> = { architecture: 7, clarity: 8, defi: 7, nft: 5, security: 5, advanced: 5 };
       const selected: QuizQuestion[] = [];
       categories.forEach(cat => {
         const available = quizQuestions.filter(q => q.category === cat).sort(() => Math.random() - 0.5);
