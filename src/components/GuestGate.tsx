@@ -6,7 +6,7 @@ import { useIsGuest } from "@/hooks/useIsGuest";
 import { ReactNode } from "react";
 
 interface GuestGateProps {
-  children: ReactNode;
+  children?: ReactNode;
   /** Short label describing what's locked, e.g. "quiz submissions" */
   feature?: string;
   /** If true, wraps children in a relative container and overlays the gate */
