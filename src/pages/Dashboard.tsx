@@ -299,7 +299,7 @@ const Dashboard = () => {
                   <BookOpen className="w-5 h-5 text-primary" />
                   <h1 className="text-lg font-semibold tracking-tight">Knowledge Assessment</h1>
                 </div>
-                <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} />
+                <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
               </div>
             </motion.header>
 
