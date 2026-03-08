@@ -82,9 +82,9 @@ export const useStacksAuth = () => {
         const hasOnboarded = localStorage.getItem(onboardedKey);
       if (!hasOnboarded) {
         localStorage.setItem(onboardedKey, "true");
-        navigate("/dashboard");
+        navigate("/");
       } else {
-        navigate("/dashboard");
+        navigate("/");
       }
       }
     } catch (err: unknown) {
