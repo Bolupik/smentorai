@@ -216,6 +216,45 @@ export type Database = {
         }
         Relationships: []
       }
+      stacks_news: {
+        Row: {
+          fetched_at: string
+          id: string
+          image_url: string | null
+          published_at: string
+          relevance_score: number | null
+          source: string
+          summary: string | null
+          tags: string[] | null
+          title: string
+          url: string
+        }
+        Insert: {
+          fetched_at?: string
+          id?: string
+          image_url?: string | null
+          published_at: string
+          relevance_score?: number | null
+          source: string
+          summary?: string | null
+          tags?: string[] | null
+          title: string
+          url: string
+        }
+        Update: {
+          fetched_at?: string
+          id?: string
+          image_url?: string | null
+          published_at?: string
+          relevance_score?: number | null
+          source?: string
+          summary?: string | null
+          tags?: string[] | null
+          title?: string
+          url?: string
+        }
+        Relationships: []
+      }
       topic_progress: {
         Row: {
           explored: boolean
