@@ -18,7 +18,7 @@ import { useStacksAuth } from "@/hooks/useStacksAuth";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
 import { useAdminRole } from "@/hooks/useAdminRole";
 import { topicsList } from "@/components/TopicCards";
-import { Play, Info, BookOpen, Library, Shield, Activity } from "lucide-react";
+import { Play, Info, BookOpen, Library, Shield, Activity, UserCircle } from "lucide-react";
 
 const pageVariants = {
   initial: { opacity: 0 },
