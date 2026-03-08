@@ -60,35 +60,36 @@ const Dashboard = () => {
     }
   }, [isAuthorized, authLoading, navigate]);
 
-  // Auto-show onboarding modal for first-time users
-  // Both email users and wallet users (who get an anonymous Supabase session)
-  // are checked the same way: look up their DB profile for age_level.
+  // Auto-show onboarding modal for first-time users.
+  // Works for BOTH email users (real session) and wallet users (anonymous session).
+  // We call supabase.auth.getUser() directly so we always get the current session
+  // user regardless of which auth method was used.
   useEffect(() => {
     if (authLoading || !isAuthorized) return;
 
-    // We need a Supabase user to check the DB profile.
-    // Wallet users get an anonymous Supabase session created at connect time.
-    if (!user) return;
-
-    const onboardedKey = `onboarded_${user.id}`;
-    if (localStorage.getItem(onboardedKey)) return;
-
     import("@/integrations/supabase/client").then(({ supabase }) => {
-      supabase
-        .from("profiles")
-        .select("age_level")
-        .eq("user_id", user.id)
-        .maybeSingle()
-        .then(({ data }) => {
-          if (data?.age_level) {
-            localStorage.setItem(onboardedKey, "true");
-          } else {
-            setShowOnboarding(true);
-          }
-        });
+      supabase.auth.getUser().then(({ data: { user: currentUser } }) => {
+        if (!currentUser) return;
+
+        const onboardedKey = `onboarded_${currentUser.id}`;
+        if (localStorage.getItem(onboardedKey)) return;
+
+        supabase
+          .from("profiles")
+          .select("age_level")
+          .eq("user_id", currentUser.id)
+          .maybeSingle()
+          .then(({ data }) => {
+            if (data?.age_level) {
+              localStorage.setItem(onboardedKey, "true");
+            } else {
+              setShowOnboarding(true);
+            }
+          });
+      });
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authLoading, isAuthorized, user?.id]);
+  }, [authLoading, isAuthorized, user?.id, isWalletConnected]);
 
   // Show loading while checking auth
   if (authLoading) {
@@ -675,9 +676,8 @@ const Dashboard = () => {
       <OnboardingModal
         open={showOnboarding}
         onComplete={() => {
-          if (user) {
-            localStorage.setItem(`onboarded_${user.id}`, "true");
-          }
+          // OnboardingModal already persists the onboarded_ key for the current
+          // user (email or wallet anon session). We just close the modal here.
           setShowOnboarding(false);
         }}
       />

@@ -19,26 +19,39 @@ interface StacksAuthContextType {
 
 const StacksAuthContext = createContext<StacksAuthContextType | undefined>(undefined);
 
-const STACKS_CONNECT_KEY = "@stacks/connect";
+const STACKS_CONNECT_KEYS = ["@stacks/connect", "blockstack-session", "stacks-session"];
 
-const readLocalStorage = (): { addresses?: { stx?: { address: string }[] } } | null => {
-  try {
-    const raw = localStorage.getItem(STACKS_CONNECT_KEY);
-    if (!raw) return null;
-    const bytes = new Uint8Array(raw.match(/.{1,2}/g)!.map((b) => parseInt(b, 16)));
-    return JSON.parse(new TextDecoder().decode(bytes));
-  } catch {
-    return null;
-  }
-};
-
+/**
+ * Try multiple known localStorage key formats used across @stacks/connect versions.
+ * v8 stores data as a hex-encoded binary blob under "@stacks/connect".
+ * Older versions stored JSON directly under other keys.
+ */
 const getAddressFromStorage = (): string | undefined => {
-  try {
-    const data = readLocalStorage();
-    return data?.addresses?.stx?.[0]?.address;
-  } catch {
-    return undefined;
+  for (const key of STACKS_CONNECT_KEYS) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) continue;
+
+      // Try hex-encoded binary (v8 format)
+      if (/^[0-9a-f]+$/i.test(raw) && raw.length % 2 === 0) {
+        const bytes = new Uint8Array(raw.match(/.{1,2}/g)!.map((b) => parseInt(b, 16)));
+        const parsed = JSON.parse(new TextDecoder().decode(bytes));
+        const addr = parsed?.addresses?.stx?.[0]?.address ?? parsed?.addresses?.mainnet?.address;
+        if (addr && typeof addr === "string") return addr;
+      }
+
+      // Try plain JSON format
+      const parsed = JSON.parse(raw);
+      const addr =
+        parsed?.addresses?.stx?.[0]?.address ??
+        parsed?.addresses?.mainnet?.address ??
+        parsed?.userData?.profile?.stxAddress?.mainnet;
+      if (addr && typeof addr === "string") return addr;
+    } catch {
+      continue;
+    }
   }
+  return undefined;
 };
 
 /**
@@ -63,7 +76,8 @@ const fetchBnsName = async (address: string): Promise<string | undefined> => {
   }
 };
 
-const waitForAddress = (maxMs = 3000, intervalMs = 100): Promise<string | undefined> =>
+// Increased to 8 s — wallet popup can take a few seconds to confirm
+const waitForAddress = (maxMs = 8000, intervalMs = 150): Promise<string | undefined> =>
   new Promise((resolve) => {
     const start = Date.now();
     const check = () => {
@@ -79,23 +93,23 @@ const waitForAddress = (maxMs = 3000, intervalMs = 100): Promise<string | undefi
  * Ensures a Supabase session exists for wallet users and links the
  * wallet address to their profile.
  *
- * - If an email session already exists → just save the STX address to that profile.
+ * - If a real (email) session already exists → link the wallet address to it.
+ * - If an anonymous session already exists → just update the wallet address.
  * - Otherwise → create an anonymous session and upsert a profile row.
- *
- * This gives every wallet user a real auth.uid() so all RLS-protected
- * tables work exactly like they do for email-authenticated users.
  */
 const ensureSupabaseSession = async (address: string, bnsName?: string) => {
   try {
     const { data: { session } } = await supabase.auth.getSession();
+    const displayName = typeof bnsName === "string" && bnsName.length > 0 ? bnsName : null;
 
     if (session) {
-      // Email (or existing anon) user — just link the wallet address
+      // Existing session (email or previous anon) — link wallet address
       await supabase.from("profiles").upsert(
         {
           user_id: session.user.id,
           stacks_address: address,
-          bns_name: bnsName ?? null,
+          bns_name: displayName,
+          ...(displayName ? { display_name: displayName, username: displayName } : {}),
         },
         { onConflict: "user_id" }
       );
@@ -104,11 +118,11 @@ const ensureSupabaseSession = async (address: string, bnsName?: string) => {
 
     // No session yet → create anonymous session for this wallet user
     const { data, error } = await supabase.auth.signInAnonymously();
-    if (error || !data.user) return;
+    if (error || !data.user) {
+      console.warn("Anonymous sign-in failed:", error?.message);
+      return;
+    }
 
-    // Create / update their profile row so DB-backed features work.
-    // Only set username/display_name to the bnsName string (never an object).
-    const displayName = typeof bnsName === "string" ? bnsName : null;
     await supabase.from("profiles").upsert(
       {
         user_id: data.user.id,
