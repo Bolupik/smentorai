@@ -1098,22 +1098,26 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
     return <div className="text-center text-muted-foreground">Loading assessment...</div>;
   }
 
-  // Mode selection screen
+  // Mode selection screen — guests can start freely
   if (!quizStarted) {
     return (
-      <GuestGate feature="quiz submissions" overlay>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-card border border-border rounded-xl p-8 max-w-2xl mx-auto"
-        >
-          <div className="text-center mb-6">
-            <BookOpen className="w-12 h-12 mx-auto mb-4 text-primary" />
-            <h2 className="text-2xl font-bold text-foreground mb-2">Stacks Knowledge Assessment</h2>
-            <p className="text-muted-foreground text-sm">
-              Choose a topic to focus on, or test across all categories.
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-card border border-border rounded-xl p-8 max-w-2xl mx-auto"
+      >
+        <div className="text-center mb-6">
+          <BookOpen className="w-12 h-12 mx-auto mb-4 text-primary" />
+          <h2 className="text-2xl font-bold text-foreground mb-2">Stacks Knowledge Assessment</h2>
+          <p className="text-muted-foreground text-sm">
+            Choose a topic to focus on, or test across all categories.
+          </p>
+          {isGuest && (
+            <p className="text-xs text-amber-400 mt-2">
+              🎁 Guest preview: {GUEST_LIMIT} free questions. Sign up to unlock the full assessment.
             </p>
-          </div>
+          )}
+        </div>
 
           {/* Topic selector */}
           <div className="mb-6">
