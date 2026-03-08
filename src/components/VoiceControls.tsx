@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Volume2, VolumeX, Loader2 } from "lucide-react";
 import { useToast } from "./ui/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 
 interface VoiceControlsProps {
   text: string;
@@ -12,71 +11,80 @@ interface VoiceControlsProps {
 const VoiceControls = ({ text, onSpeakingChange }: VoiceControlsProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
+      window.speechSynthesis.cancel();
     };
   }, []);
 
-  const handleSpeak = async () => {
-    if (isPlaying && audioRef.current) {
-      audioRef.current.pause();
+  const handleSpeak = () => {
+    if (!window.speechSynthesis) {
+      toast({
+        title: "Not Supported",
+        description: "Your browser does not support text-to-speech.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (isPlaying) {
+      window.speechSynthesis.cancel();
       setIsPlaying(false);
       onSpeakingChange?.(false);
       return;
     }
 
-    try {
-      setIsLoading(true);
-      
-      const { data, error } = await supabase.functions.invoke('text-to-speech', {
-        body: { text },
-      });
+    setIsLoading(true);
+    window.speechSynthesis.cancel();
 
-      if (error) throw error;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utteranceRef.current = utterance;
 
-      if (data?.audioContent) {
-        const audio = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
-        audioRef.current = audio;
+    // Pick a natural-sounding English voice if available
+    const voices = window.speechSynthesis.getVoices();
+    const preferred = voices.find(
+      (v) => v.lang.startsWith("en") && v.localService
+    ) || voices.find((v) => v.lang.startsWith("en")) || voices[0];
+    if (preferred) utterance.voice = preferred;
 
-        audio.onplay = () => {
-          setIsPlaying(true);
-          onSpeakingChange?.(true);
-        };
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
 
-        audio.onended = () => {
-          setIsPlaying(false);
-          onSpeakingChange?.(false);
-        };
+    utterance.onstart = () => {
+      setIsLoading(false);
+      setIsPlaying(true);
+      onSpeakingChange?.(true);
+    };
 
-        audio.onerror = () => {
-          setIsPlaying(false);
-          onSpeakingChange?.(false);
-          toast({
-            title: "Playback Error",
-            description: "Failed to play audio",
-            variant: "destructive",
-          });
-        };
+    utterance.onend = () => {
+      setIsPlaying(false);
+      setIsLoading(false);
+      onSpeakingChange?.(false);
+    };
 
-        await audio.play();
+    utterance.onerror = (e) => {
+      // "interrupted" fires when user manually stops — not a real error
+      if (e.error === "interrupted") {
+        setIsPlaying(false);
+        setIsLoading(false);
+        onSpeakingChange?.(false);
+        return;
       }
-    } catch (error) {
-      console.error('Text-to-speech error:', error);
+      setIsPlaying(false);
+      setIsLoading(false);
+      onSpeakingChange?.(false);
       toast({
         title: "Voice Error",
-        description: "Failed to generate speech. Please try again.",
+        description: "Failed to play speech. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
-    }
+    };
+
+    window.speechSynthesis.speak(utterance);
   };
 
   return (
