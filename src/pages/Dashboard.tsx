@@ -436,7 +436,7 @@ const Dashboard = () => {
             </motion.header>
 
             {/* Hero Content - Mobile optimized */}
-            <main className="relative z-10 flex-1 flex flex-col justify-end px-4 sm:px-8 pb-28 sm:pb-32 md:pb-40">
+            <main className="relative z-10 flex-1 flex flex-col justify-end px-4 sm:px-8 pb-48 sm:pb-56 md:pb-64">
               <div className="max-w-2xl">
                 {/* Series badge */}
                 <motion.div
