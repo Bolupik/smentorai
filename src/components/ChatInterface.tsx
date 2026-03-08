@@ -35,6 +35,7 @@ const ChatInterface = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [ageLevel, setAgeLevel] = useState<AgeLevel>("adult");
+  const { addToHistory } = useSearchHistory();
   const [showNFTExplorer, setShowNFTExplorer] = useState(false);
   const [showScrollDown, setShowScrollDown] = useState(false);
   const [thinkingPhrase] = useState(
