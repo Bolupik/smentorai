@@ -261,15 +261,20 @@ const ProfileEditor = () => {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // A user is "wallet-only" if they have no real email: either no Supabase
-  // session at all, or they have an anonymous session (wallet-created).
+  // A user is "wallet-only" if they have an anonymous Supabase session
+  // (created at wallet-connect time) OR no session at all but wallet connected.
   const email = (user?.email && !user.is_anonymous) ? user.email : null;
   const walletOnlyUser = !user || !!user.is_anonymous;
 
   useEffect(() => {
-    if (user) fetchProfile();
-    else if (isWalletConnected) setLoading(false);
-  }, [user, isWalletConnected]);
+    if (user) {
+      // Both email users AND wallet (anon) users have a Supabase user
+      fetchProfile();
+    } else {
+      // No session yet — if wallet connected, don't leave spinner indefinitely
+      setLoading(false);
+    }
+  }, [user?.id]);
 
   // When an email user connects their wallet, save the address to DB
   useEffect(() => {
