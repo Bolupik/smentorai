@@ -367,6 +367,9 @@ const ProfileEditor = () => {
 
       {/* ── Daily Rankings ── */}
       <RankingPlaceholder />
+
+      {/* ── Achievement Wall ── */}
+      <ProfileAchievements />
     </div>
   );
 };
