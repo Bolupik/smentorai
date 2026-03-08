@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { retryWithBackoff } from "@/lib/retryWithBackoff";
 
 export interface TopicProgress {
   explored: boolean;
@@ -48,11 +49,15 @@ export const useTopicProgressDB = () => {
       setIsLoading(true);
 
       if (userId) {
-        // Load from database
-        const { data, error } = await supabase
-          .from("topic_progress")
-          .select("topic_title, explored, last_visited")
-          .eq("user_id", userId);
+        // Load from database — with retry on transient network errors
+        const { data, error } = await retryWithBackoff(() =>
+          Promise.resolve(
+            supabase
+              .from("topic_progress")
+              .select("topic_title, explored, last_visited")
+              .eq("user_id", userId)
+          )
+        );
 
         if (!error && data) {
           const progressMap: ProgressMap = {};
@@ -119,12 +124,16 @@ export const useTopicProgressDB = () => {
     const currentUserId = userId ?? await getCurrentUserId();
 
     if (currentUserId) {
-      await supabase.from("topic_progress").upsert({
-        user_id: currentUserId,
-        topic_title: topicTitle,
-        explored: true,
-        last_visited: new Date().toISOString(),
-      });
+      await retryWithBackoff(() =>
+        Promise.resolve(
+          supabase.from("topic_progress").upsert({
+            user_id: currentUserId,
+            topic_title: topicTitle,
+            explored: true,
+            last_visited: new Date().toISOString(),
+          })
+        )
+      );
     } else {
       const updated = { ...progress, [topicTitle]: newProgress };
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
