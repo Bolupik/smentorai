@@ -1229,6 +1229,31 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
     advanced: "bg-cyan-500/20 text-cyan-400"
   };
 
+  // Guest limit reached — show upgrade gate
+  if (isGuest && limitReached) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-card border border-border rounded-xl p-8 max-w-2xl mx-auto text-center"
+      >
+        <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+          <Trophy className="w-7 h-7 text-primary" />
+        </div>
+        <h3 className="text-xl font-bold text-foreground mb-2">You've completed your {GUEST_LIMIT} free questions!</h3>
+        <p className="text-sm text-muted-foreground mb-6 max-w-sm mx-auto">
+          Create a free account to unlock the full assessment, track your progress, earn achievements, and save your score.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <Button size="lg" className="gap-2" onClick={() => window.location.href = '/auth'}>
+            <BookOpen className="w-4 h-4" />
+            Sign Up Free — Unlock All
+          </Button>
+        </div>
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
