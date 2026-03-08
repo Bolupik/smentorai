@@ -18,7 +18,7 @@ interface UserMenuProps {
   onOpenProfile?: () => void;
 }
 
-const UserMenu = ({ exploredCount = 0, totalTopics = 0 }: UserMenuProps) => {
+const UserMenu = ({ exploredCount = 0, totalTopics = 0, onOpenProfile }: UserMenuProps) => {
   const { user, signOut, isLoading } = useAuth();
   const { isAuthenticated: isWalletConnected, userData: walletData, signOut: walletSignOut, truncateAddress } = useStacksAuth();
   const navigate = useNavigate();
@@ -54,6 +54,15 @@ const UserMenu = ({ exploredCount = 0, totalTopics = 0 }: UserMenuProps) => {
             <p className="text-xs text-muted-foreground font-mono break-all">{walletData.address}</p>
           </div>
           <DropdownMenuSeparator />
+          {onOpenProfile && (
+            <>
+              <DropdownMenuItem onClick={onOpenProfile} className="gap-2 cursor-pointer">
+                <UserCircle className="w-4 h-4 text-primary" />
+                <span className="text-sm">My Profile</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
           <DropdownMenuItem className="gap-2 cursor-default">
             <Trophy className="w-4 h-4 text-primary" />
             <span className="text-sm">Progress: {exploredCount}/{totalTopics} topics</span>
@@ -114,6 +123,15 @@ const UserMenu = ({ exploredCount = 0, totalTopics = 0 }: UserMenuProps) => {
           )}
         </div>
         <DropdownMenuSeparator />
+        {onOpenProfile && (
+          <>
+            <DropdownMenuItem onClick={onOpenProfile} className="gap-2 cursor-pointer">
+              <UserCircle className="w-4 h-4 text-primary" />
+              <span className="text-sm">My Profile</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
         <DropdownMenuItem className="gap-2 cursor-default">
           <Trophy className="w-4 h-4 text-primary" />
           <span className="text-sm">Progress: {exploredCount}/{totalTopics} topics</span>
