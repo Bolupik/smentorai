@@ -389,6 +389,25 @@ export default function DailyQuizPanel() {
                             ? "⚡ Great effort! Keep exploring to reach mastery."
                             : "💡 Good start. Review the topics and try again tomorrow!"}
                         </p>
+                        {/* Streak banner */}
+                        {currentStreak > 0 && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            className="flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-primary/10 border border-primary/20"
+                          >
+                            <Flame className="w-5 h-5 text-primary" />
+                            <div className="text-left">
+                              <p className="text-xs font-bold text-foreground">
+                                {currentStreak} day streak!
+                              </p>
+                              <p className="text-[10px] text-muted-foreground">
+                                Best: {longestStreak} day{longestStreak !== 1 ? "s" : ""}
+                              </p>
+                            </div>
+                          </motion.div>
+                        )}
                         {/* Per-question review */}
                         <div className="space-y-2 text-left max-h-64 overflow-y-auto pr-1">
                           {quiz.questions.map((q, i) => (
