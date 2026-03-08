@@ -71,19 +71,21 @@ export const useStacksAuth = () => {
         if (isConnected()) {
           const address = getAddressFromStorage();
           if (address) {
+            // Mark authenticated immediately so auth gates unblock right away
             setUserData({ address });
             setIsAuthenticated(true);
-            // Fetch BNS name in the background (don't block loading)
+            setIsLoading(false);
+            // Fetch BNS name in the background — doesn't block auth
             fetchBnsName(address).then((bnsName) => {
               if (bnsName) setUserData((prev) => (prev ? { ...prev, bnsName } : prev));
             });
+            return;
           }
         }
       } catch {
         // no session
-      } finally {
-        setIsLoading(false);
       }
+      setIsLoading(false);
     };
     loadSession();
   }, []);
