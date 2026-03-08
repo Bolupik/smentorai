@@ -66,14 +66,18 @@ export const useStacksAuth = () => {
 
   // On mount, check for an existing wallet session
   useEffect(() => {
+    // Safety timeout: always resolve within 2s to prevent blank screen on mobile
+    // where wallet extensions are unavailable
+    const timeout = setTimeout(() => setIsLoading(false), 2000);
+
     const loadSession = async () => {
       try {
         if (isConnected()) {
           const address = getAddressFromStorage();
           if (address) {
-            // Mark authenticated immediately so auth gates unblock right away
             setUserData({ address });
             setIsAuthenticated(true);
+            clearTimeout(timeout);
             setIsLoading(false);
             // Fetch BNS name in the background — doesn't block auth
             fetchBnsName(address).then((bnsName) => {
@@ -83,11 +87,15 @@ export const useStacksAuth = () => {
           }
         }
       } catch {
-        // no session
+        // no session / no wallet extension (common on mobile)
       }
+      clearTimeout(timeout);
       setIsLoading(false);
     };
+
     loadSession();
+
+    return () => clearTimeout(timeout);
   }, []);
 
   const signIn = useCallback(async () => {
