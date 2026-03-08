@@ -81,7 +81,7 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
         localStorage.setItem(`stacks_age_level_${walletData.address}`, selectedLevel);
         toast({ title: "All set! 🎉", description: "Welcome to SMentor — your journey starts now." });
         onComplete();
-        navigate("/dashboard");
+        navigate("/");
         return;
       }
 
@@ -105,7 +105,7 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
 
       toast({ title: "All set! 🎉", description: "Welcome to SMentor — your journey starts now." });
       onComplete();
-      navigate("/dashboard");
+      navigate("/");
     } catch {
       toast({ title: "Error", description: "Something went wrong. Please try again.", variant: "destructive" });
     } finally {
