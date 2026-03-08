@@ -8,6 +8,7 @@ import { Switch } from "./ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import GuestGate from "./GuestGate";
+import { useGuestQuizLimit } from "@/hooks/useGuestQuizLimit";
 
 type AgeLevel = "child" | "teen" | "adult" | "expert";
 
