@@ -111,6 +111,7 @@ export const useStacksAuth = () => {
     setIsAuthenticated(false);
     setUserData(null);
     navigate("/auth");
+
   }, [navigate]);
 
   const truncateAddress = (addr: string) =>
