@@ -124,12 +124,16 @@ export const useTopicProgressDB = () => {
     const currentUserId = userId ?? await getCurrentUserId();
 
     if (currentUserId) {
-      await supabase.from("topic_progress").upsert({
-        user_id: currentUserId,
-        topic_title: topicTitle,
-        explored: true,
-        last_visited: new Date().toISOString(),
-      });
+      await retryWithBackoff(() =>
+        Promise.resolve(
+          supabase.from("topic_progress").upsert({
+            user_id: currentUserId,
+            topic_title: topicTitle,
+            explored: true,
+            last_visited: new Date().toISOString(),
+          })
+        )
+      );
     } else {
       const updated = { ...progress, [topicTitle]: newProgress };
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
