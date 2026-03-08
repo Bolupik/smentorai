@@ -280,18 +280,13 @@ const ProfileEditor = () => {
   const saveWalletToProfile = async (address: string, bnsName?: string) => {
     if (!user) return;
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("profiles")
-        .update({ stacks_address: address, bns_name: bnsName || null })
-        .eq("user_id", user.id)
-        .select("stacks_address, bns_name")
-        .maybeSingle();
-      if (!error && data) {
-        setProfile((prev) => ({
-          ...prev,
-          stacks_address: data.stacks_address,
-          bns_name: data.bns_name,
-        }));
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .update({ stacks_address: address, bns_name: bnsName || null } as any)
+        .eq("user_id", user.id);
+      if (!error) {
+        setProfile((prev) => ({ ...prev, stacks_address: address, bns_name: bnsName || null }));
         toast.success("Wallet linked to your profile");
       }
     } catch {
