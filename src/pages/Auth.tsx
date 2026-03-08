@@ -6,11 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, User, Mail, CheckCircle, Wallet } from "lucide-react";
+import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, User, Mail, CheckCircle, Wallet, ExternalLink, Smartphone } from "lucide-react";
 import aiCharacter from "@/assets/ai-character.png";
 import { z } from "zod";
 import { useStacksAuth } from "@/hooks/useStacksAuth";
 import { useAuth } from "@/contexts/AuthContext";
+
+/** Returns true when running on a mobile/tablet device */
+const isMobileDevice = () =>
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
