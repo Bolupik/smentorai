@@ -244,7 +244,7 @@ const Dashboard = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="w-full max-w-2xl py-8"
+                className="w-full max-w-3xl py-8"
               >
                 <AdminPanel />
               </motion.div>
