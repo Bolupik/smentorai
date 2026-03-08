@@ -17,16 +17,17 @@ export const useAdminRole = () => {
 
     const checkAdminRole = async () => {
       try {
-        const { data, error } = await retryWithBackoff(() =>
+        const result = await retryWithBackoff(() =>
           supabase
             .from('user_roles')
             .select('role')
             .eq('user_id', user.id)
             .eq('role', 'admin')
             .maybeSingle()
+            .then((r) => r)
         );
-        if (error) throw error;
-        setIsAdmin(!!data);
+        if (result.error) throw result.error;
+        setIsAdmin(!!result.data);
       } catch {
         setIsAdmin(false);
       } finally {
