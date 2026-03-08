@@ -48,40 +48,183 @@ const TOPIC_MAP: Record<string, string> = {
   "Skullcoin": "tools",
 };
 
-const SPONSORS = [
-  { name: "ALEX", url: "https://alex.io", category: "defi" },
-  { name: "Arkadiko", url: "https://arkadiko.finance", category: "defi" },
-  { name: "Bitflow", url: "https://app.bitflow.finance", category: "defi" },
-  { name: "Brotocol", url: "https://brotocol.xyz", category: "defi" },
-  { name: "Charisma", url: "https://charisma.rocks", category: "defi" },
-  { name: "FastPool", url: "https://fastpool.org", category: "defi" },
-  { name: "Granite", url: "https://granite.world", category: "defi" },
-  { name: "Hermetica", url: "https://hermetica.fi", category: "defi" },
-  { name: "Moonlabs", url: "https://moonlabs.fun", category: "defi" },
-  { name: "STX City", url: "https://stx.city", category: "defi" },
-  { name: "Velar", url: "https://velar.com", category: "defi" },
-  { name: "Zest Protocol", url: "https://zestprotocol.com", category: "defi" },
-  { name: "Gamma", url: "https://gamma.io", category: "nft" },
-  { name: "BNS Market", url: "https://bns.market", category: "nft" },
-  { name: "Boom", url: "https://boom.money", category: "nft" },
-  { name: "Tradeport", url: "https://tradeport.xyz", category: "nft" },
-  { name: "Asigna", url: "https://asigna.io", category: "wallets" },
-  { name: "Leather", url: "https://leather.io", category: "wallets" },
-  { name: "Ryder", url: "https://ryder.id", category: "wallets" },
-  { name: "Xverse", url: "https://xverse.app", category: "wallets" },
-  { name: "Hiro", url: "https://hiro.so", category: "tools" },
-  { name: "Indexer", url: "https://indexer.xyz", category: "tools" },
-  { name: "BlockSurvey", url: "https://blocksurvey.io", category: "tools" },
-  { name: "BoostX", url: "https://boostx.cc", category: "tools" },
-  { name: "BNS One", url: "https://bns.one", category: "tools" },
-  { name: "LunarCrush", url: "https://lunarcrush.com", category: "tools" },
-  { name: "STX Tools", url: "https://stxtools.io", category: "tools" },
-  { name: "STX Watch", url: "https://stxwatch.io", category: "tools" },
-  { name: "STX20", url: "https://stx20.com", category: "tools" },
-  { name: "Sigle", url: "https://sigle.io", category: "tools" },
-  { name: "Deorganized", url: "https://deorganized.media", category: "tools" },
-  { name: "Chess on Chain", url: "https://chessonchain.io", category: "tools" },
-  { name: "Zero Authority DAO", url: "https://zeroauthoritydao.com", category: "tools" },
+// Each sponsor now has a primary URL + optional deep-dive sub-pages
+const SPONSORS: { name: string; url: string; category: string; deepPages?: string[] }[] = [
+  {
+    name: "ALEX",
+    url: "https://docs.alexlab.co",
+    category: "defi",
+    deepPages: ["https://alex.io", "https://docs.alexlab.co/product-features/automated-market-maker"],
+  },
+  {
+    name: "Arkadiko",
+    url: "https://docs.arkadiko.finance",
+    category: "defi",
+    deepPages: ["https://arkadiko.finance", "https://docs.arkadiko.finance/faq"],
+  },
+  {
+    name: "Bitflow",
+    url: "https://bitflow.finance",
+    category: "defi",
+    deepPages: ["https://app.bitflow.finance"],
+  },
+  {
+    name: "Brotocol",
+    url: "https://brotocol.xyz",
+    category: "defi",
+  },
+  {
+    name: "Charisma",
+    url: "https://charisma.rocks",
+    category: "defi",
+    deepPages: ["https://docs.charisma.rocks"],
+  },
+  {
+    name: "FastPool",
+    url: "https://fastpool.org",
+    category: "stacking",
+  },
+  {
+    name: "Granite",
+    url: "https://granite.world",
+    category: "defi",
+    deepPages: ["https://docs.granite.world"],
+  },
+  {
+    name: "Hermetica",
+    url: "https://hermetica.fi",
+    category: "defi",
+  },
+  {
+    name: "Moonlabs",
+    url: "https://moonlabs.fun",
+    category: "defi",
+  },
+  {
+    name: "STX City",
+    url: "https://stx.city",
+    category: "defi",
+  },
+  {
+    name: "Velar",
+    url: "https://velar.com",
+    category: "defi",
+    deepPages: ["https://velar.com/learn"],
+  },
+  {
+    name: "Zest Protocol",
+    url: "https://docs.zestprotocol.com",
+    category: "defi",
+    deepPages: ["https://zestprotocol.com", "https://docs.zestprotocol.com/start/bitcoin-as-prime-collateral"],
+  },
+  {
+    name: "Gamma",
+    url: "https://gamma.io",
+    category: "nft",
+  },
+  {
+    name: "BNS Market",
+    url: "https://bns.market",
+    category: "nft",
+  },
+  {
+    name: "Boom",
+    url: "https://boom.money",
+    category: "nft",
+  },
+  {
+    name: "Tradeport",
+    url: "https://tradeport.xyz",
+    category: "nft",
+  },
+  {
+    name: "Asigna",
+    url: "https://asigna.io",
+    category: "wallets",
+  },
+  {
+    name: "Leather",
+    url: "https://leather.io/guides",
+    category: "wallets",
+    deepPages: ["https://leather.io"],
+  },
+  {
+    name: "Ryder",
+    url: "https://ryder.id",
+    category: "wallets",
+  },
+  {
+    name: "Xverse",
+    url: "https://www.xverse.app",
+    category: "wallets",
+    deepPages: ["https://docs.xverse.app"],
+  },
+  {
+    name: "Hiro",
+    url: "https://docs.hiro.so/stacks/get-started",
+    category: "architecture",
+    deepPages: ["https://hiro.so"],
+  },
+  {
+    name: "Indexer",
+    url: "https://indexer.xyz",
+    category: "architecture",
+  },
+  {
+    name: "BlockSurvey",
+    url: "https://blocksurvey.io",
+    category: "tools",
+  },
+  {
+    name: "BoostX",
+    url: "https://boostx.cc",
+    category: "tools",
+  },
+  {
+    name: "BNS One",
+    url: "https://bns.one",
+    category: "tools",
+  },
+  {
+    name: "LunarCrush",
+    url: "https://lunarcrush.com",
+    category: "tools",
+  },
+  {
+    name: "STX Tools",
+    url: "https://stxtools.io",
+    category: "tools",
+  },
+  {
+    name: "STX Watch",
+    url: "https://stxwatch.io",
+    category: "tools",
+  },
+  {
+    name: "STX20",
+    url: "https://stx20.com",
+    category: "tools",
+  },
+  {
+    name: "Sigle",
+    url: "https://sigle.io",
+    category: "tools",
+  },
+  {
+    name: "Deorganized",
+    url: "https://deorganized.media",
+    category: "tools",
+  },
+  {
+    name: "Chess on Chain",
+    url: "https://chessonchain.io",
+    category: "tools",
+  },
+  {
+    name: "Zero Authority DAO",
+    url: "https://zeroauthoritydao.com",
+    category: "tools",
+  },
 ];
 
 async function scrapeUrl(url: string, firecrawlKey: string): Promise<string | null> {
@@ -96,6 +239,7 @@ async function scrapeUrl(url: string, firecrawlKey: string): Promise<string | nu
         url,
         formats: ["markdown"],
         onlyMainContent: true,
+        waitFor: 1000,
       }),
     });
 
@@ -105,12 +249,11 @@ async function scrapeUrl(url: string, firecrawlKey: string): Promise<string | nu
     }
 
     const data = await res.json();
-    // v1 API nests content inside data
     const markdown: string = data?.data?.markdown ?? data?.markdown ?? "";
     if (!markdown || markdown.trim().length < 100) return null;
 
-    // Truncate to 4000 chars to keep DB entries concise
-    return markdown.slice(0, 4000).trim();
+    // Truncate to 6000 chars to keep DB entries rich but concise
+    return markdown.slice(0, 6000).trim();
   } catch (err) {
     console.error(`Scrape failed for ${url}:`, err);
     return null;
@@ -135,14 +278,16 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Allow caller to pick a batch (0–3) to avoid function timeout
+    // Parse options from body
     let batchIndex = 0;
+    let forceUpdate = false;
     try {
       const body = await req.json();
       if (typeof body?.batch === "number") batchIndex = body.batch;
+      if (typeof body?.force === "boolean") forceUpdate = body.force;
     } catch (_) { /* no body */ }
 
-    const BATCH_SIZE = 9;
+    const BATCH_SIZE = 8;
     const batch = SPONSORS.slice(batchIndex * BATCH_SIZE, (batchIndex + 1) * BATCH_SIZE);
 
     const SYSTEM_USER_ID = "00000000-0000-0000-0000-000000000001";
@@ -154,59 +299,100 @@ serve(async (req) => {
 
     const results: { name: string; status: string; chars?: number }[] = [];
     let inserted = 0;
+    let updated = 0;
     let skipped = 0;
     let failed = 0;
 
     for (const sponsor of batch) {
+      // Fetch existing entry
       const { data: existing } = await supabase
         .from("knowledge_base")
-        .select("id")
+        .select("id, content")
         .eq("link_url", sponsor.url)
         .maybeSingle();
 
-      if (existing) {
+      if (existing && !forceUpdate) {
         skipped++;
         results.push({ name: sponsor.name, status: "skipped (already exists)" });
         continue;
       }
 
       console.log(`Scraping ${sponsor.name} — ${sponsor.url}`);
-      const markdown = await scrapeUrl(sponsor.url, firecrawlKey);
 
-      if (!markdown) {
+      // Scrape primary page
+      let primaryMarkdown = await scrapeUrl(sponsor.url, firecrawlKey);
+
+      // Scrape deep pages and concatenate
+      let deepContent = "";
+      if (sponsor.deepPages && sponsor.deepPages.length > 0) {
+        for (const deepUrl of sponsor.deepPages) {
+          await new Promise((r) => setTimeout(r, 400));
+          const deepMd = await scrapeUrl(deepUrl, firecrawlKey);
+          if (deepMd) {
+            deepContent += `\n\n---\n\n### From ${deepUrl}\n\n${deepMd.slice(0, 2500)}`;
+          }
+        }
+      }
+
+      if (!primaryMarkdown && !deepContent) {
         failed++;
         results.push({ name: sponsor.name, status: "failed to scrape" });
         continue;
       }
 
+      const combinedMarkdown = (primaryMarkdown ?? "") + deepContent;
+
       const topic = TOPIC_MAP[sponsor.name] ?? "tools";
-      const content = `## ${sponsor.name}\n\n**Website:** ${sponsor.url}\n**Category:** ${sponsor.category}\n\n${markdown}`;
+      const content = `## ${sponsor.name}\n\n**Website:** ${sponsor.url}\n**Category:** ${sponsor.category}\n**Topic:** ${topic}\n\n${combinedMarkdown}`;
 
-      const { error } = await supabase.from("knowledge_base").insert({
-        user_id: SYSTEM_USER_ID,
-        topic,
-        category: sponsor.category,
-        content,
-        link_url: sponsor.url,
-        approved: true,
-        upvotes: 5,
-      });
+      if (existing && forceUpdate) {
+        // Update existing entry with richer content
+        const { error } = await supabase
+          .from("knowledge_base")
+          .update({
+            content,
+            link_url: sponsor.url,
+            approved: true,
+            upvotes: 10,
+          })
+          .eq("id", existing.id);
 
-      if (error) {
-        console.error(`DB insert error for ${sponsor.name}:`, error.message);
-        failed++;
-        results.push({ name: sponsor.name, status: `db error: ${error.message}` });
+        if (error) {
+          console.error(`DB update error for ${sponsor.name}:`, error.message);
+          failed++;
+          results.push({ name: sponsor.name, status: `db error: ${error.message}` });
+        } else {
+          updated++;
+          results.push({ name: sponsor.name, status: "updated", chars: content.length });
+        }
       } else {
-        inserted++;
-        results.push({ name: sponsor.name, status: "inserted", chars: content.length });
+        // Insert new entry
+        const { error } = await supabase.from("knowledge_base").insert({
+          user_id: SYSTEM_USER_ID,
+          topic,
+          category: sponsor.category,
+          content,
+          link_url: sponsor.url,
+          approved: true,
+          upvotes: 10,
+        });
+
+        if (error) {
+          console.error(`DB insert error for ${sponsor.name}:`, error.message);
+          failed++;
+          results.push({ name: sponsor.name, status: `db error: ${error.message}` });
+        } else {
+          inserted++;
+          results.push({ name: sponsor.name, status: "inserted", chars: content.length });
+        }
       }
 
-      await new Promise((r) => setTimeout(r, 300));
+      await new Promise((r) => setTimeout(r, 400));
     }
 
     const totalBatches = Math.ceil(SPONSORS.length / BATCH_SIZE);
     return new Response(
-      JSON.stringify({ batch: batchIndex, totalBatches, inserted, skipped, failed, results }),
+      JSON.stringify({ batch: batchIndex, totalBatches, inserted, updated, skipped, failed, results }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {
