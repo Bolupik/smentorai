@@ -19,7 +19,8 @@ export const useQuizStreak = (): QuizStreakData => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) {
+    // Need a real (non-anonymous) authenticated user for quiz streaks
+    if (!user || user.is_anonymous) {
       setCurrentStreak(0);
       setLongestStreak(0);
       setTotalCompleted(0);
@@ -42,10 +43,10 @@ export const useQuizStreak = (): QuizStreakData => {
           return;
         }
 
-        // Deduplicate dates (upsert might create one per day, but just in case)
+        // Deduplicate dates
         const dates = Array.from(
           new Set(data.map((r) => r.quiz_date))
-        ).sort((a, b) => (a > b ? -1 : 1)); // descending
+        ).sort((a, b) => (a > b ? -1 : 1));
 
         setTotalCompleted(dates.length);
 
@@ -58,15 +59,13 @@ export const useQuizStreak = (): QuizStreakData => {
         let streak = 0;
         let cursor = today;
 
-        // Start from today or yesterday
         if (dates[0] !== today && dates[0] !== yesterday) {
           setCurrentStreak(0);
         } else {
-          cursor = dates[0]; // start from latest
+          cursor = dates[0];
           for (const d of dates) {
             if (d === cursor) {
               streak++;
-              // Go back one day
               const prev = new Date(cursor);
               prev.setDate(prev.getDate() - 1);
               cursor = prev.toISOString().split("T")[0];
@@ -101,7 +100,7 @@ export const useQuizStreak = (): QuizStreakData => {
     };
 
     compute();
-  }, [user]);
+  }, [user?.id, user?.is_anonymous]);
 
   return { currentStreak, longestStreak, totalCompleted, completedToday, loading };
 };
