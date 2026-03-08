@@ -270,6 +270,10 @@ const ProfileEditor = () => {
     );
   }
 
+  if (isGuest) {
+    return <GuestGate feature="profile editing" />;
+  }
+
   return (
     <div className="space-y-4">
       {/* ── Identity Card ── */}
