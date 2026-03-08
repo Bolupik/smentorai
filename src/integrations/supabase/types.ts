@@ -14,6 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      daily_quiz_results: {
+        Row: {
+          answers: Json | null
+          completed_at: string
+          id: string
+          quiz_date: string
+          score: number
+          total: number
+          user_id: string
+        }
+        Insert: {
+          answers?: Json | null
+          completed_at?: string
+          id?: string
+          quiz_date: string
+          score?: number
+          total?: number
+          user_id: string
+        }
+        Update: {
+          answers?: Json | null
+          completed_at?: string
+          id?: string
+          quiz_date?: string
+          score?: number
+          total?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      daily_quizzes: {
+        Row: {
+          created_at: string
+          generated_by: string | null
+          id: string
+          questions: Json
+          quiz_date: string
+        }
+        Insert: {
+          created_at?: string
+          generated_by?: string | null
+          id?: string
+          questions: Json
+          quiz_date: string
+        }
+        Update: {
+          created_at?: string
+          generated_by?: string | null
+          id?: string
+          questions?: Json
+          quiz_date?: string
+        }
+        Relationships: []
+      }
       knowledge_base: {
         Row: {
           approved: boolean | null

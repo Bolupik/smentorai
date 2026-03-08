@@ -11,6 +11,7 @@ import KnowledgeBase from "@/components/KnowledgeBase";
 import AdminPanel from "@/components/AdminPanel";
 import ProfileEditor from "@/components/ProfileEditor";
 import DappShowcase from "@/components/DappShowcase";
+import DailyQuizPanel from "@/components/DailyQuizPanel";
 import { CommunitySentiment } from "@/components/CommunitySentiment";
 import OnboardingModal from "@/components/OnboardingModal";
 import GuideTour from "@/components/GuideTour";
@@ -687,6 +688,9 @@ const Dashboard = () => {
         }}
       />
       <GuideTour open={showGuide} onClose={() => setShowGuide(false)} />
+
+      {/* Daily Quiz – floats on right edge of every dashboard view */}
+      <DailyQuizPanel />
     </div>
   );
 };
