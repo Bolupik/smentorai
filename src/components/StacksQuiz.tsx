@@ -7,6 +7,7 @@ import { CheckCircle, XCircle, BookOpen, Trophy, RotateCcw, Timer, Clock } from 
 import { Switch } from "./ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import GuestGate from "./GuestGate";
 
 type AgeLevel = "child" | "teen" | "adult" | "expert";
 
@@ -1094,10 +1095,11 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
   // Mode selection screen
   if (!quizStarted) {
     return (
+      <GuestGate featureLabel="take the assessment">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-card border border-border rounded-xl p-8 max-w-2xl mx-auto"
+        className="bg-card border border-border rounded-xl p-6 sm:p-8 max-w-2xl mx-auto"
       >
         <div className="text-center mb-6">
           <BookOpen className="w-12 h-12 mx-auto mb-4 text-primary" />
@@ -1160,6 +1162,7 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
           {timedMode ? "Start Timed Exam" : "Start Assessment"}
         </Button>
       </motion.div>
+      </GuestGate>
     );
   }
 

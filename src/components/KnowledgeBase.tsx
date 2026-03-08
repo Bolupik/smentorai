@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Input } from "./ui/input";
+import GuestGate from "./GuestGate";
 import { 
   BookPlus, 
   Lightbulb, 
@@ -364,7 +365,9 @@ const KnowledgeBase = () => {
       </div>
 
       {/* Contribution Form Toggle */}
-      <motion.div className="mb-6">
+      <div className="mb-6">
+        <GuestGate featureLabel="contribute to the knowledge base">
+        <motion.div>
         <Button
           variant="outline"
           className="w-full justify-between"
@@ -506,7 +509,9 @@ const KnowledgeBase = () => {
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.div>
+        </motion.div>
+        </GuestGate>
+      </div>
 
       {/* My Submissions */}
       {user && myEntries.length > 0 && (
@@ -620,9 +625,12 @@ const KnowledgeBase = () => {
                     {/* Vote Controls - Reddit Style */}
                     <div className="flex flex-col items-center gap-1">
                       <button
-                        onClick={() => handleVote(entry.id, 'up')}
+                        onClick={() => user && !user.is_anonymous ? handleVote(entry.id, 'up') : undefined}
+                        title={user?.is_anonymous || !user ? "Sign in to vote" : undefined}
                         className={`p-1 rounded transition-colors ${
-                          userVote === 'up' 
+                          user?.is_anonymous || !user
+                            ? 'text-muted-foreground/30 cursor-not-allowed'
+                            : userVote === 'up' 
                             ? 'text-primary bg-primary/20' 
                             : 'text-muted-foreground hover:text-primary hover:bg-primary/10'
                         }`}
@@ -635,9 +643,12 @@ const KnowledgeBase = () => {
                         {score}
                       </span>
                       <button
-                        onClick={() => handleVote(entry.id, 'down')}
+                        onClick={() => user && !user.is_anonymous ? handleVote(entry.id, 'down') : undefined}
+                        title={user?.is_anonymous || !user ? "Sign in to vote" : undefined}
                         className={`p-1 rounded transition-colors ${
-                          userVote === 'down' 
+                          user?.is_anonymous || !user
+                            ? 'text-muted-foreground/30 cursor-not-allowed'
+                            : userVote === 'down' 
                             ? 'text-destructive bg-destructive/20' 
                             : 'text-muted-foreground hover:text-destructive hover:bg-destructive/10'
                         }`}

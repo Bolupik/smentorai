@@ -127,35 +127,35 @@ const Dashboard = () => {
             animate="animate"
             exit="exit"
             transition={pageTransition}
-            className="flex-1 flex flex-col"
+            className="flex-1 flex flex-col min-h-screen"
           >
             <motion.header
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               className="border-b border-border/30 bg-background/95 backdrop-blur-md sticky top-0 z-50"
             >
-              <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+              <div className="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between max-w-3xl mx-auto w-full">
                 <motion.button
-                  whileHover={{ x: -5 }}
+                  whileHover={{ x: -4 }}
                   onClick={() => setShowProfile(false)}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5"
                 >
-                  <span className="text-lg">←</span>
-                  <span>Return</span>
+                  <span className="text-base">←</span>
+                  <span className="hidden sm:inline">Return</span>
                 </motion.button>
-                <div className="flex items-center gap-3">
-                  <UserCircle className="w-5 h-5 text-primary" />
-                  <h1 className="text-lg font-semibold tracking-tight">My Profile</h1>
+                <div className="flex items-center gap-2">
+                  <UserCircle className="w-4 h-4 text-primary" />
+                  <h1 className="text-base font-semibold tracking-tight">My Profile</h1>
                 </div>
                 <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
               </div>
             </motion.header>
-            <main className="flex-1 flex flex-col items-center justify-start p-6 overflow-auto">
+            <main className="flex-1 overflow-auto">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="w-full max-w-md py-8"
+                transition={{ delay: 0.15 }}
+                className="w-full max-w-md mx-auto px-4 py-6 sm:py-10"
               >
                 <ProfileEditor />
               </motion.div>
@@ -169,35 +169,35 @@ const Dashboard = () => {
             animate="animate"
             exit="exit"
             transition={pageTransition}
-            className="flex-1 flex flex-col"
+            className="flex-1 flex flex-col min-h-screen"
           >
             <motion.header
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               className="border-b border-border/30 bg-background/95 backdrop-blur-md sticky top-0 z-50"
             >
-              <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+              <div className="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
                 <motion.button
-                  whileHover={{ x: -5 }}
+                  whileHover={{ x: -4 }}
                   onClick={() => setShowSentiment(false)}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5"
                 >
-                  <span className="text-lg">←</span>
-                  <span>Return</span>
+                  <span className="text-base">←</span>
+                  <span className="hidden sm:inline">Return</span>
                 </motion.button>
-                <div className="flex items-center gap-3">
-                  <Activity className="w-5 h-5 text-orange-500" />
-                  <h1 className="text-lg font-semibold tracking-tight">Community Pulse</h1>
+                <div className="flex items-center gap-2">
+                  <Activity className="w-4 h-4 text-orange-500" />
+                  <h1 className="text-base font-semibold tracking-tight">Community Pulse</h1>
                 </div>
                 <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
               </div>
             </motion.header>
-            <main className="flex-1 flex flex-col items-center justify-start p-6 overflow-auto">
+            <main className="flex-1 overflow-auto">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="w-full max-w-4xl py-8"
+                transition={{ delay: 0.15 }}
+                className="w-full max-w-4xl mx-auto px-4 py-6 sm:py-10"
               >
                 <CommunitySentiment />
               </motion.div>
@@ -211,35 +211,35 @@ const Dashboard = () => {
             animate="animate"
             exit="exit"
             transition={pageTransition}
-            className="flex-1 flex flex-col"
+            className="flex-1 flex flex-col min-h-screen"
           >
             <motion.header
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               className="border-b border-border/30 bg-background/95 backdrop-blur-md sticky top-0 z-50"
             >
-              <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+              <div className="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
                 <motion.button
-                  whileHover={{ x: -5 }}
+                  whileHover={{ x: -4 }}
                   onClick={() => setShowAdmin(false)}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5"
                 >
-                  <span className="text-lg">←</span>
-                  <span>Return</span>
+                  <span className="text-base">←</span>
+                  <span className="hidden sm:inline">Return</span>
                 </motion.button>
-                <div className="flex items-center gap-3">
-                  <Shield className="w-5 h-5 text-destructive" />
-                  <h1 className="text-lg font-semibold tracking-tight">Admin Panel</h1>
+                <div className="flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-destructive" />
+                  <h1 className="text-base font-semibold tracking-tight">Admin Panel</h1>
                 </div>
                 <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
               </div>
             </motion.header>
-            <main className="flex-1 flex flex-col items-center justify-start p-6 overflow-auto">
+            <main className="flex-1 overflow-auto">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="w-full max-w-2xl py-8"
+                transition={{ delay: 0.15 }}
+                className="w-full max-w-2xl mx-auto px-4 py-6 sm:py-10"
               >
                 <AdminPanel />
               </motion.div>
@@ -253,35 +253,35 @@ const Dashboard = () => {
             animate="animate"
             exit="exit"
             transition={pageTransition}
-            className="flex-1 flex flex-col"
+            className="flex-1 flex flex-col min-h-screen"
           >
             <motion.header
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               className="border-b border-border/30 bg-background/95 backdrop-blur-md sticky top-0 z-50"
             >
-              <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+              <div className="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
                 <motion.button
-                  whileHover={{ x: -5 }}
+                  whileHover={{ x: -4 }}
                   onClick={() => setShowKnowledge(false)}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5"
                 >
-                  <span className="text-lg">←</span>
-                  <span>Return</span>
+                  <span className="text-base">←</span>
+                  <span className="hidden sm:inline">Return</span>
                 </motion.button>
-                <div className="flex items-center gap-3">
-                  <Library className="w-5 h-5 text-primary" />
-                  <h1 className="text-lg font-semibold tracking-tight">Knowledge Repository</h1>
+                <div className="flex items-center gap-2">
+                  <Library className="w-4 h-4 text-primary" />
+                  <h1 className="text-base font-semibold tracking-tight">Knowledge Repository</h1>
                 </div>
                 <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
               </div>
             </motion.header>
-            <main className="flex-1 flex flex-col items-center justify-start p-6 overflow-auto">
+            <main className="flex-1 overflow-auto">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="w-full max-w-2xl py-8 space-y-6"
+                transition={{ delay: 0.15 }}
+                className="w-full max-w-2xl mx-auto px-4 py-6 sm:py-8 space-y-6"
               >
                 <KnowledgeBase />
               </motion.div>
@@ -295,42 +295,40 @@ const Dashboard = () => {
             animate="animate"
             exit="exit"
             transition={pageTransition}
-            className="flex-1 flex flex-col"
+            className="flex-1 flex flex-col min-h-screen"
           >
-            {/* Quiz Header */}
             <motion.header
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               className="border-b border-border/30 bg-background/95 backdrop-blur-md sticky top-0 z-50"
             >
-              <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+              <div className="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
                 <motion.button
-                  whileHover={{ x: -5 }}
+                  whileHover={{ x: -4 }}
                   onClick={() => setShowQuiz(false)}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5"
                 >
-                  <span className="text-lg">←</span>
-                  <span>Return</span>
+                  <span className="text-base">←</span>
+                  <span className="hidden sm:inline">Return</span>
                 </motion.button>
-                <div className="flex items-center gap-3">
-                  <BookOpen className="w-5 h-5 text-primary" />
-                  <h1 className="text-lg font-semibold tracking-tight">Knowledge Assessment</h1>
+                <div className="flex items-center gap-2">
+                  <BookOpen className="w-4 h-4 text-primary" />
+                  <h1 className="text-base font-semibold tracking-tight">Knowledge Assessment</h1>
                 </div>
                 <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
               </div>
             </motion.header>
 
-            {/* Quiz Content */}
-            <main className="flex-1 flex flex-col items-center justify-center p-6">
+            <main className="flex-1 overflow-auto">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="w-full max-w-2xl"
+                transition={{ delay: 0.15 }}
+                className="w-full max-w-2xl mx-auto px-4 py-6 sm:py-10"
               >
-                <div className="text-center mb-8">
-                  <h2 className="text-2xl font-bold text-foreground mb-2">Stacks Ecosystem Proficiency</h2>
-                  <p className="text-muted-foreground">
+                <div className="text-center mb-6 sm:mb-8">
+                  <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">Stacks Ecosystem Proficiency</h2>
+                  <p className="text-sm text-muted-foreground">
                     A technical assessment to evaluate your comprehension of core architectural principles.
                   </p>
                 </div>
@@ -485,77 +483,76 @@ const Dashboard = () => {
                   A comprehensive discourse on the Stacks paradigm. Master decentralized finance, Bitcoin's programmable layer, and the elegance of Clarity.
                 </motion.p>
 
-                {/* Buttons - Mobile responsive grid */}
+                {/* Buttons - Mobile responsive, 2-col on small screens */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 1.4 }}
-                  className="flex flex-wrap gap-2 sm:gap-3 md:gap-4"
+                  className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-3"
                 >
                   <motion.button
                     onClick={() => setShowChat(true)}
-                    className="group flex items-center gap-2 sm:gap-3 px-4 sm:px-8 py-3 sm:py-4 bg-foreground text-background font-semibold text-sm sm:text-lg rounded-sm hover:bg-foreground/90 transition-all duration-300 shadow-lg hover:shadow-xl"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="col-span-2 sm:col-auto group flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-8 py-3 sm:py-4 bg-foreground text-background font-semibold text-sm sm:text-base rounded-sm hover:bg-foreground/90 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
                   >
-                    <Play className="w-4 h-4 sm:w-6 sm:h-6 fill-current" />
+                    <Play className="w-4 h-4 fill-current" />
                     <span>Begin</span>
                   </motion.button>
                   <motion.button
                     onClick={() => setShowQuiz(true)}
-                    className="group flex items-center gap-2 px-4 sm:px-8 py-3 sm:py-4 bg-primary/20 text-primary border border-primary/50 font-semibold text-sm sm:text-lg rounded-sm hover:bg-primary/30 transition-all duration-300"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-primary/20 text-primary border border-primary/50 font-semibold text-sm sm:text-base rounded-sm hover:bg-primary/30 transition-all duration-300"
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
                   >
-                    <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="hidden sm:inline">Assessment</span>
-                    <span className="sm:hidden">Quiz</span>
+                    <BookOpen className="w-4 h-4" />
+                    <span>Quiz</span>
                   </motion.button>
                   <motion.button
                     onClick={() => setShowKnowledge(true)}
-                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-muted/60 text-foreground/80 font-medium text-sm sm:text-lg rounded-sm hover:bg-muted transition-all duration-300 backdrop-blur-sm"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-muted/60 text-foreground/80 font-medium text-sm sm:text-base rounded-sm hover:bg-muted transition-all duration-300 backdrop-blur-sm"
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
                   >
-                    <Library className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="hidden sm:inline">Contribute</span>
+                    <Library className="w-4 h-4" />
+                    <span>Contribute</span>
                   </motion.button>
                   <motion.button
                     onClick={() => setShowSentiment(true)}
-                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-orange-500/20 text-orange-400 border border-orange-500/50 font-semibold text-sm sm:text-lg rounded-sm hover:bg-orange-500/30 transition-all duration-300"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-orange-500/20 text-orange-400 border border-orange-500/50 font-semibold text-sm sm:text-base rounded-sm hover:bg-orange-500/30 transition-all duration-300"
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
                   >
-                    <Activity className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="hidden sm:inline">Pulse</span>
+                    <Activity className="w-4 h-4" />
+                    <span>Pulse</span>
                   </motion.button>
                   <motion.button 
                     onClick={() => setShowPreview(true)}
-                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-muted/80 text-foreground font-semibold text-sm sm:text-lg rounded-sm hover:bg-muted transition-all duration-300 backdrop-blur-sm"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-muted/80 text-foreground font-semibold text-sm sm:text-base rounded-sm hover:bg-muted transition-all duration-300 backdrop-blur-sm"
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
                   >
-                    <Info className="w-4 h-4 sm:w-6 sm:h-6" />
-                    <span className="hidden sm:inline">Overview</span>
+                    <Info className="w-4 h-4" />
+                    <span>Overview</span>
                   </motion.button>
                   <motion.button
                     onClick={() => setShowGuide(true)}
-                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-muted/60 text-foreground/70 font-medium text-sm sm:text-lg rounded-sm hover:bg-muted hover:text-foreground transition-all duration-300 backdrop-blur-sm border border-border/40"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-muted/60 text-foreground/70 font-medium text-sm sm:text-base rounded-sm hover:bg-muted hover:text-foreground transition-all duration-300 backdrop-blur-sm border border-border/40"
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
                   >
-                    <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="hidden sm:inline">Guide</span>
+                    <HelpCircle className="w-4 h-4" />
+                    <span>Guide</span>
                   </motion.button>
                   {isAdmin && (
                     <motion.button
                       onClick={() => setShowAdmin(true)}
-                      className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-destructive/20 text-destructive border border-destructive/50 font-semibold text-sm sm:text-lg rounded-sm hover:bg-destructive/30 transition-all duration-300"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.98 }}
+                      className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-destructive/20 text-destructive border border-destructive/50 font-semibold text-sm sm:text-base rounded-sm hover:bg-destructive/30 transition-all duration-300"
+                      whileHover={{ scale: 1.04 }}
+                      whileTap={{ scale: 0.97 }}
                     >
-                      <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
-                      <span className="hidden sm:inline">Admin</span>
+                      <Shield className="w-4 h-4" />
+                      <span>Admin</span>
                     </motion.button>
                   )}
                 </motion.div>
