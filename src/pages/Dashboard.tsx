@@ -211,35 +211,35 @@ const Dashboard = () => {
             animate="animate"
             exit="exit"
             transition={pageTransition}
-            className="flex-1 flex flex-col"
+            className="flex-1 flex flex-col min-h-screen"
           >
             <motion.header
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               className="border-b border-border/30 bg-background/95 backdrop-blur-md sticky top-0 z-50"
             >
-              <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+              <div className="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
                 <motion.button
-                  whileHover={{ x: -5 }}
+                  whileHover={{ x: -4 }}
                   onClick={() => setShowAdmin(false)}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5"
                 >
-                  <span className="text-lg">←</span>
-                  <span>Return</span>
+                  <span className="text-base">←</span>
+                  <span className="hidden sm:inline">Return</span>
                 </motion.button>
-                <div className="flex items-center gap-3">
-                  <Shield className="w-5 h-5 text-destructive" />
-                  <h1 className="text-lg font-semibold tracking-tight">Admin Panel</h1>
+                <div className="flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-destructive" />
+                  <h1 className="text-base font-semibold tracking-tight">Admin Panel</h1>
                 </div>
                 <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
               </div>
             </motion.header>
-            <main className="flex-1 flex flex-col items-center justify-start p-6 overflow-auto">
+            <main className="flex-1 overflow-auto">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="w-full max-w-2xl py-8"
+                transition={{ delay: 0.15 }}
+                className="w-full max-w-2xl mx-auto px-4 py-6 sm:py-10"
               >
                 <AdminPanel />
               </motion.div>
@@ -253,35 +253,35 @@ const Dashboard = () => {
             animate="animate"
             exit="exit"
             transition={pageTransition}
-            className="flex-1 flex flex-col"
+            className="flex-1 flex flex-col min-h-screen"
           >
             <motion.header
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               className="border-b border-border/30 bg-background/95 backdrop-blur-md sticky top-0 z-50"
             >
-              <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+              <div className="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
                 <motion.button
-                  whileHover={{ x: -5 }}
+                  whileHover={{ x: -4 }}
                   onClick={() => setShowKnowledge(false)}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5"
                 >
-                  <span className="text-lg">←</span>
-                  <span>Return</span>
+                  <span className="text-base">←</span>
+                  <span className="hidden sm:inline">Return</span>
                 </motion.button>
-                <div className="flex items-center gap-3">
-                  <Library className="w-5 h-5 text-primary" />
-                  <h1 className="text-lg font-semibold tracking-tight">Knowledge Repository</h1>
+                <div className="flex items-center gap-2">
+                  <Library className="w-4 h-4 text-primary" />
+                  <h1 className="text-base font-semibold tracking-tight">Knowledge Repository</h1>
                 </div>
                 <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
               </div>
             </motion.header>
-            <main className="flex-1 flex flex-col items-center justify-start p-6 overflow-auto">
+            <main className="flex-1 overflow-auto">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="w-full max-w-2xl py-8 space-y-6"
+                transition={{ delay: 0.15 }}
+                className="w-full max-w-2xl mx-auto px-4 py-6 sm:py-8 space-y-6"
               >
                 <KnowledgeBase />
               </motion.div>
@@ -295,42 +295,40 @@ const Dashboard = () => {
             animate="animate"
             exit="exit"
             transition={pageTransition}
-            className="flex-1 flex flex-col"
+            className="flex-1 flex flex-col min-h-screen"
           >
-            {/* Quiz Header */}
             <motion.header
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               className="border-b border-border/30 bg-background/95 backdrop-blur-md sticky top-0 z-50"
             >
-              <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+              <div className="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
                 <motion.button
-                  whileHover={{ x: -5 }}
+                  whileHover={{ x: -4 }}
                   onClick={() => setShowQuiz(false)}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5"
                 >
-                  <span className="text-lg">←</span>
-                  <span>Return</span>
+                  <span className="text-base">←</span>
+                  <span className="hidden sm:inline">Return</span>
                 </motion.button>
-                <div className="flex items-center gap-3">
-                  <BookOpen className="w-5 h-5 text-primary" />
-                  <h1 className="text-lg font-semibold tracking-tight">Knowledge Assessment</h1>
+                <div className="flex items-center gap-2">
+                  <BookOpen className="w-4 h-4 text-primary" />
+                  <h1 className="text-base font-semibold tracking-tight">Knowledge Assessment</h1>
                 </div>
                 <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
               </div>
             </motion.header>
 
-            {/* Quiz Content */}
-            <main className="flex-1 flex flex-col items-center justify-center p-6">
+            <main className="flex-1 overflow-auto">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="w-full max-w-2xl"
+                transition={{ delay: 0.15 }}
+                className="w-full max-w-2xl mx-auto px-4 py-6 sm:py-10"
               >
-                <div className="text-center mb-8">
-                  <h2 className="text-2xl font-bold text-foreground mb-2">Stacks Ecosystem Proficiency</h2>
-                  <p className="text-muted-foreground">
+                <div className="text-center mb-6 sm:mb-8">
+                  <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">Stacks Ecosystem Proficiency</h2>
+                  <p className="text-sm text-muted-foreground">
                     A technical assessment to evaluate your comprehension of core architectural principles.
                   </p>
                 </div>
