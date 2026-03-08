@@ -112,12 +112,6 @@ export default function DailyQuizPanel() {
   const loadLeaderboard = useCallback(async () => {
     setLbLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("quiz-leaderboard", {
-        body: null,
-        headers: {},
-      });
-      // Pass date as query param via URL workaround
-      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const anonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
       const res = await fetch(
