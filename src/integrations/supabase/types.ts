@@ -181,9 +181,11 @@ export type Database = {
         Row: {
           age_level: string | null
           avatar_url: string | null
+          bns_name: string | null
           created_at: string
           display_name: string | null
           id: string
+          stacks_address: string | null
           updated_at: string
           user_id: string
           username: string | null
@@ -191,9 +193,11 @@ export type Database = {
         Insert: {
           age_level?: string | null
           avatar_url?: string | null
+          bns_name?: string | null
           created_at?: string
           display_name?: string | null
           id?: string
+          stacks_address?: string | null
           updated_at?: string
           user_id: string
           username?: string | null
@@ -201,9 +205,11 @@ export type Database = {
         Update: {
           age_level?: string | null
           avatar_url?: string | null
+          bns_name?: string | null
           created_at?: string
           display_name?: string | null
           id?: string
+          stacks_address?: string | null
           updated_at?: string
           user_id?: string
           username?: string | null
