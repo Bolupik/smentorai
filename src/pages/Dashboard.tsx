@@ -256,7 +256,7 @@ const Dashboard = () => {
                   <Library className="w-5 h-5 text-primary" />
                   <h1 className="text-lg font-semibold tracking-tight">Knowledge Repository</h1>
                 </div>
-                <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} />
+                <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
               </div>
             </motion.header>
             <main className="flex-1 flex flex-col items-center justify-start p-6 overflow-auto">
