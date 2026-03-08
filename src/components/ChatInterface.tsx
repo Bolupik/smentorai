@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { Send, Loader2, Sparkles } from "lucide-react";
+import { Send, Loader2, Sparkles, ChevronDown } from "lucide-react";
 import { useToast } from "./ui/use-toast";
 import ChatMessage from "./ChatMessage";
 import TopicCards, { topicsList } from "./TopicCards";
@@ -21,14 +21,25 @@ interface Message {
   images?: string[];
 }
 
+const THINKING_PHRASES = [
+  "Thinking…",
+  "Searching the Stacks…",
+  "Connecting the blocks…",
+  "Consulting Clarity…",
+];
+
 const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [ageLevel, setAgeLevel] = useState<AgeLevel>("adult");
   const [showNFTExplorer, setShowNFTExplorer] = useState(false);
+  const [showScrollDown, setShowScrollDown] = useState(false);
+  const [thinkingPhrase] = useState(
+    () => THINKING_PHRASES[Math.floor(Math.random() * THINKING_PHRASES.length)]
+  );
 
-  // Fetch user's age_level from profile on mount
+  // Fetch age_level from profile on mount
   useEffect(() => {
     const fetchAgeLevel = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -38,98 +49,75 @@ const ChatInterface = () => {
         .select("age_level")
         .eq("user_id", session.user.id)
         .single();
-      if (data?.age_level) {
-        setAgeLevel(data.age_level as AgeLevel);
-      }
+      if (data?.age_level) setAgeLevel(data.age_level as AgeLevel);
     };
     fetchAgeLevel();
   }, []);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { progress, markExplored, isExplored, exploredCount } = useTopicProgressDB();
   const { achievements, unlockedCount, totalAchievements, allCompleted } = useAchievements(progress);
-
   const isUserScrolledUp = useRef(false);
 
-  const scrollToBottom = () => {
-    if (!isUserScrolledUp.current) {
+  const scrollToBottom = (force = false) => {
+    if (!isUserScrolledUp.current || force) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      setShowScrollDown(false);
     }
   };
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const target = e.currentTarget;
-    const isAtBottom = target.scrollHeight - target.scrollTop - target.clientHeight < 100;
+    const distFromBottom = target.scrollHeight - target.scrollTop - target.clientHeight;
+    const isAtBottom = distFromBottom < 120;
     isUserScrolledUp.current = !isAtBottom;
+    setShowScrollDown(!isAtBottom && messages.length > 0);
   };
 
   useEffect(() => {
-    // Only auto-scroll when not loading (i.e., when a complete message is added)
-    if (!isLoading) {
-      scrollToBottom();
-    }
+    if (!isLoading) scrollToBottom();
   }, [messages, isLoading]);
 
-  // Check if content is complex enough for an infographic
   const shouldAutoGenerateInfographic = (content: string, userQuery: string): boolean => {
-    // Complex topics that benefit from visual explanation
     const complexKeywords = [
-      'proof of transfer', 'stacking', 'mining', 'consensus', 'architecture',
-      'how does', 'how it works', 'explain', 'what is', 'difference between',
-      'clarity', 'smart contract', 'defi', 'yield', 'liquidity', 'amm',
-      'sbtc', 'nakamoto', 'bitcoin finality', 'microblocks', 'pox',
-      'rls', 'security', 'transaction', 'block', 'layer'
+      "proof of transfer","stacking","mining","consensus","architecture",
+      "how does","how it works","explain","what is","difference between",
+      "clarity","smart contract","defi","yield","liquidity","amm",
+      "sbtc","nakamoto","bitcoin finality","microblocks","pox",
+      "rls","security","transaction","block","layer",
     ];
-    
     const queryLower = userQuery.toLowerCase();
-    const hasComplexKeyword = complexKeywords.some(kw => queryLower.includes(kw));
+    const hasComplexKeyword = complexKeywords.some((kw) => queryLower.includes(kw));
     const isLongResponse = content.length > 800;
-    const hasCodeBlock = content.includes('```');
     const hasMultipleSections = (content.match(/#{1,3}\s/g) || []).length >= 2;
-    
-    // Generate infographic for complex explanations
-    return hasComplexKeyword && (isLongResponse || hasMultipleSections) && !hasCodeBlock;
+    return hasComplexKeyword && (isLongResponse || hasMultipleSections) && !content.includes("```");
   };
 
   const generateInfographicForMessage = async (content: string, messageIndex: number) => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       const accessToken = session?.access_token;
-      
       if (!accessToken) return;
-
-      const topic = content.split('.')[0].slice(0, 150);
-      
+      const topic = content.split(".")[0].slice(0, 150);
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-infographic`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({ 
-            topic,
-            context: content.slice(0, 500)
-          }),
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
+          body: JSON.stringify({ topic, context: content.slice(0, 500) }),
         }
       );
-
       if (!response.ok) return;
-
       const data = await response.json();
       if (data.imageUrl) {
-        setMessages((prev) => 
-          prev.map((m, i) => 
-            i === messageIndex 
-              ? { ...m, images: [...(m.images || []), data.imageUrl] }
-              : m
+        setMessages((prev) =>
+          prev.map((m, i) =>
+            i === messageIndex ? { ...m, images: [...(m.images || []), data.imageUrl] } : m
           )
         );
-        toast({
-          title: "📊 Infographic Generated",
-          description: "Visual explanation added to help you understand better!",
-        });
+        toast({ title: "📊 Infographic Generated", description: "Visual added to this response." });
       }
     } catch (error) {
       console.error("Auto-infographic error:", error);
@@ -138,41 +126,20 @@ const ChatInterface = () => {
 
   const streamChat = async (userMessage: Message) => {
     const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/defi-chat`;
-    
     try {
-      // Get the current session to use the user's access token
       const { data: { session } } = await supabase.auth.getSession();
       const accessToken = session?.access_token || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-      
       const resp = await fetch(CHAT_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
         body: JSON.stringify({ messages: [...messages, userMessage], ageLevel }),
       });
 
       if (!resp.ok) {
-        if (resp.status === 429) {
-          toast({
-            title: "Rate Limit",
-            description: "Too many requests. Please wait a moment.",
-            variant: "destructive",
-          });
-          return;
-        }
-        if (resp.status === 402) {
-          toast({
-            title: "Credits Depleted",
-            description: "AI credits have run out. Please add more credits.",
-            variant: "destructive",
-          });
-          return;
-        }
+        if (resp.status === 429) { toast({ title: "Rate Limit", description: "Too many requests.", variant: "destructive" }); return; }
+        if (resp.status === 402) { toast({ title: "Credits Depleted", description: "AI credits exhausted.", variant: "destructive" }); return; }
         throw new Error("Failed to start stream");
       }
-
       if (!resp.body) throw new Error("No response body");
 
       const reader = resp.body.getReader();
@@ -183,21 +150,16 @@ const ChatInterface = () => {
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-
         textBuffer += decoder.decode(value, { stream: true });
         let newlineIndex: number;
-
         while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
           let line = textBuffer.slice(0, newlineIndex);
           textBuffer = textBuffer.slice(newlineIndex + 1);
-
           if (line.endsWith("\r")) line = line.slice(0, -1);
           if (line.startsWith(":") || line.trim() === "") continue;
           if (!line.startsWith("data: ")) continue;
-
           const jsonStr = line.slice(6).trim();
           if (jsonStr === "[DONE]") break;
-
           try {
             const parsed = JSON.parse(jsonStr);
             const content = parsed.choices?.[0]?.delta?.content as string | undefined;
@@ -220,44 +182,30 @@ const ChatInterface = () => {
         }
       }
 
-      // After streaming completes, check if we should auto-generate an infographic
       if (assistantContent && shouldAutoGenerateInfographic(assistantContent, userMessage.content)) {
-        // Get the index of the assistant message we just added
-        const messageIndex = messages.length + 1; // +1 for user message, this is the assistant index
-        // Delay slightly to let the UI settle
-        setTimeout(() => {
-          generateInfographicForMessage(assistantContent, messageIndex);
-        }, 500);
+        const messageIndex = messages.length + 1;
+        setTimeout(() => generateInfographicForMessage(assistantContent, messageIndex), 500);
       }
     } catch (error) {
       console.error("Chat error:", error);
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: "Failed to send message. Please try again.", variant: "destructive" });
     }
   };
 
   const handleSend = async (messageText?: string) => {
     const textToSend = messageText || input.trim();
     if (!textToSend || isLoading) return;
-
     const userMessage: Message = { role: "user", content: textToSend };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
-
     await streamChat(userMessage);
     setIsLoading(false);
   };
 
   const handleTopicClick = (prompt: string, title: string) => {
     markExplored(title);
-    // Show NFT Explorer when NFT topic is clicked
-    if (title === "NFTs & Collections") {
-      setShowNFTExplorer(true);
-    }
+    if (title === "NFTs & Collections") setShowNFTExplorer(true);
     handleSend(prompt);
   };
 
@@ -273,94 +221,98 @@ const ChatInterface = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-b from-background to-card/30">
-      <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6 space-y-4" onScroll={handleScroll}>
+    <div className="flex flex-col h-full bg-background">
+
+      {/* ── Message list ────────────────────────────────────────────────── */}
+      <div
+        ref={scrollContainerRef}
+        className="flex-1 overflow-y-auto"
+        onScroll={handleScroll}
+        style={{ scrollbarWidth: "thin", scrollbarColor: "hsl(var(--border)) transparent" }}
+      >
+        {/* Empty state */}
         {messages.length === 0 && (
-          <>
+          <div className="px-4 md:px-10 pt-10 pb-4">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center py-12"
+              transition={{ duration: 0.5 }}
+              className="text-center mb-10"
             >
-              {/* AI Character avatar */}
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.2, type: "spring" }}
-                className="w-24 h-24 mx-auto mb-6 rounded-full overflow-hidden border-2 border-primary shadow-lg shadow-primary/20"
+                transition={{ delay: 0.15, type: "spring", stiffness: 200 }}
+                className="w-20 h-20 mx-auto mb-5 rounded-full overflow-hidden border border-primary/30 shadow-lg shadow-primary/15"
               >
                 <img src={aiCharacter} alt="Sammy" className="w-full h-full object-cover" />
               </motion.div>
-              
+
               <motion.h2
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-3"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25 }}
+                className="text-2xl md:text-3xl font-bold tracking-tight text-foreground mb-2.5"
               >
                 What knowledge do you seek?
               </motion.h2>
+
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="text-muted-foreground mb-2 max-w-lg mx-auto font-light"
+                transition={{ delay: 0.35 }}
+                className="text-[15px] text-muted-foreground max-w-md mx-auto leading-[1.75] mb-1.5"
               >
-                Select a domain of study below, or pose any inquiry regarding the Stacks ecosystem
+                Select a topic below or ask anything about the Stacks ecosystem.
               </motion.p>
+
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="text-xs text-primary/70 flex items-center justify-center gap-2"
+                transition={{ delay: 0.45 }}
+                className="text-[12px] text-primary/60 flex items-center justify-center gap-1.5"
               >
                 <Sparkles className="w-3 h-3" />
-                Voice narration accompanies all discourse
+                Voice narration available on all responses
               </motion.p>
             </motion.div>
 
-            {/* Search input above topics */}
+            {/* Inline quick-ask */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.4 }}
-              className="max-w-2xl mx-auto w-full px-2 sm:px-4 mb-6"
+              transition={{ delay: 0.45 }}
+              className="max-w-2xl mx-auto mb-8 px-1"
             >
-              <div className="flex gap-3">
+              <div className="flex gap-2.5">
                 <Textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Ask about DeFi, NFTs, STX Stacking, sBTC..."
-                  className="resize-none bg-muted/50 border border-border/50 focus:border-primary/50 text-foreground placeholder:text-muted-foreground rounded-xl text-base min-h-[56px] py-4"
+                  placeholder="Ask about sBTC, Proof of Transfer, Clarity smart contracts…"
+                  className="resize-none bg-muted/40 border border-border/50 focus:border-primary/60 focus:ring-0 rounded-xl text-[15px] leading-[1.6] min-h-[54px] py-3.5 px-4 placeholder:text-muted-foreground/60"
                   rows={1}
                 />
                 <Button
                   onClick={() => handleSend()}
                   disabled={!input.trim() || isLoading}
-                  size="lg"
-                  className="h-auto px-6 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl transition-all duration-300 hover:scale-105 shadow-lg shadow-primary/20"
+                  className="h-auto px-5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shadow-md shadow-primary/20 transition-all duration-200 hover:scale-105"
                 >
-                  {isLoading ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    <Send className="w-5 h-5" />
-                  )}
+                  {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                 </Button>
               </div>
-              <div className="mt-2">
+              <div className="mt-2.5 pl-1">
                 <AgeSelector value={ageLevel} onChange={setAgeLevel} />
               </div>
             </motion.div>
 
-            <TopicCards 
-              onTopicClick={handleTopicClick} 
+            <TopicCards
+              onTopicClick={handleTopicClick}
               exploredTopics={exploredTopics}
               totalTopics={topicsList.length}
               exploredCount={exploredCount}
             />
-            <AchievementBadges 
+            <AchievementBadges
               achievements={achievements}
               unlockedCount={unlockedCount}
               totalAchievements={totalAchievements}
@@ -368,75 +320,117 @@ const ChatInterface = () => {
               totalTopics={topicsList.length}
               allCompleted={allCompleted}
             />
-            <GetStartedCTA 
-              allCompleted={allCompleted}
-              exploredCount={exploredCount}
-            />
-          </>
+            <GetStartedCTA allCompleted={allCompleted} exploredCount={exploredCount} />
+          </div>
         )}
-        {/* NFT Explorer - shown when NFT topic is selected */}
+
+        {/* NFT Explorer panel */}
         {showNFTExplorer && messages.length > 0 && (
-          <NFTExplorer 
-            isVisible={showNFTExplorer} 
-            onClose={() => setShowNFTExplorer(false)} 
-          />
+          <div className="px-4 md:px-10 pt-6">
+            <NFTExplorer isVisible={showNFTExplorer} onClose={() => setShowNFTExplorer(false)} />
+          </div>
         )}
-        {messages.map((msg, idx) => (
-          <ChatMessage key={idx} role={msg.role} content={msg.content} images={msg.images} />
-        ))}
-        {isLoading && messages[messages.length - 1]?.role === "user" && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex gap-4 mb-6"
-          >
-            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary flex-shrink-0">
-              <img src={aiCharacter} alt="AI" className="w-full h-full object-cover" />
-            </div>
-            <div className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl px-5 py-4 shadow-lg">
-              <div className="flex items-center gap-3">
-                <Loader2 className="w-4 h-4 animate-spin text-primary" />
-                <span className="text-sm text-muted-foreground">Thinking...</span>
-              </div>
-            </div>
-          </motion.div>
+
+        {/* Messages */}
+        {messages.length > 0 && (
+          <div className="px-4 md:px-10 pt-8 pb-4 max-w-4xl mx-auto w-full">
+            {messages.map((msg, idx) => (
+              <ChatMessage key={idx} role={msg.role} content={msg.content} images={msg.images} />
+            ))}
+
+            {/* Thinking indicator */}
+            <AnimatePresence>
+              {isLoading && messages[messages.length - 1]?.role === "user" && (
+                <motion.div
+                  key="thinking"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  className="flex gap-3 mb-8"
+                >
+                  <div className="w-9 h-9 rounded-full overflow-hidden border border-primary/40 flex-shrink-0 mt-1">
+                    <img src={aiCharacter} alt="Sammy" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex flex-col gap-1 items-start">
+                    <span className="text-[11px] font-medium tracking-wide text-muted-foreground/60 px-1">Sammy</span>
+                    <div className="bg-card border border-border/40 rounded-2xl rounded-tl-md px-5 py-4 shadow-sm">
+                      <div className="flex items-center gap-2.5">
+                        {/* Animated dots */}
+                        <div className="flex gap-1">
+                          {[0, 1, 2].map((i) => (
+                            <motion.div
+                              key={i}
+                              className="w-2 h-2 rounded-full bg-primary/60"
+                              animate={{ scale: [1, 1.4, 1], opacity: [0.4, 1, 0.4] }}
+                              transition={{ duration: 0.9, repeat: Infinity, delay: i * 0.18, ease: "easeInOut" }}
+                            />
+                          ))}
+                        </div>
+                        <span className="text-[13px] text-muted-foreground">{thinkingPhrase}</span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         )}
-        <div ref={messagesEndRef} />
+
+        <div ref={messagesEndRef} className="h-4" />
       </div>
 
-      {/* Input area - Netflix style, hidden on empty state */}
+      {/* ── Scroll-to-bottom pill ────────────────────────────────────────── */}
+      <AnimatePresence>
+        {showScrollDown && (
+          <motion.button
+            initial={{ opacity: 0, y: 8, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.9 }}
+            onClick={() => scrollToBottom(true)}
+            className="absolute bottom-28 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-card border border-border/60 text-foreground/70 hover:text-foreground text-xs font-medium px-3.5 py-1.5 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 z-20"
+          >
+            <ChevronDown className="w-3.5 h-3.5" />
+            Scroll to latest
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* ── Input bar (active state) ─────────────────────────────────────── */}
       {messages.length > 0 && (
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="border-t border-border/30 bg-background/95 backdrop-blur-md p-4 md:p-6"
+          className="border-t border-border/25 bg-background/98 backdrop-blur-lg"
         >
-          <div className="max-w-4xl mx-auto space-y-3">
-            <div className="flex items-center justify-between gap-3">
+          <div className="max-w-4xl mx-auto px-4 md:px-6 py-4">
+            {/* Age selector row */}
+            <div className="mb-3">
               <AgeSelector value={ageLevel} onChange={setAgeLevel} />
             </div>
-            <div className="flex gap-3">
+
+            {/* Input row */}
+            <div className="flex gap-2.5 items-end">
               <Textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Ask about DeFi, NFTs, STX Stacking, sBTC..."
-                className="resize-none bg-muted/50 border border-border/50 focus:border-primary/50 text-foreground placeholder:text-muted-foreground rounded-xl text-base min-h-[56px] py-4"
+                placeholder="Continue the conversation…"
+                className="flex-1 resize-none bg-muted/40 border border-border/50 focus:border-primary/60 focus:ring-0 rounded-xl text-[15px] leading-[1.65] min-h-[52px] max-h-40 py-3.5 px-4 placeholder:text-muted-foreground/55 transition-colors duration-150"
                 rows={1}
+                style={{ fieldSizing: "content" } as React.CSSProperties}
               />
               <Button
                 onClick={() => handleSend()}
                 disabled={!input.trim() || isLoading}
-                size="lg"
-                className="h-auto px-6 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl transition-all duration-300 hover:scale-105 shadow-lg shadow-primary/20"
+                className="h-[52px] w-[52px] p-0 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shadow-md shadow-primary/20 transition-all duration-200 hover:scale-105 flex-shrink-0"
               >
-                {isLoading ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <Send className="w-5 h-5" />
-                )}
+                {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
               </Button>
             </div>
+
+            <p className="text-[11px] text-muted-foreground/40 mt-2 text-center">
+              Enter to send · Shift+Enter for new line
+            </p>
           </div>
         </motion.div>
       )}
