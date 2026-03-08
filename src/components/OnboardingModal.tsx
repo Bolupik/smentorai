@@ -76,25 +76,26 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
 
     setIsLoading(true);
     try {
-      // Stacks wallet user — persist to localStorage
-      if (isWalletConnected && walletData?.address) {
-        localStorage.setItem(`stacks_age_level_${walletData.address}`, selectedLevel);
-        toast({ title: "All set! 🎉", description: "Welcome to SMentor — your journey starts now." });
-        onComplete();
-        navigate("/");
-        return;
-      }
+      // Both email and wallet users now have a Supabase session.
+      // Wallet users get an anonymous session created at wallet-connect time,
+      // so we use the same DB-backed path for everyone.
+      const { data: { user } } = await supabase.auth.getUser();
 
-      // Email-auth user — persist to database profile
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
       if (!user) {
+        // Fallback: wallet user whose anon session hasn't resolved yet
+        if (isWalletConnected && walletData?.address) {
+          localStorage.setItem(`stacks_age_level_${walletData.address}`, selectedLevel);
+          toast({ title: "All set! 🎉", description: "Welcome to SMentor — your journey starts now." });
+          onComplete();
+          navigate("/");
+          return;
+        }
         toast({ title: "Not signed in", description: "Please sign in to continue.", variant: "destructive" });
         navigate("/auth");
         return;
       }
 
+      // Persist age_level to DB profile (works for email AND wallet users)
       const { error } = await supabase
         .from("profiles")
         .upsert({ user_id: user.id, age_level: selectedLevel }, { onConflict: "user_id" });
@@ -103,8 +104,8 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
         console.warn("Profile upsert note:", error.message);
       }
 
-      // Mark onboarded so Dashboard won't re-show the modal
-      localStorage.setItem(`email_onboarded_${user.id}`, "true");
+      // Mark onboarded in localStorage so Dashboard won't re-show the modal
+      localStorage.setItem(`onboarded_${user.id}`, "true");
 
       toast({ title: "All set! 🎉", description: "Welcome to SMentor — your journey starts now." });
       onComplete();

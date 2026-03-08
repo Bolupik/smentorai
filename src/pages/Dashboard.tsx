@@ -61,37 +61,34 @@ const Dashboard = () => {
   }, [isAuthorized, authLoading, navigate]);
 
   // Auto-show onboarding modal for first-time users
+  // Both email users and wallet users (who get an anonymous Supabase session)
+  // are checked the same way: look up their DB profile for age_level.
   useEffect(() => {
     if (authLoading || !isAuthorized) return;
 
-    if (isWalletConnected && walletData?.address) {
-      // Wallet user: show onboarding if age_level not yet chosen
-      const ageKey = `stacks_age_level_${walletData.address}`;
-      if (!localStorage.getItem(ageKey)) {
-        setShowOnboarding(true);
-      }
-    } else if (user && !user.is_anonymous) {
-      // Email user: check the DB profile for age_level
-      const onboardedKey = `email_onboarded_${user.id}`;
-      if (!localStorage.getItem(onboardedKey)) {
-        import("@/integrations/supabase/client").then(({ supabase }) => {
-          supabase
-            .from("profiles")
-            .select("age_level")
-            .eq("user_id", user.id)
-            .maybeSingle()
-            .then(({ data }) => {
-              if (data?.age_level) {
-                localStorage.setItem(onboardedKey, "true");
-              } else {
-                setShowOnboarding(true);
-              }
-            });
+    // We need a Supabase user to check the DB profile.
+    // Wallet users get an anonymous Supabase session created at connect time.
+    if (!user) return;
+
+    const onboardedKey = `onboarded_${user.id}`;
+    if (localStorage.getItem(onboardedKey)) return;
+
+    import("@/integrations/supabase/client").then(({ supabase }) => {
+      supabase
+        .from("profiles")
+        .select("age_level")
+        .eq("user_id", user.id)
+        .maybeSingle()
+        .then(({ data }) => {
+          if (data?.age_level) {
+            localStorage.setItem(onboardedKey, "true");
+          } else {
+            setShowOnboarding(true);
+          }
         });
-      }
-    }
+    });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authLoading, isAuthorized, isWalletConnected, walletData?.address, user?.id]);
+  }, [authLoading, isAuthorized, user?.id]);
 
   // Show loading while checking auth
   if (authLoading) {

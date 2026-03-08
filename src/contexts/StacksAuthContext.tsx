@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { connect, disconnect, isConnected } from "@stacks/connect";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface StacksUserData {
   address: string;
@@ -63,6 +64,34 @@ const waitForAddress = (maxMs = 3000, intervalMs = 100): Promise<string | undefi
     check();
   });
 
+/**
+ * Ensures a Supabase anonymous session exists for wallet users.
+ * This gives wallet users a real auth.uid() so all RLS-protected
+ * tables (topic_progress, daily_quiz_results, profiles, knowledge_base)
+ * work exactly like they do for email-authenticated users.
+ */
+const ensureSupabaseSession = async (address: string, bnsName?: string) => {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) return; // already signed in
+
+    const { data, error } = await supabase.auth.signInAnonymously();
+    if (error || !data.user) return;
+
+    // Create / update their profile row so DB-backed features work
+    await supabase.from("profiles").upsert(
+      {
+        user_id: data.user.id,
+        username: bnsName || address,
+        display_name: bnsName || address,
+      },
+      { onConflict: "user_id" }
+    );
+  } catch {
+    // Non-fatal: wallet auth still works, DB features degrade gracefully
+  }
+};
+
 export const StacksAuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userData, setUserData] = useState<StacksUserData | null>(null);
@@ -82,10 +111,11 @@ export const StacksAuthProvider = ({ children }: { children: ReactNode }) => {
             setIsAuthenticated(true);
             clearTimeout(timeout);
             setIsLoading(false);
-            // Fetch BNS in background
-            fetchBnsName(address).then((bnsName) => {
-              if (bnsName) setUserData((prev) => (prev ? { ...prev, bnsName } : prev));
-            });
+
+            // Ensure a Supabase session exists (for DB access parity with email users)
+            const bnsName = await fetchBnsName(address);
+            if (bnsName) setUserData((prev) => (prev ? { ...prev, bnsName } : prev));
+            await ensureSupabaseSession(address, bnsName);
             return;
           }
         }
@@ -108,6 +138,12 @@ export const StacksAuthProvider = ({ children }: { children: ReactNode }) => {
         const bnsName = await fetchBnsName(address);
         setUserData({ address, bnsName });
         setIsAuthenticated(true);
+
+        // Give this wallet user a Supabase anonymous session so all DB
+        // features (topic progress, quiz results, profiles, knowledge base)
+        // work exactly like they do for email-authenticated users.
+        await ensureSupabaseSession(address, bnsName);
+
         const onboardedKey = `stacks_onboarded_${address}`;
         if (!localStorage.getItem(onboardedKey)) {
           localStorage.setItem(onboardedKey, "true");
@@ -128,8 +164,10 @@ export const StacksAuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [navigate]);
 
-  const signOut = useCallback(() => {
+  const signOut = useCallback(async () => {
     try { disconnect(); } catch { /* ignore */ }
+    // Also sign out from Supabase so the anonymous session is cleared
+    try { await supabase.auth.signOut(); } catch { /* ignore */ }
     setIsAuthenticated(false);
     setUserData(null);
     navigate("/auth");
