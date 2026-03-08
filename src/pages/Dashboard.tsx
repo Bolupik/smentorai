@@ -64,15 +64,32 @@ const Dashboard = () => {
     if (authLoading || !isAuthorized) return;
 
     if (isWalletConnected && walletData?.address) {
+      // Wallet user: show onboarding if age_level not yet chosen
       const ageKey = `stacks_age_level_${walletData.address}`;
       if (!localStorage.getItem(ageKey)) {
         setShowOnboarding(true);
       }
     } else if (user && !user.is_anonymous) {
-      // Email user: check if profile has age_level set (handled by onboarding modal internally)
+      // Email user: check the DB profile for age_level; fall back to localStorage flag
       const onboardedKey = `email_onboarded_${user.id}`;
       if (!localStorage.getItem(onboardedKey)) {
-        setShowOnboarding(true);
+        // Async check: if profile already has age_level (e.g. returning user, cleared localStorage),
+        // mark as onboarded and skip modal
+        import("@/integrations/supabase/client").then(({ supabase }) => {
+          supabase
+            .from("profiles")
+            .select("age_level")
+            .eq("user_id", user.id)
+            .maybeSingle()
+            .then(({ data }) => {
+              if (data?.age_level) {
+                // Profile already configured — persist flag and skip onboarding
+                localStorage.setItem(onboardedKey, "true");
+              } else {
+                setShowOnboarding(true);
+              }
+            });
+        });
       }
     }
   }, [authLoading, isAuthorized, isWalletConnected, walletData, user]);

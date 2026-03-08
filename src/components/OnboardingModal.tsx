@@ -103,6 +103,9 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
         console.warn("Profile upsert note:", error.message);
       }
 
+      // Mark onboarded so Dashboard won't re-show the modal
+      localStorage.setItem(`email_onboarded_${user.id}`, "true");
+
       toast({ title: "All set! 🎉", description: "Welcome to SMentor — your journey starts now." });
       onComplete();
       navigate("/");
