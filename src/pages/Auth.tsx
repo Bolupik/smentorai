@@ -34,6 +34,7 @@ const Auth = () => {
   const [signupComplete, setSignupComplete] = useState(false);
   const [signupEmail, setSignupEmail] = useState("");
   const [isWalletLoading, setIsWalletLoading] = useState(false);
+  const [isMobile] = useState(() => isMobileDevice());
   const navigate = useNavigate();
   const { toast } = useToast();
   const { signIn: stacksSignIn, isAuthenticated: isWalletAuthenticated } = useStacksAuth();
@@ -44,6 +45,7 @@ const Auth = () => {
   useEffect(() => {
     if (isAuthenticated) navigate("/");
   }, [isAuthenticated, navigate]);
+
   const handleWalletConnect = async () => {
     setIsWalletLoading(true);
     try {
@@ -52,6 +54,16 @@ const Auth = () => {
       toast({ title: "Wallet connection failed", description: "Could not connect wallet. Please try again.", variant: "destructive" });
     } finally {
       setIsWalletLoading(false);
+    }
+  };
+
+  /** Open the Xverse or Leather mobile app via deep link, sending user back after auth */
+  const openMobileWallet = (wallet: "xverse" | "leather") => {
+    const returnUrl = encodeURIComponent(window.location.href);
+    if (wallet === "xverse") {
+      window.location.href = `xverse://browser?url=${returnUrl}`;
+    } else {
+      window.location.href = `leather://browser?url=${returnUrl}`;
     }
   };
 
