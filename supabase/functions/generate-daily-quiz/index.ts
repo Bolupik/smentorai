@@ -42,20 +42,13 @@ serve(async (req) => {
       });
     }
 
-    // Fetch recent approved knowledge base entries for context
+    // Fetch ALL approved knowledge base entries to source questions from
     const { data: knowledgeEntries } = await supabase
       .from("knowledge_base")
-      .select("topic, content, category")
+      .select("id, topic, content, category, upvotes")
       .eq("approved", true)
       .order("upvotes", { ascending: false })
-      .limit(20);
-
-    const knowledgeContext =
-      knowledgeEntries && knowledgeEntries.length > 0
-        ? knowledgeEntries
-            .map((e) => `[${e.category?.toUpperCase() ?? e.topic}] ${e.content}`)
-            .join("\n\n")
-        : "No community knowledge available yet.";
+      .limit(100);
 
     const dateStr = new Date().toLocaleDateString("en-US", {
       weekday: "long",
@@ -64,27 +57,34 @@ serve(async (req) => {
       day: "numeric",
     });
 
-    const systemPrompt = `You are an expert on the Stacks blockchain ecosystem. Your task is to generate a daily quiz of exactly 15 multiple-choice questions. 
+    if (!knowledgeEntries || knowledgeEntries.length === 0) {
+      return new Response(
+        JSON.stringify({ error: "Not enough knowledge base entries to generate a quiz. Please add and approve more content first." }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
-TOPICS TO COVER (distribute questions across these):
-1. Stacks Architecture (PoX, Nakamoto upgrade, Bitcoin finality, Signers)
-2. Clarity Language (syntax, post-conditions, contracts, traits)
-3. DeFi (AMMs, lending, yield, sBTC liquidity)
-4. NFTs (Clarity standards, marketplaces, royalties)
-5. Security (contract auditing, best practices, attack vectors)
-6. Stacking (PoX stacking, pools, rewards, cycles)
-7. sBTC (peg, decentralization, bridging, thresholds)
-8. Tools & Wallets (Leather, Xverse, BNS, Clarity tools)
+    // Format knowledge entries with index for the AI to reference
+    const knowledgeContext = knowledgeEntries
+      .map((e, i) => `ENTRY ${i + 1} [topic: ${e.topic}, category: ${e.category ?? "general"}]:\n${e.content}`)
+      .join("\n\n---\n\n");
 
-COMMUNITY KNOWLEDGE (use these real-world insights to inspire questions where relevant):
+    const questionCount = Math.min(15, knowledgeEntries.length);
+
+    const systemPrompt = `You are a quiz generator for SMentor, an educational platform about the Stacks blockchain ecosystem.
+
+YOUR ONLY SOURCE OF TRUTH is the SMentor knowledge base entries provided below. You MUST generate questions EXCLUSIVELY from the content in these entries. Do NOT use your own training knowledge about Stacks or any external information.
+
+KNOWLEDGE BASE ENTRIES (${knowledgeEntries.length} entries):
 ${knowledgeContext}
 
-RULES:
-- Generate exactly 15 questions
+INSTRUCTIONS:
+- Generate exactly ${questionCount} multiple-choice questions
+- Every single question MUST be directly answerable from one of the knowledge base entries above
 - Each question must have exactly 4 options (A, B, C, D)
-- Vary difficulty: 5 beginner, 5 intermediate, 5 advanced
-- Make questions factual and educational, not trick questions
-- Explanations should be 1-2 sentences
+- Vary difficulty: roughly one-third beginner, one-third intermediate, one-third advanced
+- The "topic" field should match the entry's topic (e.g. "architecture", "clarity", "defi", "nft", "security", "stacking", "sbtc", "tools")
+- The explanation should quote or closely reference the source entry
 - Date context: ${dateStr}
 
 Return ONLY valid JSON in this exact format, no markdown, no extra text:
@@ -97,7 +97,7 @@ Return ONLY valid JSON in this exact format, no markdown, no extra text:
       "question": "Question text here?",
       "options": ["Option A", "Option B", "Option C", "Option D"],
       "correctAnswer": 0,
-      "explanation": "Brief explanation of the correct answer."
+      "explanation": "Brief explanation referencing the knowledge base entry."
     }
   ]
 }`;
