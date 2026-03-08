@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Lock, Award, BookOpen, Library, Zap } from "lucide-react";
+import { Lock, Award, BookOpen, Library, Zap, Flame } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useStacksAuth } from "@/hooks/useStacksAuth";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
 import { useAchievements } from "@/hooks/useAchievements";
+import { useQuizStreak } from "@/hooks/useQuizStreak";
 import { cn } from "@/lib/utils";
 
 // ─── Quiz badge definitions ──────────────────────────────────────────────────
@@ -14,6 +15,14 @@ const QUIZ_BADGES = [
   { id: "quiz-half",    label: "Half Way",         icon: "⚡", desc: "Score 50% or higher on a quiz",    minScore: 50 },
   { id: "quiz-sharp",   label: "Sharp Mind",       icon: "🧠", desc: "Score 70% or higher on a quiz",   minScore: 70 },
   { id: "quiz-perfect", label: "Perfect Score",    icon: "🌟", desc: "Score 100% on any quiz",           minScore: 100 },
+];
+
+// ─── Streak badge definitions ─────────────────────────────────────────────────
+const STREAK_BADGES = [
+  { id: "streak-3",  label: "On Fire",        icon: "🔥", desc: "Complete quizzes 3 days in a row",   min: 3  },
+  { id: "streak-7",  label: "Week Warrior",   icon: "⚡", desc: "Complete quizzes 7 days in a row",   min: 7  },
+  { id: "streak-14", label: "Fortnight",      icon: "📚", desc: "Complete quizzes 14 days in a row",  min: 14 },
+  { id: "streak-30", label: "Monthly Master", icon: "🏆", desc: "Complete quizzes 30 days in a row",  min: 30 },
 ];
 
 // ─── Contribution badge definitions ─────────────────────────────────────────

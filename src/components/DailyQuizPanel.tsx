@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAdminRole } from "@/hooks/useAdminRole";
 import { useAuth } from "@/contexts/AuthContext";
 import { useStacksAuth } from "@/hooks/useStacksAuth";
+import { useQuizStreak } from "@/hooks/useQuizStreak";
 import { Button } from "@/components/ui/button";
 import {
   CalendarDays,
