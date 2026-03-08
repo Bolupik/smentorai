@@ -65,16 +65,33 @@ const waitForAddress = (maxMs = 3000, intervalMs = 100): Promise<string | undefi
   });
 
 /**
- * Ensures a Supabase anonymous session exists for wallet users.
- * This gives wallet users a real auth.uid() so all RLS-protected
- * tables (topic_progress, daily_quiz_results, profiles, knowledge_base)
- * work exactly like they do for email-authenticated users.
+ * Ensures a Supabase session exists for wallet users and links the
+ * wallet address to their profile.
+ *
+ * - If an email session already exists → just save the STX address to that profile.
+ * - Otherwise → create an anonymous session and upsert a profile row.
+ *
+ * This gives every wallet user a real auth.uid() so all RLS-protected
+ * tables work exactly like they do for email-authenticated users.
  */
 const ensureSupabaseSession = async (address: string, bnsName?: string) => {
   try {
     const { data: { session } } = await supabase.auth.getSession();
-    if (session) return; // already signed in
 
+    if (session) {
+      // Email (or existing anon) user — just link the wallet address
+      await supabase.from("profiles").upsert(
+        {
+          user_id: session.user.id,
+          stacks_address: address,
+          bns_name: bnsName || null,
+        },
+        { onConflict: "user_id" }
+      );
+      return;
+    }
+
+    // No session yet → create anonymous session for this wallet user
     const { data, error } = await supabase.auth.signInAnonymously();
     if (error || !data.user) return;
 
@@ -84,6 +101,8 @@ const ensureSupabaseSession = async (address: string, bnsName?: string) => {
         user_id: data.user.id,
         username: bnsName || address,
         display_name: bnsName || address,
+        stacks_address: address,
+        bns_name: bnsName || null,
       },
       { onConflict: "user_id" }
     );
