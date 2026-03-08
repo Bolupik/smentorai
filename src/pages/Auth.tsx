@@ -6,11 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, User, Mail, CheckCircle, Wallet } from "lucide-react";
+import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, User, Mail, CheckCircle, Wallet, ExternalLink, Smartphone } from "lucide-react";
 import aiCharacter from "@/assets/ai-character.png";
 import { z } from "zod";
 import { useStacksAuth } from "@/hooks/useStacksAuth";
 import { useAuth } from "@/contexts/AuthContext";
+
+/** Returns true when running on a mobile/tablet device */
+const isMobileDevice = () =>
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -30,6 +34,7 @@ const Auth = () => {
   const [signupComplete, setSignupComplete] = useState(false);
   const [signupEmail, setSignupEmail] = useState("");
   const [isWalletLoading, setIsWalletLoading] = useState(false);
+  const [isMobile] = useState(() => isMobileDevice());
   const navigate = useNavigate();
   const { toast } = useToast();
   const { signIn: stacksSignIn, isAuthenticated: isWalletAuthenticated } = useStacksAuth();
@@ -40,6 +45,7 @@ const Auth = () => {
   useEffect(() => {
     if (isAuthenticated) navigate("/");
   }, [isAuthenticated, navigate]);
+
   const handleWalletConnect = async () => {
     setIsWalletLoading(true);
     try {
@@ -48,6 +54,16 @@ const Auth = () => {
       toast({ title: "Wallet connection failed", description: "Could not connect wallet. Please try again.", variant: "destructive" });
     } finally {
       setIsWalletLoading(false);
+    }
+  };
+
+  /** Open the Xverse or Leather mobile app via deep link, sending user back after auth */
+  const openMobileWallet = (wallet: "xverse" | "leather") => {
+    const returnUrl = encodeURIComponent(window.location.href);
+    if (wallet === "xverse") {
+      window.location.href = `xverse://browser?url=${returnUrl}`;
+    } else {
+      window.location.href = `leather://browser?url=${returnUrl}`;
     }
   };
 
@@ -330,31 +346,65 @@ const Auth = () => {
           </div>
 
           {/* Stacks Wallet Connect */}
-          <Button
-            type="button"
-            onClick={handleWalletConnect}
-            disabled={isWalletLoading}
-            className="w-full py-6 text-base font-semibold mb-3 bg-[hsl(var(--primary))] hover:bg-primary/90 text-primary-foreground rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-primary/20 transition-all duration-300 hover:scale-[1.02]"
-          >
-            {isWalletLoading ? (
-              <span className="flex items-center gap-2">
-                <motion.span
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full"
-                />
-                Connecting Wallet…
-              </span>
-            ) : (
-              <>
-                <Wallet className="w-5 h-5" />
-                Connect Stacks Wallet
-              </>
-            )}
-          </Button>
-          <p className="text-center text-xs text-muted-foreground mb-6">
-            Xverse · Leather · Asigna supported
-          </p>
+          {isMobile ? (
+            <div className="mb-6 rounded-xl border border-border bg-muted/30 p-4 space-y-3">
+              <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <Smartphone className="w-4 h-4 text-primary" />
+                Connect via Mobile Wallet
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Open this app inside your Stacks wallet browser to connect.
+              </p>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => openMobileWallet("xverse")}
+                  className="flex-1 gap-2 text-sm"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Open in Xverse
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => openMobileWallet("leather")}
+                  className="flex-1 gap-2 text-sm"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Open in Leather
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <Button
+                type="button"
+                onClick={handleWalletConnect}
+                disabled={isWalletLoading}
+                className="w-full py-6 text-base font-semibold mb-3 bg-[hsl(var(--primary))] hover:bg-primary/90 text-primary-foreground rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-primary/20 transition-all duration-300 hover:scale-[1.02]"
+              >
+                {isWalletLoading ? (
+                  <span className="flex items-center gap-2">
+                    <motion.span
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full"
+                    />
+                    Connecting Wallet…
+                  </span>
+                ) : (
+                  <>
+                    <Wallet className="w-5 h-5" />
+                    Connect Stacks Wallet
+                  </>
+                )}
+              </Button>
+              <p className="text-center text-xs text-muted-foreground mb-6">
+                Xverse · Leather · Asigna · Fordefi supported
+              </p>
+            </>
+          )}
 
           <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
