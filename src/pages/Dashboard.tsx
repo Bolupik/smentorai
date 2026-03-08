@@ -113,8 +113,13 @@ const Dashboard = () => {
     );
   }
 
+  // Show loading instead of null to prevent blank flash while redirect fires
   if (!isAuthorized) {
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="w-12 h-12 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
   }
 
   return (
