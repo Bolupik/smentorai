@@ -509,7 +509,9 @@ const KnowledgeBase = () => {
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.div>
+        </motion.div>
+        </GuestGate>
+      </div>
 
       {/* My Submissions */}
       {user && myEntries.length > 0 && (
