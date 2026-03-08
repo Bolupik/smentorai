@@ -92,6 +92,7 @@ const ProfileAchievements = () => {
 
   // Topic achievements via existing hook
   const { achievements: topicAchievements, unlockedCount: topicUnlocked } = useAchievements(progress);
+  const { currentStreak, longestStreak, totalCompleted } = useQuizStreak();
 
   useEffect(() => {
     const load = async () => {
@@ -130,6 +131,11 @@ const ProfileAchievements = () => {
     unlocked: b.id === "quiz-first" ? bestQuizScore > 0 : bestQuizScore >= b.minScore,
   }));
 
+  const streakBadgesUnlocked = STREAK_BADGES.map((b) => ({
+    ...b,
+    unlocked: longestStreak >= b.min,
+  }));
+
   const contribBadgesUnlocked = CONTRIB_BADGES.map((b) => ({
     ...b,
     unlocked: approvedContribs >= b.min,
@@ -137,9 +143,10 @@ const ProfileAchievements = () => {
 
   const topicBadgesEarned = topicAchievements.filter((a) => a.unlocked).length;
   const quizBadgesEarned  = quizBadgesUnlocked.filter((b) => b.unlocked).length;
+  const streakBadgesEarned = streakBadgesUnlocked.filter((b) => b.unlocked).length;
   const contribBadgesEarned = contribBadgesUnlocked.filter((b) => b.unlocked).length;
-  const totalEarned = topicBadgesEarned + quizBadgesEarned + contribBadgesEarned;
-  const totalBadges = topicAchievements.length + QUIZ_BADGES.length + CONTRIB_BADGES.length;
+  const totalEarned = topicBadgesEarned + quizBadgesEarned + streakBadgesEarned + contribBadgesEarned;
+  const totalBadges = topicAchievements.length + QUIZ_BADGES.length + STREAK_BADGES.length + CONTRIB_BADGES.length;
 
   return (
     <div className="bg-card border border-border rounded-xl overflow-hidden">
