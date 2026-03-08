@@ -902,6 +902,7 @@ const topicOptions: { value: TopicFilter; label: string; emoji: string; descript
 
 const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
   const { user } = useAuth();
+  const { isGuest, limitReached, increment: incrementGuestQuiz, GUEST_LIMIT } = useGuestQuizLimit();
   const [ageLevel, setAgeLevel] = useState<AgeLevel>("adult");
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string>("");
