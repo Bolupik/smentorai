@@ -523,6 +523,15 @@ const Dashboard = () => {
                     <Info className="w-4 h-4 sm:w-6 sm:h-6" />
                     <span className="hidden sm:inline">Overview</span>
                   </motion.button>
+                  <motion.button
+                    onClick={() => setShowGuide(true)}
+                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-muted/60 text-foreground/70 font-medium text-sm sm:text-lg rounded-sm hover:bg-muted hover:text-foreground transition-all duration-300 backdrop-blur-sm border border-border/40"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="hidden sm:inline">Guide</span>
+                  </motion.button>
                   {isAdmin && (
                     <motion.button
                       onClick={() => setShowAdmin(true)}
