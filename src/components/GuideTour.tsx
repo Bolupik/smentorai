@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronRight, ChevronLeft, MessageSquare, BookOpen, Library, Activity, Grid3X3, Trophy, Mic, Image, Wallet } from "lucide-react";
+import { X, ChevronRight, ChevronLeft, MessageSquare, BookOpen, Library, Activity, Grid3X3, Trophy, Mic, Wallet } from "lucide-react";
 import { Button } from "./ui/button";
 
 interface GuideTourProps {
@@ -15,7 +15,7 @@ const steps = [
     title: "Chat with SAMMY",
     tag: "Core Feature",
     description:
-      "SAMMY THE AI is your personal guide to the Stacks ecosystem. Ask any question in plain English — from "What is Proof of Transfer?" to "How do I use sBTC?" — and get a clear, level-adapted answer.",
+      "SAMMY THE AI is your personal guide to the Stacks ecosystem. Ask any question in plain English and get a clear, level-adapted answer about Proof of Transfer, sBTC, DeFi, and more.",
     tips: [
       "Type anything and press Send",
       "Follow up with more questions for deeper dives",
