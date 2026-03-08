@@ -414,7 +414,7 @@ const ChatInterface = () => {
           <div className="max-w-4xl mx-auto px-4 md:px-6 py-4">
             {/* Age selector row */}
             <div className="mb-3">
-              <AgeSelector value={ageLevel} onChange={setAgeLevel} />
+              <AgeSelector value={ageLevel} onChange={setAgeLevel} locked />
             </div>
 
             {/* Input row */}
