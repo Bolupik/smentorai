@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, LogOut, Trophy, Wallet } from "lucide-react";
+import { User, LogOut, Trophy, Wallet, UserCircle } from "lucide-react";
 
 interface UserMenuProps {
   exploredCount?: number;
