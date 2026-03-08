@@ -53,7 +53,7 @@ const Auth = () => {
         return;
       }
       toast({ title: "Welcome, Guest", description: "You may explore freely. Create an account to preserve your progress." });
-      navigate("/");
+      navigate("/dashboard");
     } catch {
       toast({ title: "Error", description: "An unexpected error occurred. Please try again.", variant: "destructive" });
     } finally {
@@ -100,10 +100,10 @@ const Auth = () => {
           });
           return;
         }
-        toast({ title: "Welcome back!", description: "You've successfully logged in." });
-        navigate("/");
+      toast({ title: "Welcome back!", description: "You've successfully logged in." });
+        navigate("/dashboard");
       } else {
-        const redirectUrl = `${window.location.origin}/onboarding`;
+        const redirectUrl = `${window.location.origin}/dashboard`;
 
         const { data: signUpData, error } = await supabase.auth.signUp({
           email,
@@ -210,7 +210,7 @@ const Auth = () => {
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md"
         >
-          <Button variant="ghost" onClick={() => navigate("/")} className="mb-8 text-muted-foreground hover:text-foreground">
+          <Button variant="ghost" onClick={() => navigate("/dashboard")} className="mb-8 text-muted-foreground hover:text-foreground">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Home
           </Button>

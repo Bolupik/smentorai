@@ -12,6 +12,7 @@ import AdminPanel from "@/components/AdminPanel";
 import ProfileEditor from "@/components/ProfileEditor";
 import DappShowcase from "@/components/DappShowcase";
 import { CommunitySentiment } from "@/components/CommunitySentiment";
+import OnboardingModal from "@/components/OnboardingModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { useStacksAuth } from "@/hooks/useStacksAuth";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
@@ -31,16 +32,17 @@ const pageTransition = {
   duration: 0.5
 };
 
-const Index = () => {
+const Dashboard = () => {
   const [showChat, setShowChat] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
   const [showKnowledge, setShowKnowledge] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
   const [showSentiment, setShowSentiment] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
-  const { isAuthenticated: isWalletConnected, isLoading: isWalletLoading } = useStacksAuth();
+  const { isAuthenticated: isWalletConnected, userData: walletData, isLoading: isWalletLoading } = useStacksAuth();
   const { exploredCount } = useTopicProgressDB();
   const { isAdmin } = useAdminRole();
 
@@ -53,6 +55,24 @@ const Index = () => {
       navigate("/auth");
     }
   }, [isAuthorized, authLoading, navigate]);
+
+  // Show onboarding modal for first-time users
+  useEffect(() => {
+    if (authLoading || !isAuthorized) return;
+
+    if (isWalletConnected && walletData?.address) {
+      const ageKey = `stacks_age_level_${walletData.address}`;
+      if (!localStorage.getItem(ageKey)) {
+        setShowOnboarding(true);
+      }
+    } else if (user && !user.is_anonymous) {
+      // Email user: check if profile has age_level set (handled by onboarding modal internally)
+      const onboardedKey = `email_onboarded_${user.id}`;
+      if (!localStorage.getItem(onboardedKey)) {
+        setShowOnboarding(true);
+      }
+    }
+  }, [authLoading, isAuthorized, isWalletConnected, walletData, user]);
 
   // Show loading while checking auth
   if (authLoading) {
@@ -581,6 +601,15 @@ const Index = () => {
       </AnimatePresence>
 
       {/* Preview Modal */}
+      <OnboardingModal
+        open={showOnboarding}
+        onComplete={() => {
+          if (user && !user.is_anonymous) {
+            localStorage.setItem(`email_onboarded_${user.id}`, "true");
+          }
+          setShowOnboarding(false);
+        }}
+      />
       <PreviewModal
         isOpen={showPreview}
         onClose={() => setShowPreview(false)}
@@ -593,4 +622,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Dashboard;

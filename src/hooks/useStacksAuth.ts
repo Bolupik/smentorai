@@ -80,12 +80,12 @@ export const useStacksAuth = () => {
         // Route new wallets to onboarding, returning wallets to home
         const onboardedKey = `stacks_onboarded_${address}`;
         const hasOnboarded = localStorage.getItem(onboardedKey);
-        if (!hasOnboarded) {
-          localStorage.setItem(onboardedKey, "true");
-          navigate("/onboarding");
-        } else {
-          navigate("/");
-        }
+      if (!hasOnboarded) {
+        localStorage.setItem(onboardedKey, "true");
+        navigate("/dashboard");
+      } else {
+        navigate("/dashboard");
+      }
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
