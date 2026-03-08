@@ -266,7 +266,6 @@ const Dashboard = () => {
                 transition={{ delay: 0.2 }}
                 className="w-full max-w-2xl py-8 space-y-6"
               >
-                <ProfileEditor />
                 <KnowledgeBase />
               </motion.div>
             </main>
