@@ -33,6 +33,8 @@ const Auth = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { signIn: stacksSignIn } = useStacksAuth();
+  const { user } = useAuth();
+  const isAuthenticated = !!user;
 
   const handleWalletConnect = async () => {
     setIsWalletLoading(true);
