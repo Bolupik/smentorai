@@ -3,6 +3,12 @@ project_id = "mdrbioxjnqjjdgnhzwfh"
 [functions.defi-chat]
 verify_jwt = false
 
+[functions.stacks-news]
+verify_jwt = false
+
+[functions.stacks-metrics]
+verify_jwt = false
+
 [functions.generate-infographic]
 verify_jwt = false
 
