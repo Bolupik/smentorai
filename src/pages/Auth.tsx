@@ -103,7 +103,7 @@ const Auth = () => {
       toast({ title: "Welcome back!", description: "You've successfully logged in." });
         navigate("/dashboard");
       } else {
-        const redirectUrl = `${window.location.origin}/onboarding`;
+        const redirectUrl = `${window.location.origin}/dashboard`;
 
         const { data: signUpData, error } = await supabase.auth.signUp({
           email,
