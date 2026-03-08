@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAdminRole } from "@/hooks/useAdminRole";
 import { useAuth } from "@/contexts/AuthContext";
 import { useStacksAuth } from "@/hooks/useStacksAuth";
+import { useQuizStreak } from "@/hooks/useQuizStreak";
 import { Button } from "@/components/ui/button";
 import {
   CalendarDays,
@@ -60,6 +61,7 @@ export default function DailyQuizPanel() {
   const { user } = useAuth();
   const { isAuthenticated: isWalletConnected } = useStacksAuth();
   const { isAdmin, loading: adminLoading } = useAdminRole();
+  const { currentStreak, longestStreak } = useQuizStreak();
 
   const [open, setOpen] = useState(false);
   const [quiz, setQuiz] = useState<DailyQuiz | null>(null);
@@ -268,6 +270,13 @@ export default function DailyQuizPanel() {
                     })}
                   </p>
                 </div>
+                {/* Streak pill */}
+                {currentStreak > 0 && (
+                  <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-primary/10 border border-primary/20">
+                    <Flame className="w-3 h-3 text-primary" />
+                    <span className="text-[10px] font-bold text-primary">{currentStreak}d</span>
+                  </div>
+                )}
                 <button
                   onClick={() => setOpen(false)}
                   className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-muted transition-colors"
@@ -380,6 +389,25 @@ export default function DailyQuizPanel() {
                             ? "⚡ Great effort! Keep exploring to reach mastery."
                             : "💡 Good start. Review the topics and try again tomorrow!"}
                         </p>
+                        {/* Streak banner */}
+                        {currentStreak > 0 && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            className="flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-primary/10 border border-primary/20"
+                          >
+                            <Flame className="w-5 h-5 text-primary" />
+                            <div className="text-left">
+                              <p className="text-xs font-bold text-foreground">
+                                {currentStreak} day streak!
+                              </p>
+                              <p className="text-[10px] text-muted-foreground">
+                                Best: {longestStreak} day{longestStreak !== 1 ? "s" : ""}
+                              </p>
+                            </div>
+                          </motion.div>
+                        )}
                         {/* Per-question review */}
                         <div className="space-y-2 text-left max-h-64 overflow-y-auto pr-1">
                           {quiz.questions.map((q, i) => (

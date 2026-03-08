@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Lock, Award, BookOpen, Library, Zap } from "lucide-react";
+import { Lock, Award, BookOpen, Library, Zap, Flame } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useStacksAuth } from "@/hooks/useStacksAuth";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
 import { useAchievements } from "@/hooks/useAchievements";
+import { useQuizStreak } from "@/hooks/useQuizStreak";
 import { cn } from "@/lib/utils";
 
 // ─── Quiz badge definitions ──────────────────────────────────────────────────
@@ -14,6 +15,14 @@ const QUIZ_BADGES = [
   { id: "quiz-half",    label: "Half Way",         icon: "⚡", desc: "Score 50% or higher on a quiz",    minScore: 50 },
   { id: "quiz-sharp",   label: "Sharp Mind",       icon: "🧠", desc: "Score 70% or higher on a quiz",   minScore: 70 },
   { id: "quiz-perfect", label: "Perfect Score",    icon: "🌟", desc: "Score 100% on any quiz",           minScore: 100 },
+];
+
+// ─── Streak badge definitions ─────────────────────────────────────────────────
+const STREAK_BADGES = [
+  { id: "streak-3",  label: "On Fire",        icon: "🔥", desc: "Complete quizzes 3 days in a row",   min: 3  },
+  { id: "streak-7",  label: "Week Warrior",   icon: "⚡", desc: "Complete quizzes 7 days in a row",   min: 7  },
+  { id: "streak-14", label: "Fortnight",      icon: "📚", desc: "Complete quizzes 14 days in a row",  min: 14 },
+  { id: "streak-30", label: "Monthly Master", icon: "🏆", desc: "Complete quizzes 30 days in a row",  min: 30 },
 ];
 
 // ─── Contribution badge definitions ─────────────────────────────────────────
@@ -83,6 +92,7 @@ const ProfileAchievements = () => {
 
   // Topic achievements via existing hook
   const { achievements: topicAchievements, unlockedCount: topicUnlocked } = useAchievements(progress);
+  const { currentStreak, longestStreak, totalCompleted } = useQuizStreak();
 
   useEffect(() => {
     const load = async () => {
@@ -121,6 +131,11 @@ const ProfileAchievements = () => {
     unlocked: b.id === "quiz-first" ? bestQuizScore > 0 : bestQuizScore >= b.minScore,
   }));
 
+  const streakBadgesUnlocked = STREAK_BADGES.map((b) => ({
+    ...b,
+    unlocked: longestStreak >= b.min,
+  }));
+
   const contribBadgesUnlocked = CONTRIB_BADGES.map((b) => ({
     ...b,
     unlocked: approvedContribs >= b.min,
@@ -128,9 +143,10 @@ const ProfileAchievements = () => {
 
   const topicBadgesEarned = topicAchievements.filter((a) => a.unlocked).length;
   const quizBadgesEarned  = quizBadgesUnlocked.filter((b) => b.unlocked).length;
+  const streakBadgesEarned = streakBadgesUnlocked.filter((b) => b.unlocked).length;
   const contribBadgesEarned = contribBadgesUnlocked.filter((b) => b.unlocked).length;
-  const totalEarned = topicBadgesEarned + quizBadgesEarned + contribBadgesEarned;
-  const totalBadges = topicAchievements.length + QUIZ_BADGES.length + CONTRIB_BADGES.length;
+  const totalEarned = topicBadgesEarned + quizBadgesEarned + streakBadgesEarned + contribBadgesEarned;
+  const totalBadges = topicAchievements.length + QUIZ_BADGES.length + STREAK_BADGES.length + CONTRIB_BADGES.length;
 
   return (
     <div className="bg-card border border-border rounded-xl overflow-hidden">
@@ -213,6 +229,42 @@ const ProfileAchievements = () => {
                   Best score: <span className="text-primary font-semibold">{bestQuizScore}%</span>
                 </p>
               )}
+            </div>
+
+            {/* ── Streak Badges ── */}
+            <div>
+              <SectionHeader
+                icon={Flame}
+                label="Daily Streaks"
+                earned={streakBadgesEarned}
+                total={STREAK_BADGES.length}
+              />
+              {/* Live streak counter */}
+              {totalCompleted > 0 && (
+                <div className="flex items-center gap-3 mb-3 px-3 py-2 rounded-lg bg-primary/5 border border-primary/10">
+                  <Flame className="w-4 h-4 text-primary shrink-0" />
+                  <div className="flex-1 text-xs">
+                    <span className="font-bold text-foreground">{currentStreak} day</span>
+                    <span className="text-muted-foreground"> current · </span>
+                    <span className="font-bold text-foreground">{longestStreak} day</span>
+                    <span className="text-muted-foreground"> best · </span>
+                    <span className="font-bold text-foreground">{totalCompleted}</span>
+                    <span className="text-muted-foreground"> total</span>
+                  </div>
+                </div>
+              )}
+              <div className="grid grid-cols-4 gap-3">
+                {streakBadgesUnlocked.map((b, i) => (
+                  <Badge
+                    key={b.id}
+                    icon={b.icon}
+                    label={b.label}
+                    desc={b.desc}
+                    unlocked={b.unlocked}
+                    idx={i}
+                  />
+                ))}
+              </div>
             </div>
 
             {/* ── Contribution Badges ── */}
