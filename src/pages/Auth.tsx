@@ -10,6 +10,7 @@ import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, User, Mail, CheckCircle, Walle
 import aiCharacter from "@/assets/ai-character.png";
 import { z } from "zod";
 import { useStacksAuth } from "@/hooks/useStacksAuth";
+import { useAuth } from "@/contexts/AuthContext";
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -32,6 +33,8 @@ const Auth = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { signIn: stacksSignIn } = useStacksAuth();
+  const { user } = useAuth();
+  const isAuthenticated = !!user;
 
   const handleWalletConnect = async () => {
     setIsWalletLoading(true);
@@ -210,10 +213,12 @@ const Auth = () => {
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md"
         >
-          <Button variant="ghost" onClick={() => navigate("/dashboard")} className="mb-8 text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Home
-          </Button>
+          {isAuthenticated && (
+            <Button variant="ghost" onClick={() => navigate("/dashboard")} className="mb-8 text-muted-foreground hover:text-foreground">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Home
+            </Button>
+          )}
 
           <div className="mb-8">
             <h1 className="text-3xl font-black text-primary mb-2">SAMMY THE AI</h1>
