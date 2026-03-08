@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { RefreshCw, Wifi, WifiOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNetworkStatus } from "@/hooks/useNetworkStatus";
-import sammyHazard from "@/assets/sammy-hazard.png";
+import sammyMascot from "@/assets/sammy-mascot.jpg";
 
 const ConnectionErrorBanner = () => {
   const { status, retry } = useNetworkStatus();
