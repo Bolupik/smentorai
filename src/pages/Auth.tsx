@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,6 +36,10 @@ const Auth = () => {
   const { user } = useAuth();
   const isAuthenticated = !!user;
 
+  // If already authenticated, redirect to home
+  useEffect(() => {
+    if (isAuthenticated) navigate("/");
+  }, [isAuthenticated, navigate]);
   const handleWalletConnect = async () => {
     setIsWalletLoading(true);
     try {
@@ -56,7 +60,7 @@ const Auth = () => {
         return;
       }
       toast({ title: "Welcome, Guest", description: "You may explore freely. Create an account to preserve your progress." });
-      navigate("/dashboard");
+      navigate("/");
     } catch {
       toast({ title: "Error", description: "An unexpected error occurred. Please try again.", variant: "destructive" });
     } finally {
@@ -104,9 +108,9 @@ const Auth = () => {
           return;
         }
       toast({ title: "Welcome back!", description: "You've successfully logged in." });
-        navigate("/dashboard");
+        navigate("/");
       } else {
-        const redirectUrl = `${window.location.origin}/dashboard`;
+        const redirectUrl = `${window.location.origin}/`;
 
         const { data: signUpData, error } = await supabase.auth.signUp({
           email,
@@ -214,7 +218,7 @@ const Auth = () => {
           className="w-full max-w-md"
         >
           {isAuthenticated && (
-            <Button variant="ghost" onClick={() => navigate("/dashboard")} className="mb-8 text-muted-foreground hover:text-foreground">
+            <Button variant="ghost" onClick={() => navigate("/")} className="mb-8 text-muted-foreground hover:text-foreground">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
             </Button>
