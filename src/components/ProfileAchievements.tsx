@@ -231,6 +231,42 @@ const ProfileAchievements = () => {
               )}
             </div>
 
+            {/* ── Streak Badges ── */}
+            <div>
+              <SectionHeader
+                icon={Flame}
+                label="Daily Streaks"
+                earned={streakBadgesEarned}
+                total={STREAK_BADGES.length}
+              />
+              {/* Live streak counter */}
+              {totalCompleted > 0 && (
+                <div className="flex items-center gap-3 mb-3 px-3 py-2 rounded-lg bg-primary/5 border border-primary/10">
+                  <Flame className="w-4 h-4 text-primary shrink-0" />
+                  <div className="flex-1 text-xs">
+                    <span className="font-bold text-foreground">{currentStreak} day</span>
+                    <span className="text-muted-foreground"> current · </span>
+                    <span className="font-bold text-foreground">{longestStreak} day</span>
+                    <span className="text-muted-foreground"> best · </span>
+                    <span className="font-bold text-foreground">{totalCompleted}</span>
+                    <span className="text-muted-foreground"> total</span>
+                  </div>
+                </div>
+              )}
+              <div className="grid grid-cols-4 gap-3">
+                {streakBadgesUnlocked.map((b, i) => (
+                  <Badge
+                    key={b.id}
+                    icon={b.icon}
+                    label={b.label}
+                    desc={b.desc}
+                    unlocked={b.unlocked}
+                    idx={i}
+                  />
+                ))}
+              </div>
+            </div>
+
             {/* ── Contribution Badges ── */}
             <div>
               <SectionHeader
