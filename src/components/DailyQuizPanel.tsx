@@ -61,6 +61,7 @@ export default function DailyQuizPanel() {
   const { user } = useAuth();
   const { isAuthenticated: isWalletConnected } = useStacksAuth();
   const { isAdmin, loading: adminLoading } = useAdminRole();
+  const { currentStreak, longestStreak } = useQuizStreak();
 
   const [open, setOpen] = useState(false);
   const [quiz, setQuiz] = useState<DailyQuiz | null>(null);
