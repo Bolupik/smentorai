@@ -407,7 +407,7 @@ const Dashboard = () => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1.1 }}
                   >
-                    <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} />
+                    <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
                   </motion.div>
                 </div>
               </div>
