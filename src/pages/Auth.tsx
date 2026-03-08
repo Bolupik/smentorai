@@ -213,10 +213,12 @@ const Auth = () => {
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md"
         >
-          <Button variant="ghost" onClick={() => navigate("/dashboard")} className="mb-8 text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Home
-          </Button>
+          {isAuthenticated && (
+            <Button variant="ghost" onClick={() => navigate("/dashboard")} className="mb-8 text-muted-foreground hover:text-foreground">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Home
+            </Button>
+          )}
 
           <div className="mb-8">
             <h1 className="text-3xl font-black text-primary mb-2">SAMMY THE AI</h1>
