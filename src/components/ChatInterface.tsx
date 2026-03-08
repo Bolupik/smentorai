@@ -314,8 +314,9 @@ const ChatInterface = () => {
                   {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                 </Button>
               </div>
-              <div className="mt-2.5 pl-1">
+              <div className="mt-2.5 pl-1 flex items-center justify-between">
                 <AgeSelector value={ageLevel} onChange={setAgeLevel} locked />
+                <SearchHistory onSelectQuery={(q) => { setInput(q); }} />
               </div>
             </motion.div>
 
