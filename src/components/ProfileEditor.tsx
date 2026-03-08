@@ -252,6 +252,13 @@ const ProfileEditor = () => {
     }
   };
 
+  // ── Guest user (anonymous Supabase session) ─────────────────────────────
+  if (user?.is_anonymous && !isWalletConnected) {
+    return (
+      <GuestGate featureLabel="view and edit your profile" />
+    );
+  }
+
   // ── Wallet-only user (no Supabase auth) ─────────────────────────────────
   const walletOnlyUser = !user && isWalletConnected;
   const avatarInitial = profile.display_name?.[0]?.toUpperCase()
