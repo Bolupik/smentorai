@@ -114,7 +114,7 @@ Return ONLY valid JSON in this exact format, no markdown, no extra text:
           { role: "system", content: systemPrompt },
           {
             role: "user",
-            content: `Generate today's (${dateStr}) Stacks ecosystem daily quiz with exactly 15 questions.`,
+            content: `Generate today's (${dateStr}) SMentor daily quiz with exactly ${questionCount} questions sourced ONLY from the knowledge base entries provided. Do not use any outside knowledge.`,
           },
         ],
         temperature: 0.7,
