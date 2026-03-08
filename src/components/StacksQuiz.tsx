@@ -1022,6 +1022,20 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
       }
     } else {
       setQuizComplete(true);
+      const finalPct = Math.round((score / shuffledQuestions.length) * 100);
+      // Persist best score so ProfileAchievements can read it
+      if (user) {
+        const key = `quiz_best_score_${user.id}`;
+        const prev = Number(localStorage.getItem(key) ?? 0);
+        if (finalPct > prev) localStorage.setItem(key, String(finalPct));
+      } else {
+        // wallet / guest
+        const walletAddr = Object.keys(localStorage).find((k) => k.startsWith("stacks_age_level_"))
+          ?.replace("stacks_age_level_", "");
+        const key = walletAddr ? `quiz_best_score_wallet_${walletAddr}` : "quiz_best_score_guest";
+        const prev = Number(localStorage.getItem(key) ?? 0);
+        if (finalPct > prev) localStorage.setItem(key, String(finalPct));
+      }
       onComplete?.(score, shuffledQuestions.length);
     }
   };
