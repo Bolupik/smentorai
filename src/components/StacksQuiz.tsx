@@ -1095,72 +1095,74 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
   // Mode selection screen
   if (!quizStarted) {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-card border border-border rounded-xl p-8 max-w-2xl mx-auto"
-      >
-        <div className="text-center mb-6">
-          <BookOpen className="w-12 h-12 mx-auto mb-4 text-primary" />
-          <h2 className="text-2xl font-bold text-foreground mb-2">Stacks Knowledge Assessment</h2>
-          <p className="text-muted-foreground text-sm">
-            Choose a topic to focus on, or test across all categories.
-          </p>
-        </div>
-
-        {/* Topic selector */}
-        <div className="mb-6">
-          <p className="text-sm font-medium text-foreground mb-3">Select Topic</p>
-          <div className="grid grid-cols-2 gap-2">
-            {topicOptions.map((topic) => (
-              <button
-                key={topic.value}
-                type="button"
-                onClick={() => setSelectedTopic(topic.value)}
-                className={`flex items-center gap-2 p-3 rounded-lg border text-left transition-all ${
-                  selectedTopic === topic.value
-                    ? "border-primary bg-primary/10"
-                    : "border-border hover:border-primary/50"
-                }`}
-              >
-                <span className="text-base">{topic.emoji}</span>
-                <div>
-                  <p className="text-xs font-semibold text-foreground">{topic.label}</p>
-                  <p className="text-[10px] text-muted-foreground leading-tight">{topic.description}</p>
-                </div>
-              </button>
-            ))}
+      <GuestGate feature="quiz submissions" overlay>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-card border border-border rounded-xl p-8 max-w-2xl mx-auto"
+        >
+          <div className="text-center mb-6">
+            <BookOpen className="w-12 h-12 mx-auto mb-4 text-primary" />
+            <h2 className="text-2xl font-bold text-foreground mb-2">Stacks Knowledge Assessment</h2>
+            <p className="text-muted-foreground text-sm">
+              Choose a topic to focus on, or test across all categories.
+            </p>
           </div>
-          <p className="text-xs text-muted-foreground mt-2">
-            {selectedTopic === "all" ? `${shuffledQuestions.length} questions across all topics` : `${shuffledQuestions.length} questions on ${topicOptions.find(t => t.value === selectedTopic)?.label}`}
-          </p>
-        </div>
 
-        <div className="bg-muted/30 rounded-lg p-4 mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Timer className={`w-5 h-5 ${timedMode ? "text-primary" : "text-muted-foreground"}`} />
-              <div>
-                <p className="font-medium text-foreground text-sm">Timed Exam Mode</p>
-                <p className="text-xs text-muted-foreground">
-                  {timedMode 
-                    ? `${QUESTION_TIME_LIMIT}s per question. Unanswered = incorrect.`
-                    : "Take your time with no time pressure."}
-                </p>
-              </div>
+          {/* Topic selector */}
+          <div className="mb-6">
+            <p className="text-sm font-medium text-foreground mb-3">Select Topic</p>
+            <div className="grid grid-cols-2 gap-2">
+              {topicOptions.map((topic) => (
+                <button
+                  key={topic.value}
+                  type="button"
+                  onClick={() => setSelectedTopic(topic.value)}
+                  className={`flex items-center gap-2 p-3 rounded-lg border text-left transition-all ${
+                    selectedTopic === topic.value
+                      ? "border-primary bg-primary/10"
+                      : "border-border hover:border-primary/50"
+                  }`}
+                >
+                  <span className="text-base">{topic.emoji}</span>
+                  <div>
+                    <p className="text-xs font-semibold text-foreground">{topic.label}</p>
+                    <p className="text-[10px] text-muted-foreground leading-tight">{topic.description}</p>
+                  </div>
+                </button>
+              ))}
             </div>
-            <Switch
-              checked={timedMode}
-              onCheckedChange={setTimedMode}
-            />
+            <p className="text-xs text-muted-foreground mt-2">
+              {selectedTopic === "all" ? `${shuffledQuestions.length} questions across all topics` : `${shuffledQuestions.length} questions on ${topicOptions.find(t => t.value === selectedTopic)?.label}`}
+            </p>
           </div>
-        </div>
 
-        <Button onClick={startQuiz} className="w-full gap-2" size="lg">
-          {timedMode ? <Timer className="w-4 h-4" /> : <BookOpen className="w-4 h-4" />}
-          {timedMode ? "Start Timed Exam" : "Start Assessment"}
-        </Button>
-      </motion.div>
+          <div className="bg-muted/30 rounded-lg p-4 mb-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Timer className={`w-5 h-5 ${timedMode ? "text-primary" : "text-muted-foreground"}`} />
+                <div>
+                  <p className="font-medium text-foreground text-sm">Timed Exam Mode</p>
+                  <p className="text-xs text-muted-foreground">
+                    {timedMode 
+                      ? `${QUESTION_TIME_LIMIT}s per question. Unanswered = incorrect.`
+                      : "Take your time with no time pressure."}
+                  </p>
+                </div>
+              </div>
+              <Switch
+                checked={timedMode}
+                onCheckedChange={setTimedMode}
+              />
+            </div>
+          </div>
+
+          <Button onClick={startQuiz} className="w-full gap-2" size="lg">
+            {timedMode ? <Timer className="w-4 h-4" /> : <BookOpen className="w-4 h-4" />}
+            {timedMode ? "Start Timed Exam" : "Start Assessment"}
+          </Button>
+        </motion.div>
+      </GuestGate>
     );
   }
 
