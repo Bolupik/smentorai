@@ -270,6 +270,13 @@ export default function DailyQuizPanel() {
                     })}
                   </p>
                 </div>
+                {/* Streak pill */}
+                {currentStreak > 0 && (
+                  <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-primary/10 border border-primary/20">
+                    <Flame className="w-3 h-3 text-primary" />
+                    <span className="text-[10px] font-bold text-primary">{currentStreak}d</span>
+                  </div>
+                )}
                 <button
                   onClick={() => setOpen(false)}
                   className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-muted transition-colors"
