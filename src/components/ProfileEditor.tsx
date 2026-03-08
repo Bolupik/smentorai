@@ -261,8 +261,10 @@ const ProfileEditor = () => {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const email = user?.email ?? null;
-  const walletOnlyUser = !user && isWalletConnected;
+  // A user is "wallet-only" if they have no real email: either no Supabase
+  // session at all, or they have an anonymous session (wallet-created).
+  const email = (user?.email && !user.is_anonymous) ? user.email : null;
+  const walletOnlyUser = !user || !!user.is_anonymous;
 
   useEffect(() => {
     if (user) fetchProfile();
@@ -368,7 +370,9 @@ const ProfileEditor = () => {
     ?? walletData?.bnsName?.[0]?.toUpperCase()
     ?? "?";
 
+  // Show nothing if completely unauthenticated
   if (!user && !isWalletConnected) return null;
+
 
   if (loading) {
     return (
@@ -378,7 +382,8 @@ const ProfileEditor = () => {
     );
   }
 
-  if (isGuest) return <GuestGate feature="profile editing" />;
+  // Only block pure guests (no wallet, no email, just anonymous with nothing linked)
+  if (isGuest && !isWalletConnected) return <GuestGate feature="profile editing" />;
 
   return (
     <div className="space-y-4">
