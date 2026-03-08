@@ -311,7 +311,7 @@ const ChatInterface = () => {
                 </Button>
               </div>
               <div className="mt-2.5 pl-1">
-                <AgeSelector value={ageLevel} onChange={setAgeLevel} />
+                <AgeSelector value={ageLevel} onChange={setAgeLevel} locked />
               </div>
             </motion.div>
 
