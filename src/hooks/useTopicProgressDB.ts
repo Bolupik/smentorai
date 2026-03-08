@@ -49,11 +49,15 @@ export const useTopicProgressDB = () => {
       setIsLoading(true);
 
       if (userId) {
-        // Load from database
-        const { data, error } = await supabase
-          .from("topic_progress")
-          .select("topic_title, explored, last_visited")
-          .eq("user_id", userId);
+        // Load from database — with retry on transient network errors
+        const { data, error } = await retryWithBackoff(() =>
+          Promise.resolve(
+            supabase
+              .from("topic_progress")
+              .select("topic_title, explored, last_visited")
+              .eq("user_id", userId)
+          )
+        );
 
         if (!error && data) {
           const progressMap: ProgressMap = {};
