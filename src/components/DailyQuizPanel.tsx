@@ -105,7 +105,7 @@ export default function DailyQuizPanel() {
         .maybeSingle();
 
       if (data) {
-        setQuiz(data as DailyQuiz);
+        setQuiz(data as unknown as DailyQuiz);
         return;
       }
 
@@ -113,7 +113,7 @@ export default function DailyQuizPanel() {
       setGenerating(true);
       const { data: fn, error } = await supabase.functions.invoke("generate-daily-quiz");
       if (error) throw error;
-      if (fn?.quiz) setQuiz(fn.quiz as DailyQuiz);
+      if (fn?.quiz) setQuiz(fn.quiz as unknown as DailyQuiz);
       else throw new Error("No quiz returned");
     } catch (err) {
       console.error("loadQuiz error:", err);
