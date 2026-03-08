@@ -27,8 +27,11 @@ const UserMenu = ({ exploredCount = 0, totalTopics = 0, onOpenProfile }: UserMen
     return <div className="w-9 h-9 rounded-full bg-muted animate-pulse" />;
   }
 
-  // Wallet-only connected (no Supabase session)
-  if (!user && isWalletConnected && walletData) {
+  // Wallet-only user: they have an anonymous Supabase session (user.is_anonymous)
+  // OR no session at all, but they have a connected wallet.
+  const isWalletOnlyUser = isWalletConnected && walletData && (!user || !!user.is_anonymous);
+
+  if (isWalletOnlyUser) {
     const displayName = walletData.bnsName || truncateAddress(walletData.address);
     return (
       <DropdownMenu>
