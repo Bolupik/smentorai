@@ -83,7 +83,8 @@ const UserMenu = ({ exploredCount = 0, totalTopics = 0, onOpenProfile }: UserMen
     );
   }
 
-  if (!user) {
+  // Unauthenticated — no session and no wallet
+  if (!user && !isWalletConnected) {
     return (
       <Button
         onClick={() => navigate("/auth")}
