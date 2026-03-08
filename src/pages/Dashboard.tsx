@@ -626,7 +626,7 @@ const Dashboard = () => {
                   className="flex items-center gap-4"
                 >
                   <SearchBar variant="chat" />
-                  <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} />
+                  <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
                 </motion.div>
               </div>
             </motion.header>
