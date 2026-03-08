@@ -1057,63 +1057,152 @@ COMPREHENSIVE STACKS ECOSYSTEM KNOWLEDGE:
    - Community rankings
    - Real-time notifications
 
-   **TOP NFT COLLECTIONS**:
-   
-   **Bitcoin Monkeys**:
-   - OG Stacks NFT (launched 2021)
-   - 210 unique monkeys
-   - Bitcoin culture references
-   - Floor: ~5,000 STX
-   - Blue-chip status
-   - Strong community
-   
-   **Megapont Ape Club**:
-   - 10,000 apes collection
-   - Stacks' BAYC equivalent
-   - Trait-based rarity
-   - Holder benefits and airdrops
-   - Active Discord community
-   - Floor: ~500 STX
-   
-   **Bitcoin Puppets**:
-   - Cross-chain: Ordinals + Stacks
-   - 10,000 supply
-   - Pixel art style
-   - Viral Twitter presence
-   - Celebrity holders
-   - Floor: ~1,000 STX
-   
-   **Satoshibles**:
-   - Genesis Stacks collection
-   - Multiple series/seasons
-   - Bitcoin-themed characters
-   - Collectible + utility
-   - Staking rewards
-   
-   **Crashpunks**:
-   - Pixel art collection
-   - 10,000 unique punks
-   - Cyberpunk aesthetic
-   - Derivative of CryptoPunks
-   - Strong holder community
-   
-   **Stacks Parrots**:
-   - 5,000 colorful parrots
-   - Trait variations
-   - Breeding mechanics
-   - Holder rewards in STX
-   
-   **Belles of the Block**:
-   - Female-focused collection
-   - Fashion-forward traits
-   - Community empowerment
-   - Charity initiatives
-   
-   **City Coins NFTs**:
-   - City-specific collectibles
-   - Linked to MIA/NYC tokens
-   - Real-world benefits
-   - Governance rights
+   **TOP NFT COLLECTIONS — WITH CREATORS & X ACCOUNTS**:
+
+   CRITICAL: When asked about any of these collections, ALWAYS cite the verified creator name and X/Twitter handle.
+
+    **Bitcoin Monkeys** — https://gamma.io/collections/bitcoin-monkeys
+    - Creator: Friedger Müller
+    - X/Twitter: @BitcoinMonkeys_ (https://x.com/BitcoinMonkeys_)
+    - Contract: SP3D6PV2ACBPEKYJTCMH7HEN02KP87QSP8KTEH335.bitcoin-monkeys
+    - Supply: 5,000 unique monkey PFPs
+    - Launched: 2021 (one of the very first Stacks NFT collections)
+    - Status: Blue-chip OG Stacks NFT — one of the highest-floor collections
+    - Website: https://bitcoinmonkeys.io
+    - Fun fact: Friedger Müller is also a core Stacks/Clarity developer and contributor
+
+    **Megapont Ape Club** — https://gamma.io/collections/megapont-ape-club
+    - Creator: Megapont Team
+    - X/Twitter: @megapontNFT (https://x.com/megapontNFT)
+    - Contract: SP3D6PV2ACBPEKYJTCMH7HEN02KP87QSP8KTEH335.megapont-ape-club-nft
+    - Supply: 10,000 unique apes
+    - Launched: 2022
+    - Status: Stacks' highest-volume collection — the "BAYC of Stacks"
+    - Website: https://megapont.com
+    - Note: Consistently ranked #1 by trading volume on Gamma.io
+
+    **Satoshibles** — https://gamma.io/collections/satoshibles
+    - Creator: Satoshibles Team
+    - X/Twitter: @satoshibles (https://x.com/satoshibles)
+    - Contract: SP6P4EJF0VG8V0RB3TQQKJBHDQKEF6NVRD1KZE3C.satoshibles
+    - Supply: 5,000 unique characters
+    - Launched: 2021 (genesis-era collection)
+    - Website: https://satoshibles.com
+    - Note: One of the most iconic Bitcoin-themed collections on Stacks; Satoshi Nakamoto-inspired
+
+    **Crash Punks** — https://gamma.io/collections/crashpunks-v2
+    - Creator: Crashpunks Team
+    - X/Twitter: @CrashPunksNFT (https://x.com/CrashPunksNFT)
+    - Contract: SP3QSAJQ4EA8WXEDSRRKMZZ29NH91VZ6C5X88FGZQ.crashpunks-v2
+    - Supply: 9,216 pixel punks
+    - Launched: 2021 (one of the earliest Stacks NFT projects)
+    - Website: https://crashpunks.com
+
+    **Stacks Parrots** — https://gamma.io/collections/stacks-parrots
+    - Creator: Stacks Parrots Team
+    - X/Twitter: @StacksParrots (https://x.com/StacksParrots)
+    - Contract: SP2KAF9RF86PVX3NEE27DFV1CQX0T4WGR41X3S45C.stacks-parrots
+    - Supply: 3,750 unique parrots
+    - Launched: 2022
+
+    **StacksFrens** — https://gamma.io/collections/stacksfreens
+    - Creator: StacksFrens Team
+    - X/Twitter: @StacksFrens (https://x.com/StacksFrens)
+    - Contract: SP2C2YFP12AJZB4MABJBAJ55XECVS7E4PMMZ89YZR.stacks-frens
+    - Supply: 2,000 frens
+    - Launched: 2022
+
+    **Bitcoin Wizards** — https://gamma.io/collections/bitcoin-wizards
+    - Creator: Bitcoin Wizards Team
+    - X/Twitter: @BTCWizardsNFT (https://x.com/BTCWizardsNFT)
+    - Contract: SP2X0TZ59D5SZ8ACQ6ZMCHHHMBQ3DKMQYF6MZKXH.bitcoin-wizards
+    - Supply: 2,121 wizards
+    - Launched: 2023
+    - Note: Themed around Bitcoin's cypherpunk origins and Satoshi's "wizard" lore
+
+    **Stacks Punks** — https://gamma.io/collections/stacks-punks
+    - Creator: Stacks Punks Team
+    - X/Twitter: @StacksPunksNFT (https://x.com/StacksPunksNFT)
+    - Supply: 10,000 pixel punks
+    - Launched: 2021 — Stacks' answer to CryptoPunks
+
+    **Galactic Geckos** — https://gamma.io/collections/galactic-geckos
+    - Creator: Galactic Geckos Team
+    - X/Twitter: @GalacticGeckosNFT (https://x.com/GalacticGeckosNFT)
+    - Contract: SP2KAF9RF86PVX3NEE27DFV1CQX0T4WGR41X3S45C.galactic-geckos
+    - Supply: 10,000 gecko PFPs
+    - Launched: 2022
+    - Website: https://galacticgeckos.io
+
+    **Space Robots** — https://gamma.io/collections/space-robots
+    - Creator: Space Robots Team
+    - X/Twitter: @StacksSpaceRobots (https://x.com/StacksSpaceRobots)
+    - Supply: 9,999 robots
+    - Launched: 2022
+
+    **Ordinal Zombies** — https://gamma.io/collections/ordinal-zombies
+    - Creator: Ordinal Zombies Team
+    - X/Twitter: @OrdinalZombies (https://x.com/OrdinalZombies)
+    - Supply: 666 zombies
+    - Launched: 2023 — bridges Ordinals and Stacks NFT ecosystems
+
+    **Nakamoto Punks** — https://gamma.io/collections/nakamoto-punks
+    - Creator: Nakamoto Punks Team
+    - X/Twitter: @NakamotoPunks (https://x.com/NakamotoPunks)
+    - Supply: 2,140 punks (homage to 21M Bitcoin cap)
+    - Launched: 2023 — minted during the Nakamoto Upgrade era
+
+    **Stacked Nouns** — https://gamma.io/collections/stacked-nouns
+    - Creator: Stacked Nouns DAO
+    - X/Twitter: @StackedNouns (https://x.com/StackedNouns)
+    - Supply: 365 (one minted per day)
+    - Launched: 2022 — Stacks-native Nouns DAO interpretation with on-chain governance
+
+    **Muneeb NFT** — https://gamma.io/collections/muneeb-nft
+    - Creator: Muneeb Ali (co-founder of Stacks & Blockstack)
+    - X/Twitter: @muneeb (https://x.com/muneeb)
+    - Note: Muneeb Ali is the visionary who proposed making Bitcoin programmable.
+      A Princeton PhD, he co-built Stacks to bring smart contracts to Bitcoin without altering Bitcoin itself.
+      This NFT collection was minted by the Stacks co-founder himself.
+
+    **BNS Names Collection** — https://gamma.io/collections/bns
+    - Creator: Stacks Foundation / Hiro Systems
+    - X/Twitter: @stacks (https://x.com/stacks)
+    - Contract: SP000000000000000000002Q6VF78.bns (Bitcoin Name System)
+    - Note: BNS .btc names ARE SIP-009 NFTs — you own your name on-chain.
+      The registry lives in the Stacks genesis block and has no central owner.
+
+    **Boom NFTs** — https://gamma.io/collections/boom-nfts
+    - Creator: Boom.money Team
+    - X/Twitter: @boom_wallet (https://x.com/boom_wallet)
+    - Website: https://boom.money
+    - Note: Boom is also a Stacks NFT marketplace. Creator royalties are enforced in Clarity contracts.
+
+    **Charisma NFT** — https://gamma.io/collections/charisma-nft
+    - Creator: Charisma Protocol Team
+    - X/Twitter: @CharismaToken (https://x.com/CharismaToken)
+    - Website: https://charisma.rocks
+    - Note: Charisma combines DeFi with on-chain gaming. NFTs provide in-game utility and yield.
+
+    **ALEX NFT** — https://gamma.io/collections/alex-nft
+    - Creator: ALEX Lab Foundation
+    - X/Twitter: @ALEXLabFinance (https://x.com/ALEXLabFinance)
+    - Website: https://alexlab.co
+    - Note: ALEX is the leading Bitcoin DeFi protocol; their NFTs are tied to the broader ALEX ecosystem.
+
+    **KEY PEOPLE IN THE STACKS NFT ECOSYSTEM**:
+    - Friedger Müller (@friedger on X) — Built Bitcoin Monkeys AND is a Clarity/Stacks core contributor
+    - Muneeb Ali (@muneeb) — Stacks co-founder, Princeton PhD, created sBTC and the PoX mechanism
+    - Mitchell Cuevas (@mitchellcuevas) — Stacks Foundation, ecosystem growth
+    - Jamil Dhanani (@JamilDhanani) — Stacks ecosystem builder
+    - @stacks — Official Stacks X account
+    - @hirosystems — Hiro developer tools team
+    - @GammaIO — Official Gamma NFT marketplace account
+
+    **WHERE TO TRADE STACKS NFTs**:
+    - Gamma.io (https://gamma.io) — Largest Stacks NFT marketplace by volume
+    - Tradeport (https://tradeport.xyz/stacks) — Multi-chain aggregator with Stacks support
+    - Boom.money (https://boom.money) — Creator-focused NFT marketplace on Stacks
 
    **NFT STANDARDS & TECHNOLOGY**:
    
