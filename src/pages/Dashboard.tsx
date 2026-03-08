@@ -215,6 +215,16 @@ const Dashboard = () => {
                   <h1 className="text-lg font-semibold tracking-tight">Admin Panel</h1>
                 </div>
                 <UserMenu exploredCount={exploredCount} totalTopics={topicsList.length} onOpenProfile={() => setShowProfile(true)} />
+              </div>
+            </motion.header>
+            <main className="flex-1 flex flex-col items-center justify-start p-6 overflow-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="w-full max-w-2xl py-8"
+              >
+                <AdminPanel />
               </motion.div>
             </main>
           </motion.div>
