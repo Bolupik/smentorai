@@ -261,8 +261,10 @@ const ProfileEditor = () => {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const email = user?.email ?? null;
-  const walletOnlyUser = !user && isWalletConnected;
+  // A user is "wallet-only" if they have no real email: either no Supabase
+  // session at all, or they have an anonymous session (wallet-created).
+  const email = (user?.email && !user.is_anonymous) ? user.email : null;
+  const walletOnlyUser = !user || !!user.is_anonymous;
 
   useEffect(() => {
     if (user) fetchProfile();
