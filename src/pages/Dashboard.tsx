@@ -601,6 +601,15 @@ const Dashboard = () => {
       </AnimatePresence>
 
       {/* Preview Modal */}
+      <OnboardingModal
+        open={showOnboarding}
+        onComplete={() => {
+          if (user && !user.is_anonymous) {
+            localStorage.setItem(`email_onboarded_${user.id}`, "true");
+          }
+          setShowOnboarding(false);
+        }}
+      />
       <PreviewModal
         isOpen={showPreview}
         onClose={() => setShowPreview(false)}
