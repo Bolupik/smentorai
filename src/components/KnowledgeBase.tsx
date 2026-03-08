@@ -66,6 +66,7 @@ const CATEGORIES = [
 
 const KnowledgeBase = () => {
   const { user } = useAuth();
+  const isGuest = useIsGuest();
   const [entries, setEntries] = useState<KnowledgeEntry[]>([]);
   const [myEntries, setMyEntries] = useState<KnowledgeEntry[]>([]);
   const [userVotes, setUserVotes] = useState<UserVote[]>([]);
