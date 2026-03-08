@@ -41,12 +41,23 @@ const getAddressFromStorage = (): string | undefined => {
   }
 };
 
+/**
+ * Fetches the primary BNS name for a Stacks address.
+ * The BNSv2 API returns an array of name objects; we prefer .btc > .stx > .id
+ * and return the full_name string (e.g. "kandy1.btc").
+ */
 const fetchBnsName = async (address: string): Promise<string | undefined> => {
   try {
     const res = await fetch(`https://api.bnsv2.com/names/address/${address}/valid`);
     if (!res.ok) return undefined;
     const data = await res.json();
-    return data?.names?.[0] ?? undefined;
+    const names: Array<{ full_name: string; namespace_string: string; revoked: boolean }> =
+      data?.names ?? [];
+    // Filter out revoked names, then prefer .btc > .stx > .id > anything
+    const active = names.filter((n) => !n.revoked);
+    const preferred = (ns: string) => active.find((n) => n.namespace_string === ns);
+    const best = preferred("btc") ?? preferred("stx") ?? preferred("id") ?? active[0];
+    return best?.full_name ?? undefined;
   } catch {
     return undefined;
   }
@@ -84,7 +95,7 @@ const ensureSupabaseSession = async (address: string, bnsName?: string) => {
         {
           user_id: session.user.id,
           stacks_address: address,
-          bns_name: bnsName || null,
+          bns_name: bnsName ?? null,
         },
         { onConflict: "user_id" }
       );
@@ -95,14 +106,16 @@ const ensureSupabaseSession = async (address: string, bnsName?: string) => {
     const { data, error } = await supabase.auth.signInAnonymously();
     if (error || !data.user) return;
 
-    // Create / update their profile row so DB-backed features work
+    // Create / update their profile row so DB-backed features work.
+    // Only set username/display_name to the bnsName string (never an object).
+    const displayName = typeof bnsName === "string" ? bnsName : null;
     await supabase.from("profiles").upsert(
       {
         user_id: data.user.id,
-        username: bnsName || address,
-        display_name: bnsName || address,
+        username: displayName ?? address.slice(0, 20),
+        display_name: displayName,
         stacks_address: address,
-        bns_name: bnsName || null,
+        bns_name: displayName,
       },
       { onConflict: "user_id" }
     );
