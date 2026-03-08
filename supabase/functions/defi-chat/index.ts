@@ -1750,6 +1750,12 @@ You are an autonomous guide of considerable expertise. Direct the learner toward
 ${communityKnowledge}`;
 
 
+    // ── Knowledge-gap detection ──────────────────────────────────────────────
+    // Identify the last user message to check against the KB
+    const lastUserMsg = [...messages].reverse().find((m: { role: string }) => m.role === "user");
+    const outsideKB = lastUserMsg ? isOutsideKnowledgeBase(lastUserMsg.content ?? "") : false;
+
+    // ── Fetch Gemini stream ──────────────────────────────────────────────────
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -1787,6 +1793,40 @@ ${communityKnowledge}`;
       );
     }
 
+    // ── If the question is outside the KB, prepend a clarification notice ───
+    // We emit the notice as the very first SSE tokens, then pipe the real stream.
+    if (outsideKB && response.body) {
+      const clarificationText =
+        `> 🔍 *That topic isn't in our Stacks knowledge base yet — searching the broader ecosystem via Gemini to give you the most accurate answer…*\n\n`;
+
+      const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>();
+      const writer = writable.getWriter();
+
+      (async () => {
+        // 1. Stream the clarification preamble token-by-token (chunked naturally)
+        for (const chunk of clarificationText.split("")) {
+          await writer.write(deltaEvent(chunk));
+        }
+
+        // 2. Pipe the real Gemini stream through
+        const reader = response.body!.getReader();
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            await writer.write(value);
+          }
+        } finally {
+          await writer.close();
+        }
+      })();
+
+      return new Response(readable, {
+        headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+      });
+    }
+
+    // ── Normal path: stream directly ────────────────────────────────────────
     return new Response(response.body, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
