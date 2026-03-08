@@ -13,12 +13,13 @@ import ProfileEditor from "@/components/ProfileEditor";
 import DappShowcase from "@/components/DappShowcase";
 import { CommunitySentiment } from "@/components/CommunitySentiment";
 import OnboardingModal from "@/components/OnboardingModal";
+import GuideTour from "@/components/GuideTour";
 import { useAuth } from "@/contexts/AuthContext";
 import { useStacksAuth } from "@/hooks/useStacksAuth";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
 import { useAdminRole } from "@/hooks/useAdminRole";
 import { topicsList } from "@/components/TopicCards";
-import { Play, Info, BookOpen, Library, Shield, Activity, UserCircle } from "lucide-react";
+import { Play, Info, BookOpen, Library, Shield, Activity, UserCircle, HelpCircle } from "lucide-react";
 
 const pageVariants = {
   initial: { opacity: 0 },
@@ -41,6 +42,7 @@ const Dashboard = () => {
   const [showSentiment, setShowSentiment] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
   const { isAuthenticated: isWalletConnected, userData: walletData, isLoading: isWalletLoading } = useStacksAuth();
@@ -521,6 +523,15 @@ const Dashboard = () => {
                     <Info className="w-4 h-4 sm:w-6 sm:h-6" />
                     <span className="hidden sm:inline">Overview</span>
                   </motion.button>
+                  <motion.button
+                    onClick={() => setShowGuide(true)}
+                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-muted/60 text-foreground/70 font-medium text-sm sm:text-lg rounded-sm hover:bg-muted hover:text-foreground transition-all duration-300 backdrop-blur-sm border border-border/40"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="hidden sm:inline">Guide</span>
+                  </motion.button>
                   {isAdmin && (
                     <motion.button
                       onClick={() => setShowAdmin(true)}
@@ -660,6 +671,7 @@ const Dashboard = () => {
           setShowChat(true);
         }}
       />
+      <GuideTour open={showGuide} onClose={() => setShowGuide(false)} />
     </div>
   );
 };
