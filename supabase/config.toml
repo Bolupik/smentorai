@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.quiz-leaderboard]
 verify_jwt = false
+
+[functions.ingest-sponsors]
+verify_jwt = false
