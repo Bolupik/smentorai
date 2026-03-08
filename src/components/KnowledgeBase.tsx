@@ -241,8 +241,8 @@ const KnowledgeBase = () => {
   };
 
   const handleVote = async (entryId: string, voteType: 'up' | 'down') => {
-    if (!user) {
-      toast.error("Sign in to vote on contributions");
+    if (!user || isGuest) {
+      toast.error("Create an account to vote on contributions");
       return;
     }
 
