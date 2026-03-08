@@ -59,7 +59,7 @@ const Dashboard = () => {
     }
   }, [isAuthorized, authLoading, navigate]);
 
-  // Show onboarding modal for first-time users
+  // Auto-show onboarding modal for first-time users
   useEffect(() => {
     if (authLoading || !isAuthorized) return;
 
@@ -70,11 +70,9 @@ const Dashboard = () => {
         setShowOnboarding(true);
       }
     } else if (user && !user.is_anonymous) {
-      // Email user: check the DB profile for age_level; fall back to localStorage flag
+      // Email user: check the DB profile for age_level
       const onboardedKey = `email_onboarded_${user.id}`;
       if (!localStorage.getItem(onboardedKey)) {
-        // Async check: if profile already has age_level (e.g. returning user, cleared localStorage),
-        // mark as onboarded and skip modal
         import("@/integrations/supabase/client").then(({ supabase }) => {
           supabase
             .from("profiles")
@@ -83,7 +81,6 @@ const Dashboard = () => {
             .maybeSingle()
             .then(({ data }) => {
               if (data?.age_level) {
-                // Profile already configured — persist flag and skip onboarding
                 localStorage.setItem(onboardedKey, "true");
               } else {
                 setShowOnboarding(true);
@@ -92,7 +89,8 @@ const Dashboard = () => {
         });
       }
     }
-  }, [authLoading, isAuthorized, isWalletConnected, walletData, user]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoading, isAuthorized, isWalletConnected, walletData?.address, user?.id]);
 
   // Show loading while checking auth
   if (authLoading) {
