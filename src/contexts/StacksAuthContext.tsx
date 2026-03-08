@@ -19,26 +19,39 @@ interface StacksAuthContextType {
 
 const StacksAuthContext = createContext<StacksAuthContextType | undefined>(undefined);
 
-const STACKS_CONNECT_KEY = "@stacks/connect";
+const STACKS_CONNECT_KEYS = ["@stacks/connect", "blockstack-session", "stacks-session"];
 
-const readLocalStorage = (): { addresses?: { stx?: { address: string }[] } } | null => {
-  try {
-    const raw = localStorage.getItem(STACKS_CONNECT_KEY);
-    if (!raw) return null;
-    const bytes = new Uint8Array(raw.match(/.{1,2}/g)!.map((b) => parseInt(b, 16)));
-    return JSON.parse(new TextDecoder().decode(bytes));
-  } catch {
-    return null;
-  }
-};
-
+/**
+ * Try multiple known localStorage key formats used across @stacks/connect versions.
+ * v8 stores data as a hex-encoded binary blob under "@stacks/connect".
+ * Older versions stored JSON directly under other keys.
+ */
 const getAddressFromStorage = (): string | undefined => {
-  try {
-    const data = readLocalStorage();
-    return data?.addresses?.stx?.[0]?.address;
-  } catch {
-    return undefined;
+  for (const key of STACKS_CONNECT_KEYS) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) continue;
+
+      // Try hex-encoded binary (v8 format)
+      if (/^[0-9a-f]+$/i.test(raw) && raw.length % 2 === 0) {
+        const bytes = new Uint8Array(raw.match(/.{1,2}/g)!.map((b) => parseInt(b, 16)));
+        const parsed = JSON.parse(new TextDecoder().decode(bytes));
+        const addr = parsed?.addresses?.stx?.[0]?.address ?? parsed?.addresses?.mainnet?.address;
+        if (addr && typeof addr === "string") return addr;
+      }
+
+      // Try plain JSON format
+      const parsed = JSON.parse(raw);
+      const addr =
+        parsed?.addresses?.stx?.[0]?.address ??
+        parsed?.addresses?.mainnet?.address ??
+        parsed?.userData?.profile?.stxAddress?.mainnet;
+      if (addr && typeof addr === "string") return addr;
+    } catch {
+      continue;
+    }
   }
+  return undefined;
 };
 
 /**
