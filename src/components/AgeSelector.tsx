@@ -1,6 +1,5 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
-import { Baby, GraduationCap, Brain, Sparkles } from "lucide-react";
+import { Baby, GraduationCap, Brain, Sparkles, Lock } from "lucide-react";
 import { Slider } from "./ui/slider";
 
 type AgeLevel = "child" | "teen" | "adult" | "expert";
@@ -8,6 +7,7 @@ type AgeLevel = "child" | "teen" | "adult" | "expert";
 interface AgeSelectorProps {
   value: AgeLevel;
   onChange: (value: AgeLevel) => void;
+  locked?: boolean;
 }
 
 const ageLevels: { value: AgeLevel; label: string; icon: React.ReactNode; description: string; age: string }[] = [
@@ -26,9 +26,35 @@ const indexToLevel = (index: number): AgeLevel => {
   return ageLevels[index]?.value || "adult";
 };
 
-const AgeSelector = ({ value, onChange }: AgeSelectorProps) => {
+const AgeSelector = ({ value, onChange, locked = false }: AgeSelectorProps) => {
   const currentIndex = levelToIndex(value);
   const current = ageLevels[currentIndex];
+
+  if (locked) {
+    return (
+      <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-muted/30 border border-border/30 opacity-80">
+        <div className="flex items-center gap-2 flex-1">
+          <motion.div
+            key={current.value}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="p-1.5 rounded-lg bg-primary/20 text-primary"
+          >
+            {current.icon}
+          </motion.div>
+          <div className="hidden sm:block">
+            <p className="text-xs font-medium text-foreground leading-tight">{current.label}</p>
+            <p className="text-[10px] text-muted-foreground">{current.description}</p>
+          </div>
+          <span className="sm:hidden text-xs font-medium text-foreground">{current.label}</span>
+        </div>
+        <div className="flex items-center gap-1.5 text-muted-foreground">
+          <Lock className="w-3 h-3" />
+          <span className="text-[10px]">Set at signup</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-muted/50 border border-border/50">
