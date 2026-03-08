@@ -1,6 +1,7 @@
 import { ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useStacksAuth } from "@/hooks/useStacksAuth";
 import { motion } from "framer-motion";
 
 interface ProtectedRouteProps {
@@ -9,15 +10,19 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { user, isLoading } = useAuth();
+  const { isAuthenticated: isWalletConnected, isLoading: isWalletLoading } = useStacksAuth();
   const navigate = useNavigate();
 
+  const authLoading = isLoading || isWalletLoading;
+  const isAuthorized = !!user || isWalletConnected;
+
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (!authLoading && !isAuthorized) {
       navigate("/auth");
     }
-  }, [user, isLoading, navigate]);
+  }, [isAuthorized, authLoading, navigate]);
 
-  if (isLoading) {
+  if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <motion.div
@@ -36,7 +41,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     );
   }
 
-  if (!user) {
+  if (!isAuthorized) {
     return null;
   }
 
