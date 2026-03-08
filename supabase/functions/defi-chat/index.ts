@@ -7,7 +7,52 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// ---------------------------------------------------------------------------
+// Knowledge-gap detection
+// ---------------------------------------------------------------------------
+
+// Core Stacks topics that are well covered in the built-in knowledge base
+const CORE_KB_TOPICS = [
+  "stacks", "stx", "sbtc", "bitcoin", "clarity", "smart contract", "proof of transfer",
+  "pox", "stacking", "nakamoto", "microblock", "block", "transaction", "wallet", "xverse",
+  "leather", "hiro", "nft", "defi", "amm", "liquidity", "yield", "lending", "borrow",
+  "granite", "zest", "bitflow", "velar", "arkadiko", "hermetica", "alex", "charisma",
+  "bns", "boostx", "memecoin", "token", "sip-010", "fungible", "non-fungible",
+  "security", "reentrancy", "post-condition", "contract", "principal", "testnet",
+  "mainnet", "explorer", "hiro platform", "stacks.js", "web3", "decentralized",
+  "consensus", "miner", "signer", "stacks ecosystem", "dual stacking",
+];
+
+/**
+ * Returns true when the last user message appears to be outside our KB.
+ * We flag it when NONE of the core topic keywords appear in the query.
+ */
+function isOutsideKnowledgeBase(lastUserMessage: string): boolean {
+  const lower = lastUserMessage.toLowerCase();
+  return !CORE_KB_TOPICS.some((kw) => lower.includes(kw));
+}
+
+/**
+ * Emit a single SSE data line followed by a blank line.
+ */
+function sseEvent(data: string): Uint8Array {
+  return new TextEncoder().encode(`data: ${data}\n\n`);
+}
+
+/**
+ * Build a fake OpenAI-style SSE delta payload so the frontend can
+ * render it with its existing streaming parser.
+ */
+function deltaEvent(content: string): Uint8Array {
+  const payload = JSON.stringify({
+    choices: [{ delta: { content }, finish_reason: null }],
+  });
+  return sseEvent(payload);
+}
+
+// ---------------------------------------------------------------------------
 // Fetch community-contributed knowledge from the database
+// ---------------------------------------------------------------------------
 async function fetchCommunityKnowledge(): Promise<string> {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
