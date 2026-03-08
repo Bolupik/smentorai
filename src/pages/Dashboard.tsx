@@ -483,77 +483,76 @@ const Dashboard = () => {
                   A comprehensive discourse on the Stacks paradigm. Master decentralized finance, Bitcoin's programmable layer, and the elegance of Clarity.
                 </motion.p>
 
-                {/* Buttons - Mobile responsive grid */}
+                {/* Buttons - Mobile responsive, 2-col on small screens */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 1.4 }}
-                  className="flex flex-wrap gap-2 sm:gap-3 md:gap-4"
+                  className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-3"
                 >
                   <motion.button
                     onClick={() => setShowChat(true)}
-                    className="group flex items-center gap-2 sm:gap-3 px-4 sm:px-8 py-3 sm:py-4 bg-foreground text-background font-semibold text-sm sm:text-lg rounded-sm hover:bg-foreground/90 transition-all duration-300 shadow-lg hover:shadow-xl"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="col-span-2 sm:col-auto group flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-8 py-3 sm:py-4 bg-foreground text-background font-semibold text-sm sm:text-base rounded-sm hover:bg-foreground/90 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
                   >
-                    <Play className="w-4 h-4 sm:w-6 sm:h-6 fill-current" />
+                    <Play className="w-4 h-4 fill-current" />
                     <span>Begin</span>
                   </motion.button>
                   <motion.button
                     onClick={() => setShowQuiz(true)}
-                    className="group flex items-center gap-2 px-4 sm:px-8 py-3 sm:py-4 bg-primary/20 text-primary border border-primary/50 font-semibold text-sm sm:text-lg rounded-sm hover:bg-primary/30 transition-all duration-300"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-primary/20 text-primary border border-primary/50 font-semibold text-sm sm:text-base rounded-sm hover:bg-primary/30 transition-all duration-300"
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
                   >
-                    <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="hidden sm:inline">Assessment</span>
-                    <span className="sm:hidden">Quiz</span>
+                    <BookOpen className="w-4 h-4" />
+                    <span>Quiz</span>
                   </motion.button>
                   <motion.button
                     onClick={() => setShowKnowledge(true)}
-                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-muted/60 text-foreground/80 font-medium text-sm sm:text-lg rounded-sm hover:bg-muted transition-all duration-300 backdrop-blur-sm"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-muted/60 text-foreground/80 font-medium text-sm sm:text-base rounded-sm hover:bg-muted transition-all duration-300 backdrop-blur-sm"
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
                   >
-                    <Library className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="hidden sm:inline">Contribute</span>
+                    <Library className="w-4 h-4" />
+                    <span>Contribute</span>
                   </motion.button>
                   <motion.button
                     onClick={() => setShowSentiment(true)}
-                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-orange-500/20 text-orange-400 border border-orange-500/50 font-semibold text-sm sm:text-lg rounded-sm hover:bg-orange-500/30 transition-all duration-300"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-orange-500/20 text-orange-400 border border-orange-500/50 font-semibold text-sm sm:text-base rounded-sm hover:bg-orange-500/30 transition-all duration-300"
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
                   >
-                    <Activity className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="hidden sm:inline">Pulse</span>
+                    <Activity className="w-4 h-4" />
+                    <span>Pulse</span>
                   </motion.button>
                   <motion.button 
                     onClick={() => setShowPreview(true)}
-                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-muted/80 text-foreground font-semibold text-sm sm:text-lg rounded-sm hover:bg-muted transition-all duration-300 backdrop-blur-sm"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-muted/80 text-foreground font-semibold text-sm sm:text-base rounded-sm hover:bg-muted transition-all duration-300 backdrop-blur-sm"
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
                   >
-                    <Info className="w-4 h-4 sm:w-6 sm:h-6" />
-                    <span className="hidden sm:inline">Overview</span>
+                    <Info className="w-4 h-4" />
+                    <span>Overview</span>
                   </motion.button>
                   <motion.button
                     onClick={() => setShowGuide(true)}
-                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-muted/60 text-foreground/70 font-medium text-sm sm:text-lg rounded-sm hover:bg-muted hover:text-foreground transition-all duration-300 backdrop-blur-sm border border-border/40"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-muted/60 text-foreground/70 font-medium text-sm sm:text-base rounded-sm hover:bg-muted hover:text-foreground transition-all duration-300 backdrop-blur-sm border border-border/40"
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
                   >
-                    <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="hidden sm:inline">Guide</span>
+                    <HelpCircle className="w-4 h-4" />
+                    <span>Guide</span>
                   </motion.button>
                   {isAdmin && (
                     <motion.button
                       onClick={() => setShowAdmin(true)}
-                      className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-destructive/20 text-destructive border border-destructive/50 font-semibold text-sm sm:text-lg rounded-sm hover:bg-destructive/30 transition-all duration-300"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.98 }}
+                      className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-destructive/20 text-destructive border border-destructive/50 font-semibold text-sm sm:text-base rounded-sm hover:bg-destructive/30 transition-all duration-300"
+                      whileHover={{ scale: 1.04 }}
+                      whileTap={{ scale: 0.97 }}
                     >
-                      <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
-                      <span className="hidden sm:inline">Admin</span>
+                      <Shield className="w-4 h-4" />
+                      <span>Admin</span>
                     </motion.button>
                   )}
                 </motion.div>
