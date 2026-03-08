@@ -15,6 +15,7 @@ import DailyQuizPanel from "@/components/DailyQuizPanel";
 import { CommunitySentiment } from "@/components/CommunitySentiment";
 import OnboardingModal from "@/components/OnboardingModal";
 import GuideTour from "@/components/GuideTour";
+import Footer from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
 import { useStacksAuth } from "@/hooks/useStacksAuth";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
