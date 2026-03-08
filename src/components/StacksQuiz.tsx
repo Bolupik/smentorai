@@ -8,6 +8,7 @@ import { Switch } from "./ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import GuestGate from "./GuestGate";
+import { useGuestQuizLimit } from "@/hooks/useGuestQuizLimit";
 
 type AgeLevel = "child" | "teen" | "adult" | "expert";
 
@@ -901,6 +902,7 @@ const topicOptions: { value: TopicFilter; label: string; emoji: string; descript
 
 const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
   const { user } = useAuth();
+  const { isGuest, limitReached, increment: incrementGuestQuiz, GUEST_LIMIT } = useGuestQuizLimit();
   const [ageLevel, setAgeLevel] = useState<AgeLevel>("adult");
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string>("");
@@ -1009,6 +1011,10 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
       setScore(s => Math.max(0, s - 1));
     }
     setAnsweredQuestions(prev => new Set(prev).add(currentQuestion));
+    // Track guest quiz usage
+    if (isGuest && !answeredQuestions.has(currentQuestion)) {
+      incrementGuestQuiz();
+    }
   };
 
   const handleNext = () => {
@@ -1092,22 +1098,26 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
     return <div className="text-center text-muted-foreground">Loading assessment...</div>;
   }
 
-  // Mode selection screen
+  // Mode selection screen — guests can start freely
   if (!quizStarted) {
     return (
-      <GuestGate feature="quiz submissions" overlay>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-card border border-border rounded-xl p-8 max-w-2xl mx-auto"
-        >
-          <div className="text-center mb-6">
-            <BookOpen className="w-12 h-12 mx-auto mb-4 text-primary" />
-            <h2 className="text-2xl font-bold text-foreground mb-2">Stacks Knowledge Assessment</h2>
-            <p className="text-muted-foreground text-sm">
-              Choose a topic to focus on, or test across all categories.
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-card border border-border rounded-xl p-8 max-w-2xl mx-auto"
+      >
+        <div className="text-center mb-6">
+          <BookOpen className="w-12 h-12 mx-auto mb-4 text-primary" />
+          <h2 className="text-2xl font-bold text-foreground mb-2">Stacks Knowledge Assessment</h2>
+          <p className="text-muted-foreground text-sm">
+            Choose a topic to focus on, or test across all categories.
+          </p>
+          {isGuest && (
+            <p className="text-xs text-amber-400 mt-2">
+              🎁 Guest preview: {GUEST_LIMIT} free questions. Sign up to unlock the full assessment.
             </p>
-          </div>
+          )}
+        </div>
 
           {/* Topic selector */}
           <div className="mb-6">
@@ -1162,7 +1172,6 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
             {timedMode ? "Start Timed Exam" : "Start Assessment"}
           </Button>
         </motion.div>
-      </GuestGate>
     );
   }
 
@@ -1219,6 +1228,31 @@ const StacksQuiz = ({ onComplete }: StacksQuizProps) => {
     security: "bg-red-500/20 text-red-400",
     advanced: "bg-cyan-500/20 text-cyan-400"
   };
+
+  // Guest limit reached — show upgrade gate
+  if (isGuest && limitReached) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-card border border-border rounded-xl p-8 max-w-2xl mx-auto text-center"
+      >
+        <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+          <Trophy className="w-7 h-7 text-primary" />
+        </div>
+        <h3 className="text-xl font-bold text-foreground mb-2">You've completed your {GUEST_LIMIT} free questions!</h3>
+        <p className="text-sm text-muted-foreground mb-6 max-w-sm mx-auto">
+          Create a free account to unlock the full assessment, track your progress, earn achievements, and save your score.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <Button size="lg" className="gap-2" onClick={() => window.location.href = '/auth'}>
+            <BookOpen className="w-4 h-4" />
+            Sign Up Free — Unlock All
+          </Button>
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div
