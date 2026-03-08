@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { retryWithBackoff } from "@/lib/retryWithBackoff";
+import { enqueue } from "@/lib/offlineQueue";
 
 export interface TopicProgress {
   explored: boolean;
@@ -124,16 +125,22 @@ export const useTopicProgressDB = () => {
     const currentUserId = userId ?? await getCurrentUserId();
 
     if (currentUserId) {
-      await retryWithBackoff(() =>
-        Promise.resolve(
-          supabase.from("topic_progress").upsert({
-            user_id: currentUserId,
-            topic_title: topicTitle,
-            explored: true,
-            last_visited: new Date().toISOString(),
-          })
-        )
-      );
+      const payload = {
+        user_id: currentUserId,
+        topic_title: topicTitle,
+        explored: true,
+        last_visited: new Date().toISOString(),
+      };
+
+      try {
+        const { error } = await retryWithBackoff(() =>
+          Promise.resolve(supabase.from("topic_progress").upsert(payload))
+        );
+        if (error) throw error;
+      } catch {
+        // Network unavailable — queue for later
+        enqueue({ type: "upsert_topic_progress", payload });
+      }
     } else {
       const updated = { ...progress, [topicTitle]: newProgress };
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
