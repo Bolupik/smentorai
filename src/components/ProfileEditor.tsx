@@ -370,7 +370,9 @@ const ProfileEditor = () => {
     ?? walletData?.bnsName?.[0]?.toUpperCase()
     ?? "?";
 
+  // Show nothing if completely unauthenticated
   if (!user && !isWalletConnected) return null;
+
 
   if (loading) {
     return (
