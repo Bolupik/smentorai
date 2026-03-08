@@ -365,7 +365,9 @@ const KnowledgeBase = () => {
       </div>
 
       {/* Contribution Form Toggle */}
-      <motion.div className="mb-6">
+      <div className="mb-6">
+        <GuestGate featureLabel="contribute to the knowledge base">
+        <motion.div>
         <Button
           variant="outline"
           className="w-full justify-between"
