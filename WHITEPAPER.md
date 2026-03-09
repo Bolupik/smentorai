@@ -173,7 +173,7 @@ Each tier's allocation is distributed **pro-rata** among all users in that tier 
 | Knowledge contribution approved | +30 |
 | 7-day streak | +25 |
 
-### Weekly Quiz Yield Bonus (soon(
+### Weekly Quiz Yield Bonus (soon)
 
 Top performers in the weekly timed quiz earn **additional yield on top of their tier share**:
 
