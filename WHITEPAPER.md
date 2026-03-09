@@ -21,7 +21,7 @@ New users trying to join the Stacks ecosystem face four barriers:
 
 ## 2. Proposed Solution
 
-**SMentor** is an AI-powered interactive learning platform featuring **SAMMY THE AI**  a knowledgeable AI mentor that teaches Stacks in plain, adaptive language — and rewards learners with real Bitcoin yield for engaging.
+**SMentor** is an AI-powered interactive learning platform featuring **SAMMY THE AI**  a knowledgeable AI mentor that teaches Stacks in plain, adaptive language and rewards learners with real Bitcoin yield for engaging.
 
 | Action | Result |
 |--------|--------|
