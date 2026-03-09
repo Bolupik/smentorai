@@ -21,7 +21,7 @@ New users trying to join the Stacks ecosystem face four barriers:
 
 ## 2. Proposed Solution
 
-**SMentor** is an AI-powered interactive learning platform featuring **SAMMY THE AI** — a knowledgeable AI mentor that teaches Stacks in plain, adaptive language — and rewards learners with real Bitcoin yield for engaging.
+**SMentor** is an AI-powered interactive learning platform featuring **SAMMY THE AI**  a knowledgeable AI mentor that teaches Stacks in plain, adaptive language — and rewards learners with real Bitcoin yield for engaging.
 
 | Action | Result |
 |--------|--------|
@@ -67,10 +67,10 @@ The core of SMentor is an intelligent conversational interface:
 |--------|-----------|
 | Architecture | PoX, Nakamoto upgrade, Bitcoin finality, Signers, microblocks, Satoshi roadmap |
 | Clarity | Decidability, post-conditions, traits, SIP standards, principals, data types |
-| DeFi | Zest, Granite, Bitflow, ALEX, Arkadiko, Velar, Hermetica, USDCx (Circle) |
+| DeFi | Zest, Granite, Bitflow, ALEX, Arkadiko, Velar, Hermetica, USDCx (Circle) and more |
 | sBTC | Peg mechanism, deposit caps (150 BTC/day withdrawal), security partnerships |
-| NFTs | Gamma marketplace, The Guests, Leo Cats, BNS, SpaghettiPunk Club, Ordinals bridge |
-| Memecoins | WELSH, LEO, NOT, DOG, Teiko, PEPE, sAI — traded on Bitflow, Velar, ALEX |
+| NFTs | Gamma marketplace, The Guests, Leo Cats, BNS, SpaghettiPunk Club |
+| Memecoins | WELSH, LEO, NOT, DOG, Teiko, PEPE, sAI and more traded on Bitflow, Velar, ALEX |
 | Tools | BNS (bns.one), BoostX, Hiro Platform, STXTools, STX City, Stacks Explorer |
 | Wallets | Xverse, Leather, Asigna, Fordefi — security models and use cases |
 | Security | Smart contract audits, Immunefi bug bounty, Clarity safety, DeFi best practices |
@@ -81,12 +81,12 @@ The core of SMentor is an intelligent conversational interface:
 
 | Category | Questions |
 |----------|:---------:|
-| Architecture & Consensus | 10 |
-| Clarity Language | 15 |
-| DeFi & sBTC | 10 |
-| NFTs | 5 |
-| Security | 5 |
-| Advanced | 5 |
+| Architecture & Consensus | |
+| Clarity Language |  |
+| DeFi & sBTC |  |
+| NFTs |  |
+| Security | |
+| Advanced | |
 
 Features: optional timed mode, score persistence, category filtering, **weekly quiz yield bonus** for top performers.
 
@@ -105,7 +105,7 @@ A collaborative, moderated repository:
 
 Real-time ecosystem pulse:
 
-- **Live Metrics**: STX price, BTC price, block height, transactions, mempool, PoX cycle, STX locked, signers count — sourced from Hiro API and CoinGecko
+- **Live Metrics**: STX price, BTC price, block height, transactions, mempool, PoX cycle, STX locked, signers count sourced from Hiro API and CoinGecko
 - **Trending Topics**: Dual Stacking, sBTC milestones, BitGo partnership, Clarity 4 WASM, DeFAI
 - **Auto-refresh** every 60 seconds
 - **Sentiment Meter**: community bullish/bearish indicator
@@ -145,13 +145,13 @@ Selected once during onboarding — locked to prevent gaming the system:
 
 ---
 
-## 5. Yield Generation & Reward System
+## 5. Yield Generation & Reward System (soon)
 
 ### Overview
 
-SMentor operates a **treasury** that stacks STX through the Stacks **Proof of Transfer (PoX)** mechanism, generating BTC yield every PoX cycle (~2 weeks). That yield — **never the principal** — is distributed weekly to platform participants based on engagement tier.
+SMentor plans to operates a **treasury** that stacks STX through the Stacks **Proof of Transfer (PoX)** mechanism, generating BTC yield every PoX cycle (~2 weeks). That yield — **never the principal** — is distributed weekly to platform participants based on engagement tier.
 
-### Weekly Yield Tiers
+### Weekly Yield Tiers (soon)
 
 | Tier | Weekly Points Required | Share of Weekly Yield |
 |------|:----------------------:|:---------------------:|
@@ -173,7 +173,7 @@ Each tier's allocation is distributed **pro-rata** among all users in that tier 
 | Knowledge contribution approved | +30 |
 | 7-day streak | +25 |
 
-### Weekly Quiz Yield Bonus
+### Weekly Quiz Yield Bonus (soon(
 
 Top performers in the weekly timed quiz earn **additional yield on top of their tier share**:
 
@@ -185,18 +185,10 @@ Top performers in the weekly timed quiz earn **additional yield on top of their 
 
 Quiz bonuses are funded from the platform's 5% share — no dilution to tier holders.
 
-### Treasury Safety
-
-> **The principal is never touched — only yield is distributed.**
-
-- Treasury STX is stacked via audited PoX protocol
-- Smart contract V1 (Clarity) launches Q2
-- Independent audit before V2 deployment (Q3)
-- DAO governance handoff planned for Q4
 
 ---
 
-## 6. Technology Stack
+## 5. Technology Stack
 
 ### Frontend
 
@@ -250,7 +242,7 @@ Quiz bonuses are funded from the platform's 5% share — no dilution to tier hol
 
 ---
 
-## 7. Roadmap
+## 6. Roadmap
 
 ### ✅ Q0 — Foundation (Completed, Live)
 - [x] SAMMY AI chat with streaming SSE
@@ -278,10 +270,10 @@ Quiz bonuses are funded from the platform's 5% share — no dilution to tier hol
 
 | Metric | Target |
 |--------|--------|
-| New Installs | 400 |
-| Monthly Active Users | 150 |
-| Wallet Connects | 40 |
-| Course Finishers | 60 |
+| New Installs | 40 |
+| Monthly Active Users | 80 |
+| Wallet Connects | 30 |
+| Course Finishers | 20 |
 
 ### 🔮 Q2 — Growth & Integration (Months 4–6)
 - [ ] Multi-language support (Spanish, Portuguese, Turkish)
@@ -295,10 +287,10 @@ Quiz bonuses are funded from the platform's 5% share — no dilution to tier hol
 
 | Metric | Target |
 |--------|--------|
-| New Installs (cumulative) | 1,200 |
-| Monthly Active Users | 350 |
-| Wallet Connects (cumulative) | 120 |
-| Course Finishers (cumulative) | 200 |
+| New Installs (cumulative) | 100 |
+| Monthly Active Users | 250 |
+| Wallet Connects (cumulative) | 30 |
+| Course Finishers (cumulative) | 60 |
 
 ### 🔮 Q3 — Scale & Sustainability (Months 7–9)
 - [ ] Public API — embeddable SAMMY widget for partner sites
@@ -319,8 +311,7 @@ Quiz bonuses are funded from the platform's 5% share — no dilution to tier hol
 ### 🔮 Q4 — Long-Term Sustainability (Months 10–12)
 - [ ] Stacks Academy Certification (on-chain NFT certificates, SIP-009)
 - [ ] Premium subscription tier
-- [ ] DAO treasury handoff
-- [ ] Native mobile app (iOS/Android)
+- [ ] DAO treasury handoff[Hd]
 - [ ] Year 1 Impact Report
 - [ ] Follow-up grant application
 
@@ -328,25 +319,14 @@ Quiz bonuses are funded from the platform's 5% share — no dilution to tier hol
 
 | Metric | Target |
 |--------|--------|
-| Monthly Active Users | 1,000+ |
-| Total Installs | 3,000+ |
-| On-chain Certifications | 500+ |
+| Monthly Active Users | 300+ |
+| Total Installs | 300+ |
+| On-chain Certifications | 300+ |
 | DAO Governance Live | ✅ |
 
 ---
 
-## 8. KPIs & Success Metrics
-
-| Metric | Month 1 | Month 6 | Note |
-|--------|:-------:|:-------:|------|
-| **New Installs** | 400 | 1,200 | Organic growth, no hype spikes assumed |
-| **MAU** | 150 | 500 | ~15% monthly churn modeled |
-| **Wallet Connects** | 40 | 120 | Committed users only |
-| **Course Finishers** | 60 | 200 | Focus on 1–2 key modules |
-
----
-
-## 9. Summary
+## 7. Summary
 
 | | |
 |---|---|
