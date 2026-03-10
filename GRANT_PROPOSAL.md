@@ -498,16 +498,16 @@ All core features live in production:
 
 ## 11. Budget Breakdown
 
-*To be completed with specific STX/USD amounts per milestone.*
+*8000 USD *
 
 | Category | Q1 | Q2 | Q3 | Q4 | Total |
 |----------|:--:|:--:|:--:|:--:|:-----:|
-| Development (frontend/backend) | TBD | TBD | TBD | TBD | TBD |
-| AI/Cloud infrastructure | TBD | TBD | TBD | TBD | TBD |
-| Smart contract development + audit | — | TBD | TBD | — | TBD |
-| Marketing & community | TBD | TBD | TBD | TBD | TBD |
-| Operations & maintenance | TBD | TBD | TBD | TBD | TBD |
-| **Total** | | | | | **TBD** |
+| Development (frontend/backend) 50%|  | TBD| TBD | TBD | TBD |
+| AI/Cloud infrastructure 20%| TBD | TBD | TBD | TBD | TBD |
+| Smart contract development + audit 10%  | — | TBD | TBD | — | TBD |
+| Marketing & community 10%| TBD | TBD | TBD | TBD | TBD |
+| Operations & maintenance 10%| TBD | TBD | TBD | TBD | TBD |
+| **Total** | | | | | **8000 USD** |
 
 ---
 
