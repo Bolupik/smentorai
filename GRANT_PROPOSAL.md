@@ -30,7 +30,7 @@
 
 ## 1. Executive Summary
 
-**SMentor** is an AI-powered, interactive educational platform purpose-built for the Stacks blockchain ecosystem. It serves as a comprehensive onboarding and learning companion powered by **SAMMY THE AI** — a context-rich AI mentor with 1,600+ lines of curated, current Stacks knowledge — that transforms how newcomers and intermediate users understand Stacks architecture, Clarity smart contracts, DeFi protocols, sBTC, NFTs, memecoins, wallets, tools, and security.
+**SMentor** is an AI-powered, interactive educational platform purpose-built for the Stacks blockchain ecosystem. It serves as a comprehensive onboarding and learning companion powered by **SAMMY THE AI** a context-rich AI mentor with 1,600+ lines of curated, current Stacks knowledge that transforms how newcomers and intermediate users understand Stacks architecture, Clarity smart contracts, DeFi protocols, sBTC, NFTs, memecoins, wallets, tools, and security.
 
 Unlike static documentation or generic chatbots, SMentor provides:
 
