@@ -421,17 +421,12 @@ All core features live in production:
 
 ### Q1 — Engagement & Yield Foundation (Months 1–3)
 
-**Milestone 1.1** — PoX Treasury Setup
-- Deploy treasury Clarity contract to mainnet
-- Begin STX stacking accumulation
-- Launch yield tier dashboard in-app
-
-**Milestone 1.2** — Engagement Systems
+**Milestone 1** — Engagement Systems
 - Weekly quiz events with yield bonus distribution
 - Leaderboard system (weekly and all-time)
 - Enhanced notification system for tier changes
 
-**Milestone 1.3** — Learning Paths
+**Milestone 1.2** — Learning Paths
 - Structured Beginner → Intermediate → Advanced progression
 - Completion certificates (off-chain initially)
 - Bug fixes and performance optimization
@@ -440,7 +435,7 @@ All core features live in production:
 
 | Metric | Target |
 |--------|--------|
-| New Installs | 400 |
+| New Installs | 200 |
 | Monthly Active Users | 150 |
 | Wallet Connects | 40 |
 | Course Finishers | 60 |
@@ -459,7 +454,7 @@ All core features live in production:
 
 | Metric | Target |
 |--------|--------|
-| New Installs (cumulative) | 1,200 |
+| New Installs (cumulative) | 300 |
 | MAU | 350 |
 | Wallet Connects (cumulative) | 120 |
 | Course Finishers (cumulative) | 200 |
@@ -539,9 +534,9 @@ Based on market analysis (adjusted for realistic organic growth, 15% monthly chu
 
 | Metric | Month 1 | Month 6 | Month 12 | Notes |
 |--------|:-------:|:-------:|:--------:|-------|
-| **New Installs** | 400 | 1,200 | 3,000+ | Organic only, no hype spikes |
-| **MAU** | 150 | 500 | 1,000+ | ~15% monthly churn modeled |
-| **Wallet Connects** | 40 | 120 | 300+ | Committed, yield-motivated users |
+| **New Installs** | 200 | 200 | 600+ | Organic only, no hype spikes |
+| **MAU** | 150 | 500 | 600+ | ~15% monthly churn modeled |
+| **Wallet Connects** | 20 | 120 | 300+ | Committed, yield-motivated users |
 | **Course Finishers** | 60 | 200 | 500+ | Focus on 1–2 key modules |
 | **Knowledge Base Entries** | 20 | 100+ | 300+ | Community-contributed |
 | **AI Conversations** | 1,000 | 5,000 | 10,000+ | Monthly total |
