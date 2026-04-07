@@ -189,6 +189,8 @@ export type Database = {
           updated_at: string
           user_id: string
           username: string | null
+          web3_experience: string | null
+          web3_onboarded: boolean | null
         }
         Insert: {
           age_level?: string | null
@@ -201,6 +203,8 @@ export type Database = {
           updated_at?: string
           user_id: string
           username?: string | null
+          web3_experience?: string | null
+          web3_onboarded?: boolean | null
         }
         Update: {
           age_level?: string | null
@@ -213,6 +217,8 @@ export type Database = {
           updated_at?: string
           user_id?: string
           username?: string | null
+          web3_experience?: string | null
+          web3_onboarded?: boolean | null
         }
         Relationships: []
       }
