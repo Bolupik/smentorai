@@ -14,6 +14,9 @@ import DappShowcase from "@/components/DappShowcase";
 import DailyQuizPanel from "@/components/DailyQuizPanel";
 import { CommunitySentiment } from "@/components/CommunitySentiment";
 import OnboardingModal from "@/components/OnboardingModal";
+import Web3ExperienceModal from "@/components/Web3ExperienceModal";
+import Web3OnboardingCards from "@/components/Web3OnboardingCards";
+import type { Web3Experience } from "@/components/Web3ExperienceModal";
 import GuideTour from "@/components/GuideTour";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
@@ -43,6 +46,8 @@ const Dashboard = () => {
   const [showAdmin, setShowAdmin] = useState(false);
   const [showSentiment, setShowSentiment] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showWeb3Experience, setShowWeb3Experience] = useState(false);
+  const [showWeb3Cards, setShowWeb3Cards] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
   const navigate = useNavigate();
@@ -77,14 +82,25 @@ const Dashboard = () => {
 
         supabase
           .from("profiles")
-          .select("age_level")
+          .select("age_level, web3_experience, web3_onboarded")
           .eq("user_id", currentUser.id)
           .maybeSingle()
           .then(({ data }) => {
-            if (data?.age_level) {
-              localStorage.setItem(onboardedKey, "true");
-            } else {
+            if (!data?.age_level) {
+              // Step 1: age level onboarding
               setShowOnboarding(true);
+            } else if (!data?.web3_experience) {
+              // Step 2: Web3 experience question
+              localStorage.setItem(onboardedKey, "true");
+              setShowWeb3Experience(true);
+            } else if (!data?.web3_onboarded) {
+              // Step 3: if beginner and hasn't done cards yet
+              localStorage.setItem(onboardedKey, "true");
+              if (data.web3_experience === "complete_beginner") {
+                setShowWeb3Cards(true);
+              }
+            } else {
+              localStorage.setItem(onboardedKey, "true");
             }
           });
       });
@@ -682,9 +698,43 @@ const Dashboard = () => {
       <OnboardingModal
         open={showOnboarding}
         onComplete={() => {
-          // OnboardingModal already persists the onboarded_ key for the current
-          // user (email or wallet anon session). We just close the modal here.
           setShowOnboarding(false);
+          // After age level, show Web3 experience question
+          setShowWeb3Experience(true);
+        }}
+      />
+      <Web3ExperienceModal
+        open={showWeb3Experience}
+        onComplete={async (experience: Web3Experience) => {
+          setShowWeb3Experience(false);
+          // Save to DB
+          const { supabase } = await import("@/integrations/supabase/client");
+          const { data: { user: currentUser } } = await supabase.auth.getUser();
+          if (currentUser) {
+            await supabase
+              .from("profiles")
+              .update({ web3_experience: experience } as any)
+              .eq("user_id", currentUser.id);
+          }
+          // If complete beginner, show onboarding cards
+          if (experience === "complete_beginner") {
+            setShowWeb3Cards(true);
+          }
+        }}
+      />
+      <Web3OnboardingCards
+        open={showWeb3Cards}
+        onComplete={async () => {
+          setShowWeb3Cards(false);
+          // Mark web3 onboarded
+          const { supabase } = await import("@/integrations/supabase/client");
+          const { data: { user: currentUser } } = await supabase.auth.getUser();
+          if (currentUser) {
+            await supabase
+              .from("profiles")
+              .update({ web3_onboarded: true } as any)
+              .eq("user_id", currentUser.id);
+          }
         }}
       />
       <PreviewModal
