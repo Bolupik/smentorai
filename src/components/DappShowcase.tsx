@@ -51,6 +51,7 @@ import chessonchainLogo from "@/assets/sponsors/chessonchain.ico";
 import bnsoneLogo from "@/assets/sponsors/bnsone.ico";
 import xverseLogo from "@/assets/sponsors/xverse.webp";
 import stxcityLogo from "@/assets/sponsors/stxcity.ico";
+import aibtcLogo from "@/assets/sponsors/aibtc.png";
 
 type Category = "All" | "DeFi" | "NFT" | "Tools" | "Wallets" | "Other";
 
@@ -79,6 +80,16 @@ const dapps: DappInfo[] = [
     rating: 4.9
   },
   { 
+    name: "AIBTC", 
+    tagline: "Bitcoin Agent Network", 
+    url: "https://aibtc.dev", 
+    logo: aibtcLogo, 
+    category: "Tools",
+    description: "The first network for personal AI agents on Bitcoin. 882+ agents registered, exchanging paid messages via x402 protocol. Agents autonomously earn BTC, deploy Clarity contracts, stake for yield, and inscribe on Bitcoin. Stacks leads all Bitcoin layers in AI agent activity.",
+    highlights: ["882+ Agents", "Autonomous BTC Earnings", "MCP Tools"],
+    rating: 4.8
+  },
+  { 
     name: "BoostX", 
     tagline: "Amplify your crypto journey", 
     url: "https://boostx.cc/", 
@@ -90,13 +101,13 @@ const dapps: DappInfo[] = [
   },
   { 
     name: "Zest Protocol", 
-    tagline: "DeFi lending on Bitcoin", 
+    tagline: "Largest Bitcoin lending protocol", 
     url: "https://app.zestprotocol.com", 
     logo: zestLogo, 
     category: "DeFi",
-    description: "The leading Bitcoin-native lending protocol. Borrow against your BTC or earn yield by providing liquidity. Fully decentralized and secure.",
-    highlights: ["BTC Collateral", "Competitive Rates", "Non-custodial"],
-    rating: 4.8
+    description: "The largest lending protocol on any Bitcoin layer with $75.9M TVL. V2 launched Feb 2026 with improved capital efficiency, higher deposit caps, and smoother liquidations. Hit $41M TVL within 2 days of launch.",
+    highlights: ["$75.9M TVL", "V2 Live", "Bitcoin Staking Pilot"],
+    rating: 4.9
   },
   { 
     name: "STX Tools", 
@@ -120,13 +131,13 @@ const dapps: DappInfo[] = [
   },
   { 
     name: "Hermetica", 
-    tagline: "Bitcoin-backed stablecoin", 
-    url: "https://portfolio.hermetica.fi", 
+    tagline: "USDh stablecoin & hBTC Vault", 
+    url: "https://app.hermetica.fi", 
     logo: hermeticaLogo, 
     category: "DeFi",
-    description: "Create and manage Bitcoin-backed stablecoins. Maintain exposure to BTC while accessing stable liquidity for DeFi activities.",
-    highlights: ["BTC-backed", "Stable Yields", "Low Fees"],
-    rating: 4.7
+    description: "USDh is the first Bitcoin-backed, yield-bearing synthetic dollar ($11.1M TVL, 7-15% APY). hBTC Earn Vault lets investors deploy BTC into automated yield strategies. Audited by Clarity Alliance with Immunefi bug bounty.",
+    highlights: ["USDh 15% APY", "hBTC Earn Vault", "Audited & Secure"],
+    rating: 4.8
   },
   { 
     name: "Ryder", 
@@ -160,13 +171,13 @@ const dapps: DappInfo[] = [
   },
   { 
     name: "Bitflow", 
-    tagline: "DeFi on Bitcoin", 
+    tagline: "HODLMM — Bitcoin's DEX", 
     url: "https://app.bitflow.finance", 
     logo: bitflowLogo, 
     category: "DeFi",
-    description: "Seamless token swaps and liquidity provision on Stacks. Fast, secure, and built for the Bitcoin DeFi ecosystem.",
-    highlights: ["Instant Swaps", "Deep Liquidity", "Low Slippage"],
-    rating: 4.7
+    description: "Bitcoin's leading DEX with HODLMM concentrated liquidity engine. $160M+ cumulative volume in 2 weeks, $1B+ lifetime volume. LPs earn 3-5x more per dollar with dual-layer yield from Stacks stacking + trading fees.",
+    highlights: ["HODLMM Live", "$160M Volume", "3-5x LP Yield"],
+    rating: 4.9
   },
   { 
     name: "Zero Authority DAO", 
