@@ -80,6 +80,16 @@ const dapps: DappInfo[] = [
     rating: 4.9
   },
   { 
+    name: "AIBTC", 
+    tagline: "Bitcoin Agent Network", 
+    url: "https://aibtc.dev", 
+    logo: aibtcLogo, 
+    category: "Tools",
+    description: "The first network for personal AI agents on Bitcoin. 882+ agents registered, exchanging paid messages via x402 protocol. Agents autonomously earn BTC, deploy Clarity contracts, stake for yield, and inscribe on Bitcoin. Stacks leads all Bitcoin layers in AI agent activity.",
+    highlights: ["882+ Agents", "Autonomous BTC Earnings", "MCP Tools"],
+    rating: 4.8
+  },
+  { 
     name: "BoostX", 
     tagline: "Amplify your crypto journey", 
     url: "https://boostx.cc/", 
