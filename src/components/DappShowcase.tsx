@@ -51,6 +51,7 @@ import chessonchainLogo from "@/assets/sponsors/chessonchain.ico";
 import bnsoneLogo from "@/assets/sponsors/bnsone.ico";
 import xverseLogo from "@/assets/sponsors/xverse.webp";
 import stxcityLogo from "@/assets/sponsors/stxcity.ico";
+import aibtcLogo from "@/assets/sponsors/aibtc.png";
 
 type Category = "All" | "DeFi" | "NFT" | "Tools" | "Wallets" | "Other";
 
