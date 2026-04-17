@@ -71,28 +71,58 @@ const RankingPlaceholder = () => {
 };
 
 // ─── Link Email Panel (for wallet-only users) ────────────────────────────────
-const LinkEmailPanel = () => {
+const LinkEmailPanel = ({ onLinked }: { onLinked?: () => void }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [linked, setLinked] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
 
   const handleLink = async () => {
-    if (!email.trim() || !password.trim()) {
+    const trimmedEmail = email.trim().toLowerCase();
+    if (!trimmedEmail || !password.trim()) {
       toast.error("Please enter both email and password");
       return;
     }
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+    // Basic email shape check
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
     setLoading(true);
     try {
-      // Upgrade anonymous session to email/password account
-      const { error } = await supabase.auth.updateUser({ email: email.trim(), password });
+      // Upgrade the wallet's anonymous Supabase session into a real
+      // email/password account. Supabase will send a confirmation link to
+      // the new address; the email is only attached after the user clicks it.
+      const { error } = await supabase.auth.updateUser(
+        { email: trimmedEmail, password },
+        { emailRedirectTo: `${window.location.origin}/` }
+      );
       if (error) throw error;
+
+      setPendingEmail(trimmedEmail);
       setLinked(true);
-      toast.success("Email linked! Check your inbox to confirm.", { duration: 5000 });
+      toast.success(
+        `Verification link sent to ${trimmedEmail}. Click it to finish linking your email.`,
+        { duration: 7000 }
+      );
+      onLinked?.();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to link email";
-      toast.error(msg);
+      // Friendlier messages for common Supabase errors
+      if (msg.toLowerCase().includes("already") || msg.toLowerCase().includes("registered")) {
+        toast.error("This email is already linked to another account.");
+      } else if (msg.toLowerCase().includes("rate")) {
+        toast.error("Too many attempts. Please wait a moment and try again.");
+      } else {
+        toast.error(msg);
+      }
     } finally {
       setLoading(false);
     }
@@ -100,9 +130,17 @@ const LinkEmailPanel = () => {
 
   if (linked) {
     return (
-      <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-green-500/10 border border-green-500/20">
-        <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
-        <p className="text-sm text-foreground">Email linked — confirm it in your inbox to activate.</p>
+      <div className="space-y-2">
+        <div className="flex items-start gap-3 px-4 py-3 rounded-lg bg-green-500/10 border border-green-500/20">
+          <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+          <div className="text-sm text-foreground space-y-1">
+            <p className="font-medium">Verification email sent</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              We sent a confirmation link to <span className="font-mono">{pendingEmail}</span>.
+              Open it to finish linking your email — then you can sign in with email or wallet.
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -110,7 +148,7 @@ const LinkEmailPanel = () => {
   return (
     <div className="space-y-3">
       <p className="text-xs text-muted-foreground px-1">
-        Add an email &amp; password so you can sign in without your wallet.
+        Add an email &amp; password so you can sign in without your wallet. We'll send a confirmation link to verify it's yours.
       </p>
       <Input
         type="email"
@@ -118,26 +156,30 @@ const LinkEmailPanel = () => {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         className="bg-background h-9 text-sm"
+        autoComplete="email"
       />
       <div className="relative">
         <Input
           type={showPassword ? "text" : "password"}
-          placeholder="Create a password"
+          placeholder="Create a password (min 6 characters)"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="bg-background h-9 text-sm pr-10"
+          autoComplete="new-password"
+          minLength={6}
         />
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+          aria-label={showPassword ? "Hide password" : "Show password"}
         >
           {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
         </button>
       </div>
       <Button size="sm" onClick={handleLink} disabled={loading} className="w-full h-9 gap-2">
         {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <KeyRound className="w-4 h-4" />}
-        Link Email Account
+        Send verification link
       </Button>
     </div>
   );
