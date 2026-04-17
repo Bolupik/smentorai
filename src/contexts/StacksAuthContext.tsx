@@ -90,6 +90,30 @@ const waitForAddress = (maxMs = 8000, intervalMs = 150): Promise<string | undefi
   });
 
 /**
+ * Checks if this wallet address was previously linked to a real (email) account.
+ * If so, the server sends that user a magic link so they sign back into the
+ * SAME account instead of getting a fresh anonymous one.
+ *
+ * Returns true if a magic link was sent (caller should NOT create an anon session).
+ */
+const tryResumeLinkedAccount = async (
+  address: string,
+): Promise<{ sentMagicLink: boolean; email?: string }> => {
+  try {
+    const { data, error } = await supabase.functions.invoke("resolve-wallet-login", {
+      body: { address },
+    });
+    if (error || !data) return { sentMagicLink: false };
+    if (data.linked && data.hasEmail && data.sent) {
+      return { sentMagicLink: true, email: data.email };
+    }
+  } catch {
+    // network/edge function failure — fall back silently to anon flow
+  }
+  return { sentMagicLink: false };
+};
+
+/**
  * Ensures a Supabase session exists for wallet users and links the
  * wallet address to their profile.
  *
