@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, useCallback, ReactNode 
 import { useNavigate } from "react-router-dom";
 import { connect, disconnect, isConnected } from "@stacks/connect";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export interface StacksUserData {
   address: string;
@@ -88,6 +89,30 @@ const waitForAddress = (maxMs = 8000, intervalMs = 150): Promise<string | undefi
     };
     check();
   });
+
+/**
+ * Checks if this wallet address was previously linked to a real (email) account.
+ * If so, the server sends that user a magic link so they sign back into the
+ * SAME account instead of getting a fresh anonymous one.
+ *
+ * Returns true if a magic link was sent (caller should NOT create an anon session).
+ */
+const tryResumeLinkedAccount = async (
+  address: string,
+): Promise<{ sentMagicLink: boolean; email?: string }> => {
+  try {
+    const { data, error } = await supabase.functions.invoke("resolve-wallet-login", {
+      body: { address },
+    });
+    if (error || !data) return { sentMagicLink: false };
+    if (data.linked && data.hasEmail && data.sent) {
+      return { sentMagicLink: true, email: data.email };
+    }
+  } catch {
+    // network/edge function failure — fall back silently to anon flow
+  }
+  return { sentMagicLink: false };
+};
 
 /**
  * Ensures a Supabase session exists for wallet users and links the
@@ -185,9 +210,29 @@ export const StacksAuthProvider = ({ children }: { children: ReactNode }) => {
         setUserData({ address, bnsName });
         setIsAuthenticated(true);
 
-        // Give this wallet user a Supabase anonymous session so all DB
-        // features (topic progress, quiz results, profiles, knowledge base)
-        // work exactly like they do for email-authenticated users.
+        // Before creating an anon session, check if this wallet was previously
+        // linked to a real email account. If so, send a magic link to that
+        // email and SKIP creating a new anon session — they should sign back
+        // into their original account.
+        const { data: { session: existingSession } } = await supabase.auth.getSession();
+        if (!existingSession) {
+          const resumed = await tryResumeLinkedAccount(address);
+          if (resumed.sentMagicLink) {
+            toast.success(
+              `Welcome back! We sent a sign-in link to ${resumed.email}. Open it to access your account.`,
+              { duration: 9000 }
+            );
+            const onboardedKey = `stacks_onboarded_${address}`;
+            if (!localStorage.getItem(onboardedKey)) {
+              localStorage.setItem(onboardedKey, "true");
+            }
+            navigate("/");
+            return;
+          }
+        }
+
+        // No linked email account → give this wallet user an anonymous Supabase
+        // session so all DB features work like they do for email users.
         await ensureSupabaseSession(address, bnsName);
 
         const onboardedKey = `stacks_onboarded_${address}`;
