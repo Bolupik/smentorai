@@ -316,6 +316,19 @@ const ProfileEditor = () => {
       // No session yet — if wallet connected, don't leave spinner indefinitely
       setLoading(false);
     }
+  }, [user?.id, user?.email]); // re-fetch when email gets attached after verification
+
+  // React to auth state changes (e.g. user clicks the email confirmation link
+  // and returns to the app — Supabase fires USER_UPDATED).
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "USER_UPDATED" && user) {
+        fetchProfile();
+        toast.success("Email confirmed and linked to your account");
+      }
+    });
+    return () => subscription.unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
   // When an email user connects their wallet, save the address to DB
