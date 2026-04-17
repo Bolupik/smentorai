@@ -52,44 +52,71 @@ function deltaEvent(content: string): Uint8Array {
 
 // ---------------------------------------------------------------------------
 // Fetch community-contributed knowledge from the database
+// Pulls ALL approved KB entries and prioritizes those most relevant to the
+// user's latest question via simple keyword overlap scoring.
 // ---------------------------------------------------------------------------
-async function fetchCommunityKnowledge(): Promise<string> {
+function scoreEntry(query: string, entry: { topic: string; content: string; category: string }): number {
+  const q = query.toLowerCase();
+  const haystack = `${entry.topic} ${entry.category} ${entry.content}`.toLowerCase();
+  // Tokenize query into meaningful words (>=3 chars, drop common stopwords)
+  const stop = new Set(["the","and","for","with","what","how","why","does","this","that","into","from","are","you","your","about","explain","tell","can","is","of","to","in","on","a","an"]);
+  const tokens = q.split(/[^a-z0-9]+/).filter((t) => t.length >= 3 && !stop.has(t));
+  let score = 0;
+  for (const tok of tokens) {
+    if (entry.topic.toLowerCase().includes(tok)) score += 5; // topic matches weigh most
+    if (entry.category.toLowerCase().includes(tok)) score += 3;
+    if (haystack.includes(tok)) score += 1;
+  }
+  return score;
+}
+
+async function fetchCommunityKnowledge(userQuery: string): Promise<string> {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-    
+
     if (!supabaseUrl || !supabaseKey) {
       console.log("Supabase credentials not available for knowledge fetch");
       return "";
     }
 
     const supabase = createClient(supabaseUrl, supabaseKey);
-    
+
+    // Pull a wide net (up to 200 approved entries), then rank in-process.
     const { data, error } = await supabase
       .from('knowledge_base')
-      .select('topic, content, category')
+      .select('topic, content, category, upvotes')
       .eq('approved', true)
       .order('upvotes', { ascending: false })
-      .limit(30);
+      .limit(200);
 
     if (error) {
       console.error("Error fetching community knowledge:", error);
       return "";
     }
+    if (!data || data.length === 0) return "";
 
-    if (!data || data.length === 0) {
-      return "";
-    }
+    // Rank by relevance to the current query (keyword score), break ties by upvotes.
+    const ranked = data
+      .map((e) => ({ ...e, _score: scoreEntry(userQuery, e) }))
+      .sort((a, b) => (b._score - a._score) || ((b.upvotes ?? 0) - (a.upvotes ?? 0)));
 
-    // Format the knowledge entries
-    const formattedKnowledge = data.map((entry, index) => {
-      return `[${entry.category.toUpperCase()}] ${entry.topic}:\n${entry.content}`;
-    }).join("\n\n---\n\n");
+    const matched = ranked.filter((e) => e._score > 0).slice(0, 12);
+    const fallback = ranked.slice(0, 8); // top-upvoted as base context
+    const chosen = matched.length > 0 ? matched : fallback;
+
+    const formattedKnowledge = chosen
+      .map((entry) => `[${(entry.category || "general").toUpperCase()}] ${entry.topic}:\n${entry.content}`)
+      .join("\n\n---\n\n");
+
+    const header = matched.length > 0
+      ? `COMMUNITY-CONTRIBUTED KNOWLEDGE (ranked by relevance to the user's question):`
+      : `COMMUNITY-CONTRIBUTED KNOWLEDGE (top community entries):`;
 
     return `
 
-COMMUNITY-CONTRIBUTED KNOWLEDGE:
-The following knowledge has been contributed and verified by the community. Use this information to enhance your responses:
+${header}
+Treat this as authoritative source material contributed and verified by the community. When it directly addresses the user's question, ground your answer in it and cite the topic name in passing.
 
 ${formattedKnowledge}
 
@@ -140,8 +167,11 @@ serve(async (req) => {
       throw new Error("AI service configuration error");
     }
 
-    // Fetch community knowledge to augment the AI's knowledge base
-    const communityKnowledge = await fetchCommunityKnowledge();
+    // Fetch community knowledge to augment the AI's knowledge base.
+    // Rank by relevance to the user's latest message so approved contributions
+    // surface in chat answers automatically.
+    const lastUserMsg: string = [...(messages || [])].reverse().find((m: { role: string; content: string }) => m.role === "user")?.content ?? "";
+    const communityKnowledge = await fetchCommunityKnowledge(lastUserMsg);
     console.log(`Loaded ${communityKnowledge ? 'community knowledge' : 'no community knowledge'} for this request`);
 
     // Age-based tone adjustments
