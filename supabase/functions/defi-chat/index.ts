@@ -1787,9 +1787,8 @@ ${communityKnowledge}`;
 
 
     // ── Knowledge-gap detection ──────────────────────────────────────────────
-    // Identify the last user message to check against the KB
-    const lastUserMsg = [...messages].reverse().find((m: { role: string }) => m.role === "user");
-    const outsideKB = lastUserMsg ? isOutsideKnowledgeBase(lastUserMsg.content ?? "") : false;
+    // Reuse `lastUserMsg` (the last user message string) computed above.
+    const outsideKB = lastUserMsg ? isOutsideKnowledgeBase(lastUserMsg) : false;
 
     // ── Fetch Gemini stream ──────────────────────────────────────────────────
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
