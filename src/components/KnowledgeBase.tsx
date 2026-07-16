@@ -785,6 +785,26 @@ const KnowledgeBase = () => {
                       <p className="text-sm text-muted-foreground mt-1">
                         {entry.content}
                       </p>
+
+                      {/* Tags */}
+                      {(entry.tags?.length ?? 0) > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {entry.tags!.map((tag) => (
+                            <button
+                              key={tag}
+                              onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+                              className={`text-[10px] px-1.5 py-0.5 rounded-full border transition-colors ${
+                                activeTag === tag
+                                  ? "bg-accent text-accent-foreground border-accent"
+                                  : "bg-muted/40 border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/40"
+                              }`}
+                            >
+                              #{tag}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                      
                       
                       {/* Image */}
                       {entry.image_url && (
