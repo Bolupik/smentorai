@@ -78,6 +78,8 @@ export type Database = {
           id: string
           image_url: string | null
           link_url: string | null
+          search_tsv: unknown
+          tags: string[]
           topic: string
           updated_at: string
           upvotes: number | null
@@ -92,6 +94,8 @@ export type Database = {
           id?: string
           image_url?: string | null
           link_url?: string | null
+          search_tsv?: unknown
+          tags?: string[]
           topic: string
           updated_at?: string
           upvotes?: number | null
@@ -106,6 +110,8 @@ export type Database = {
           id?: string
           image_url?: string | null
           link_url?: string | null
+          search_tsv?: unknown
+          tags?: string[]
           topic?: string
           updated_at?: string
           upvotes?: number | null
