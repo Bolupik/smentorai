@@ -135,28 +135,23 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
         </DialogHeader>
 
         <div className="p-8">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", delay: 0.1 }}
-              className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4"
-            >
-              {isWalletFlow ? (
-                <Wallet className="w-7 h-7 text-primary" />
-              ) : (
-                <CheckCircle className="w-7 h-7 text-primary" />
-              )}
-            </motion.div>
+          {/* 3D Sammy narrator */}
+          <div className="mb-4">
+            <SammyNarrator
+              height={180}
+              message={
+                isWalletFlow
+                  ? `Wallet connected${walletData?.bnsName ? `, ${walletData.bnsName}` : ""}! Pick a learning level and I'll tune how I explain everything.`
+                  : `Welcome! I'm Sammy — pick a learning level so I can match how I explain things to you.`
+              }
+            />
+          </div>
+
+          <div className="text-center mb-6">
             <h2 className="text-2xl font-black text-foreground mb-1">
-              {isWalletFlow ? "Wallet Connected! 🎉" : "Email Verified! 🎉"}
+              {isWalletFlow ? "Wallet Connected 🎉" : "Email Verified 🎉"}
             </h2>
             <p className="text-muted-foreground text-sm">One last step — choose your learning level.</p>
-            {isWalletFlow && walletData?.bnsName && (
-              <p className="text-xs text-primary/80 mt-1 font-medium">Welcome, {walletData.bnsName} 👋</p>
-            )}
-            <p className="text-xs text-muted-foreground/60 mt-1">This shapes how Sammy explains concepts to you.</p>
           </div>
 
           {/* Level grid */}
