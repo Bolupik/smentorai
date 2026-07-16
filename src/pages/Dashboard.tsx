@@ -750,6 +750,11 @@ const Dashboard = () => {
 
       {/* Daily Quiz – floats on right edge of every dashboard view */}
       <DailyQuizPanel />
+
+      {/* Persistent 3D Sammy companion — hidden during modal/onboarding flows */}
+      {!showOnboarding && !showWeb3Experience && !showWeb3Cards && !showChat && (
+        <SammyCompanion />
+      )}
     </div>
   );
 };
