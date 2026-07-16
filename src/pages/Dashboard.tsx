@@ -19,6 +19,7 @@ import Web3OnboardingCards from "@/components/Web3OnboardingCards";
 import type { Web3Experience } from "@/components/Web3ExperienceModal";
 import GuideTour from "@/components/GuideTour";
 import Footer from "@/components/Footer";
+import SammyCompanion from "@/components/SammyCompanion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useStacksAuth } from "@/hooks/useStacksAuth";
 import { useTopicProgressDB } from "@/hooks/useTopicProgressDB";
@@ -749,6 +750,11 @@ const Dashboard = () => {
 
       {/* Daily Quiz – floats on right edge of every dashboard view */}
       <DailyQuizPanel />
+
+      {/* Persistent 3D Sammy companion — hidden during modal/onboarding flows */}
+      {!showOnboarding && !showWeb3Experience && !showWeb3Cards && !showChat && (
+        <SammyCompanion />
+      )}
     </div>
   );
 };

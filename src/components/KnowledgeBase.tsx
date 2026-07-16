@@ -3,13 +3,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Input } from "./ui/input";
-import { 
-  BookPlus, 
-  Lightbulb, 
-  Send, 
+import {
+  BookPlus,
+  Lightbulb,
+  Send,
   ThumbsUp,
   ThumbsDown,
-  Clock, 
+  Clock,
   CheckCircle2,
   Loader2,
   ChevronDown,
@@ -17,10 +17,13 @@ import {
   Link2,
   Image as ImageIcon,
   X,
-  ExternalLink
+  ExternalLink,
+  Search,
+  Tag as TagIcon,
 } from "lucide-react";
 import KnowledgeComments from "./KnowledgeComments";
 import ContributorBadge from "./ContributorBadge";
+import SammyNarrator from "./SammyNarrator";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsGuest } from "@/hooks/useIsGuest";
@@ -44,6 +47,7 @@ interface KnowledgeEntry {
   link_url: string | null;
   image_url: string | null;
   category: string;
+  tags: string[] | null;
   created_at: string;
   user_id: string;
 }
@@ -74,6 +78,7 @@ const KnowledgeBase = () => {
   const [newContent, setNewContent] = useState("");
   const [newLinkUrl, setNewLinkUrl] = useState("");
   const [newCategory, setNewCategory] = useState("general");
+  const [newTags, setNewTags] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -81,6 +86,8 @@ const KnowledgeBase = () => {
   const [showMyEntries, setShowMyEntries] = useState(false);
   const [loading, setLoading] = useState(true);
   const [filterCategory, setFilterCategory] = useState<string>("all");
+  const [search, setSearch] = useState("");
+  const [activeTag, setActiveTag] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -97,7 +104,8 @@ const KnowledgeBase = () => {
         .select('*')
         .eq('approved', true)
         .order('upvotes', { ascending: false })
-        .limit(20);
+        .limit(100);
+
 
       if (approvedError) throw approvedError;
       setEntries((approvedData || []) as KnowledgeEntry[]);
@@ -210,6 +218,12 @@ const KnowledgeBase = () => {
         imageUrl = await uploadImage();
       }
 
+      const parsedTags = newTags
+        .split(",")
+        .map((t) => t.trim().replace(/^#/, ""))
+        .filter((t) => t.length > 0 && t.length <= 32)
+        .slice(0, 8);
+
       const { error } = await supabase
         .from('knowledge_base')
         .insert({
@@ -219,6 +233,7 @@ const KnowledgeBase = () => {
           link_url: newLinkUrl.trim() || null,
           image_url: imageUrl,
           category: newCategory,
+          tags: parsedTags,
           approved: false
         });
 
@@ -229,6 +244,7 @@ const KnowledgeBase = () => {
       setNewContent("");
       setNewLinkUrl("");
       setNewCategory("general");
+      setNewTags("");
       clearImage();
       setShowForm(false);
       fetchEntries();
@@ -344,9 +360,30 @@ const KnowledgeBase = () => {
     return userVotes.find(v => v.entry_id === entryId)?.vote_type;
   };
 
-  const filteredEntries = filterCategory === "all" 
-    ? entries 
-    : entries.filter(e => e.category === filterCategory);
+  // Build tag cloud from currently loaded entries (top 12 by frequency)
+  const topTags = (() => {
+    const counts = new Map<string, number>();
+    for (const e of entries) {
+      for (const t of e.tags ?? []) {
+        counts.set(t, (counts.get(t) ?? 0) + 1);
+      }
+    }
+    return Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 12)
+      .map(([tag]) => tag);
+  })();
+
+  const normalizedQuery = search.trim().toLowerCase();
+  const filteredEntries = entries.filter((e) => {
+    if (filterCategory !== "all" && e.category !== filterCategory) return false;
+    if (activeTag && !(e.tags ?? []).some((t) => t.toLowerCase() === activeTag.toLowerCase())) return false;
+    if (normalizedQuery) {
+      const haystack = `${e.topic} ${e.content} ${e.category} ${(e.tags ?? []).join(" ")}`.toLowerCase();
+      if (!haystack.includes(normalizedQuery)) return false;
+    }
+    return true;
+  });
 
   const getCategoryLabel = (value: string) => {
     return CATEGORIES.find(c => c.value === value)?.label || value;
@@ -449,6 +486,21 @@ const KnowledgeBase = () => {
                         className="bg-background"
                         type="url"
                       />
+                    </div>
+
+                    {/* Tags */}
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block flex items-center gap-2">
+                        <TagIcon className="w-4 h-4" />
+                        Tags (comma separated, optional)
+                      </label>
+                      <Input
+                        placeholder="Nakamoto, sBTC, PoX-5"
+                        value={newTags}
+                        onChange={(e) => setNewTags(e.target.value)}
+                        className="bg-background"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">Up to 8 tags. Helps others find your entry via search.</p>
                     </div>
 
                     {/* Image Upload */}
@@ -578,28 +630,88 @@ const KnowledgeBase = () => {
         </div>
       )}
 
-      {/* Category Filter */}
-      <div className="mb-4">
-        <Select value={filterCategory} onValueChange={setFilterCategory}>
-          <SelectTrigger className="w-full sm:w-48">
-            <SelectValue placeholder="Filter by category" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            {CATEGORIES.map(cat => (
-              <SelectItem key={cat.value} value={cat.value}>
-                {cat.label}
-              </SelectItem>
+      {/* Search + Filters */}
+      <div className="mb-4 space-y-3">
+        <div className="relative">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search topics, e.g. Nakamoto, sBTC, PoX-5, upgrade…"
+            className="pl-9 bg-background"
+          />
+          {(search || activeTag || filterCategory !== "all") && (
+            <button
+              onClick={() => {
+                setSearch("");
+                setActiveTag(null);
+                setFilterCategory("all");
+              }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-xs px-2 py-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+
+        {/* Category chips */}
+        <div className="flex flex-wrap gap-1.5">
+          <button
+            onClick={() => setFilterCategory("all")}
+            className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
+              filterCategory === "all"
+                ? "bg-primary text-primary-foreground border-primary"
+                : "bg-background border-border text-muted-foreground hover:border-primary/50 hover:text-foreground"
+            }`}
+          >
+            All
+          </button>
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat.value}
+              onClick={() => setFilterCategory(cat.value)}
+              className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
+                filterCategory === cat.value
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-background border-border text-muted-foreground hover:border-primary/50 hover:text-foreground"
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Tag chips (top tags in the loaded set) */}
+        {topTags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 items-center">
+            <TagIcon className="w-3.5 h-3.5 text-muted-foreground" />
+            {topTags.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+                className={`text-[11px] px-2 py-0.5 rounded-full border transition-colors ${
+                  activeTag === tag
+                    ? "bg-accent text-accent-foreground border-accent"
+                    : "bg-muted/40 border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/40"
+                }`}
+              >
+                #{tag}
+              </button>
             ))}
-          </SelectContent>
-        </Select>
+          </div>
+        )}
       </div>
 
       {/* Approved Entries */}
       <div>
-        <h3 className="text-sm font-medium text-foreground mb-3 flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-primary" />
-          Community Wisdom
+        <h3 className="text-sm font-medium text-foreground mb-3 flex items-center justify-between gap-2">
+          <span className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-primary" />
+            Community Wisdom
+          </span>
+          <span className="text-xs text-muted-foreground font-normal">
+            {filteredEntries.length} {filteredEntries.length === 1 ? "entry" : "entries"}
+          </span>
         </h3>
 
         {loading ? (
@@ -608,9 +720,15 @@ const KnowledgeBase = () => {
             Loading knowledge...
           </div>
         ) : filteredEntries.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground">
-            <BookPlus className="w-8 h-8 mx-auto mb-2 opacity-50" />
-            <p>No approved entries yet. Be the first to contribute.</p>
+          <div className="py-4">
+            <SammyNarrator
+              height={180}
+              message={
+                search || activeTag || filterCategory !== "all"
+                  ? `Hmm, I couldn't find anything matching that. Try clearing filters or searching a broader term.`
+                  : `The Repository is empty — be the first to teach me something new about Stacks!`
+              }
+            />
           </div>
         ) : (
           <div className="space-y-3">
@@ -667,6 +785,26 @@ const KnowledgeBase = () => {
                       <p className="text-sm text-muted-foreground mt-1">
                         {entry.content}
                       </p>
+
+                      {/* Tags */}
+                      {(entry.tags?.length ?? 0) > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {entry.tags!.map((tag) => (
+                            <button
+                              key={tag}
+                              onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+                              className={`text-[10px] px-1.5 py-0.5 rounded-full border transition-colors ${
+                                activeTag === tag
+                                  ? "bg-accent text-accent-foreground border-accent"
+                                  : "bg-muted/40 border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/40"
+                              }`}
+                            >
+                              #{tag}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                      
                       
                       {/* Image */}
                       {entry.image_url && (
