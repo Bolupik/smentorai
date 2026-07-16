@@ -218,6 +218,12 @@ const KnowledgeBase = () => {
         imageUrl = await uploadImage();
       }
 
+      const parsedTags = newTags
+        .split(",")
+        .map((t) => t.trim().replace(/^#/, ""))
+        .filter((t) => t.length > 0 && t.length <= 32)
+        .slice(0, 8);
+
       const { error } = await supabase
         .from('knowledge_base')
         .insert({
@@ -227,6 +233,7 @@ const KnowledgeBase = () => {
           link_url: newLinkUrl.trim() || null,
           image_url: imageUrl,
           category: newCategory,
+          tags: parsedTags,
           approved: false
         });
 
@@ -237,6 +244,7 @@ const KnowledgeBase = () => {
       setNewContent("");
       setNewLinkUrl("");
       setNewCategory("general");
+      setNewTags("");
       clearImage();
       setShowForm(false);
       fetchEntries();
@@ -352,9 +360,30 @@ const KnowledgeBase = () => {
     return userVotes.find(v => v.entry_id === entryId)?.vote_type;
   };
 
-  const filteredEntries = filterCategory === "all" 
-    ? entries 
-    : entries.filter(e => e.category === filterCategory);
+  // Build tag cloud from currently loaded entries (top 12 by frequency)
+  const topTags = (() => {
+    const counts = new Map<string, number>();
+    for (const e of entries) {
+      for (const t of e.tags ?? []) {
+        counts.set(t, (counts.get(t) ?? 0) + 1);
+      }
+    }
+    return Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 12)
+      .map(([tag]) => tag);
+  })();
+
+  const normalizedQuery = search.trim().toLowerCase();
+  const filteredEntries = entries.filter((e) => {
+    if (filterCategory !== "all" && e.category !== filterCategory) return false;
+    if (activeTag && !(e.tags ?? []).some((t) => t.toLowerCase() === activeTag.toLowerCase())) return false;
+    if (normalizedQuery) {
+      const haystack = `${e.topic} ${e.content} ${e.category} ${(e.tags ?? []).join(" ")}`.toLowerCase();
+      if (!haystack.includes(normalizedQuery)) return false;
+    }
+    return true;
+  });
 
   const getCategoryLabel = (value: string) => {
     return CATEGORIES.find(c => c.value === value)?.label || value;
