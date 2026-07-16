@@ -630,28 +630,88 @@ const KnowledgeBase = () => {
         </div>
       )}
 
-      {/* Category Filter */}
-      <div className="mb-4">
-        <Select value={filterCategory} onValueChange={setFilterCategory}>
-          <SelectTrigger className="w-full sm:w-48">
-            <SelectValue placeholder="Filter by category" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            {CATEGORIES.map(cat => (
-              <SelectItem key={cat.value} value={cat.value}>
-                {cat.label}
-              </SelectItem>
+      {/* Search + Filters */}
+      <div className="mb-4 space-y-3">
+        <div className="relative">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search topics, e.g. Nakamoto, sBTC, PoX-5, upgrade…"
+            className="pl-9 bg-background"
+          />
+          {(search || activeTag || filterCategory !== "all") && (
+            <button
+              onClick={() => {
+                setSearch("");
+                setActiveTag(null);
+                setFilterCategory("all");
+              }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-xs px-2 py-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+
+        {/* Category chips */}
+        <div className="flex flex-wrap gap-1.5">
+          <button
+            onClick={() => setFilterCategory("all")}
+            className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
+              filterCategory === "all"
+                ? "bg-primary text-primary-foreground border-primary"
+                : "bg-background border-border text-muted-foreground hover:border-primary/50 hover:text-foreground"
+            }`}
+          >
+            All
+          </button>
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat.value}
+              onClick={() => setFilterCategory(cat.value)}
+              className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
+                filterCategory === cat.value
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-background border-border text-muted-foreground hover:border-primary/50 hover:text-foreground"
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Tag chips (top tags in the loaded set) */}
+        {topTags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 items-center">
+            <TagIcon className="w-3.5 h-3.5 text-muted-foreground" />
+            {topTags.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+                className={`text-[11px] px-2 py-0.5 rounded-full border transition-colors ${
+                  activeTag === tag
+                    ? "bg-accent text-accent-foreground border-accent"
+                    : "bg-muted/40 border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/40"
+                }`}
+              >
+                #{tag}
+              </button>
             ))}
-          </SelectContent>
-        </Select>
+          </div>
+        )}
       </div>
 
       {/* Approved Entries */}
       <div>
-        <h3 className="text-sm font-medium text-foreground mb-3 flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-primary" />
-          Community Wisdom
+        <h3 className="text-sm font-medium text-foreground mb-3 flex items-center justify-between gap-2">
+          <span className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-primary" />
+            Community Wisdom
+          </span>
+          <span className="text-xs text-muted-foreground font-normal">
+            {filteredEntries.length} {filteredEntries.length === 1 ? "entry" : "entries"}
+          </span>
         </h3>
 
         {loading ? (
@@ -660,9 +720,15 @@ const KnowledgeBase = () => {
             Loading knowledge...
           </div>
         ) : filteredEntries.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground">
-            <BookPlus className="w-8 h-8 mx-auto mb-2 opacity-50" />
-            <p>No approved entries yet. Be the first to contribute.</p>
+          <div className="py-4">
+            <SammyNarrator
+              height={180}
+              message={
+                search || activeTag || filterCategory !== "all"
+                  ? `Hmm, I couldn't find anything matching that. Try clearing filters or searching a broader term.`
+                  : `The Repository is empty — be the first to teach me something new about Stacks!`
+              }
+            />
           </div>
         ) : (
           <div className="space-y-3">
