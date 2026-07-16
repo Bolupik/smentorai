@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Baby, Sparkles, GraduationCap, Brain, CheckCircle, Wallet, X } from "lucide-react";
 import { useStacksAuth } from "@/hooks/useStacksAuth";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import SammyNarrator from "@/components/SammyNarrator";
 
 type AgeLevel = "child" | "teen" | "adult" | "expert";
 
