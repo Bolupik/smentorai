@@ -3,13 +3,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Input } from "./ui/input";
-import { 
-  BookPlus, 
-  Lightbulb, 
-  Send, 
+import {
+  BookPlus,
+  Lightbulb,
+  Send,
   ThumbsUp,
   ThumbsDown,
-  Clock, 
+  Clock,
   CheckCircle2,
   Loader2,
   ChevronDown,
@@ -17,10 +17,13 @@ import {
   Link2,
   Image as ImageIcon,
   X,
-  ExternalLink
+  ExternalLink,
+  Search,
+  Tag as TagIcon,
 } from "lucide-react";
 import KnowledgeComments from "./KnowledgeComments";
 import ContributorBadge from "./ContributorBadge";
+import SammyNarrator from "./SammyNarrator";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsGuest } from "@/hooks/useIsGuest";
@@ -44,6 +47,7 @@ interface KnowledgeEntry {
   link_url: string | null;
   image_url: string | null;
   category: string;
+  tags: string[] | null;
   created_at: string;
   user_id: string;
 }
@@ -74,6 +78,7 @@ const KnowledgeBase = () => {
   const [newContent, setNewContent] = useState("");
   const [newLinkUrl, setNewLinkUrl] = useState("");
   const [newCategory, setNewCategory] = useState("general");
+  const [newTags, setNewTags] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -81,6 +86,8 @@ const KnowledgeBase = () => {
   const [showMyEntries, setShowMyEntries] = useState(false);
   const [loading, setLoading] = useState(true);
   const [filterCategory, setFilterCategory] = useState<string>("all");
+  const [search, setSearch] = useState("");
+  const [activeTag, setActiveTag] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -97,7 +104,8 @@ const KnowledgeBase = () => {
         .select('*')
         .eq('approved', true)
         .order('upvotes', { ascending: false })
-        .limit(20);
+        .limit(100);
+
 
       if (approvedError) throw approvedError;
       setEntries((approvedData || []) as KnowledgeEntry[]);
