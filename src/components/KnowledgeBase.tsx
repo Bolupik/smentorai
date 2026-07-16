@@ -488,6 +488,21 @@ const KnowledgeBase = () => {
                       />
                     </div>
 
+                    {/* Tags */}
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block flex items-center gap-2">
+                        <TagIcon className="w-4 h-4" />
+                        Tags (comma separated, optional)
+                      </label>
+                      <Input
+                        placeholder="Nakamoto, sBTC, PoX-5"
+                        value={newTags}
+                        onChange={(e) => setNewTags(e.target.value)}
+                        className="bg-background"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">Up to 8 tags. Helps others find your entry via search.</p>
+                    </div>
+
                     {/* Image Upload */}
                     <div>
                       <label className="text-sm font-medium text-foreground mb-2 block flex items-center gap-2">
