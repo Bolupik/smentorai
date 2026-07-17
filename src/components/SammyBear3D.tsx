@@ -36,12 +36,16 @@ const SammyBear3D = ({ action = "idle", accent = "#F97316", headOnly = false, re
     const t = state.clock.elapsedTime;
 
     if (group.current) {
-      // Gentle floating bob for all actions
-      group.current.position.y = Math.sin(t * 1.6) * 0.05 - 0.25;
-      group.current.rotation.y = Math.sin(t * 0.6) * 0.15;
+      if (reducedMotion) {
+        group.current.position.y = headOnly ? 0 : -0.25;
+        group.current.rotation.y = 0;
+      } else {
+        group.current.position.y = Math.sin(t * 1.6) * 0.05 + (headOnly ? 0 : -0.25);
+        group.current.rotation.y = Math.sin(t * 0.6) * 0.15;
+      }
     }
 
-    if (head.current) {
+    if (head.current && !reducedMotion) {
       head.current.rotation.z = Math.sin(t * 1.2) * 0.06;
       head.current.rotation.x = Math.sin(t * 0.9) * 0.04;
     }
@@ -53,18 +57,18 @@ const SammyBear3D = ({ action = "idle", accent = "#F97316", headOnly = false, re
       } else if (action === "point") {
         rightArm.current.rotation.z = -1.1;
         rightArm.current.rotation.x = -0.4;
-      } else {
+      } else if (!reducedMotion) {
         rightArm.current.rotation.z = Math.sin(t * 1.6) * 0.1 - 0.05;
         rightArm.current.rotation.x = 0;
       }
     }
 
-    if (leftArm.current) {
+    if (leftArm.current && !reducedMotion) {
       leftArm.current.rotation.z = -Math.sin(t * 1.6) * 0.1 + 0.05;
     }
 
     if (mouth.current) {
-      if (action === "talk") {
+      if (action === "talk" && !reducedMotion) {
         const s = 0.6 + Math.abs(Math.sin(t * 12)) * 0.7;
         mouth.current.scale.set(1, s, 1);
       } else {
