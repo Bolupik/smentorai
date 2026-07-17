@@ -81,26 +81,30 @@ const SammyBear3D = ({ action = "idle", accent = "#F97316", headOnly = false, re
   const eyeShineGeo = useMemo(() => new THREE.SphereGeometry(0.018, 8, 8), []);
 
   return (
-    <group ref={group} position={[0, -0.25, 0]}>
-      {/* Body */}
-      <mesh position={[0, 0.35, 0]} castShadow>
-        <sphereGeometry args={[0.55, 24, 24]} />
-        <meshStandardMaterial color={fur} roughness={0.85} />
-      </mesh>
-      {/* Belly patch */}
-      <mesh position={[0, 0.3, 0.42]} castShadow>
-        <sphereGeometry args={[0.32, 20, 20]} />
-        <meshStandardMaterial color={cream} roughness={0.9} />
-      </mesh>
+    <group ref={group} position={[0, headOnly ? 0 : -0.25, 0]}>
+      {!headOnly && (
+        <>
+          {/* Body */}
+          <mesh position={[0, 0.35, 0]} castShadow>
+            <sphereGeometry args={[0.55, 24, 24]} />
+            <meshStandardMaterial color={fur} roughness={0.85} />
+          </mesh>
+          {/* Belly patch */}
+          <mesh position={[0, 0.3, 0.42]} castShadow>
+            <sphereGeometry args={[0.32, 20, 20]} />
+            <meshStandardMaterial color={cream} roughness={0.9} />
+          </mesh>
 
-      {/* Scarf */}
-      <mesh position={[0, 0.72, 0]}>
-        <torusGeometry args={[0.34, 0.08, 12, 24]} />
-        <meshStandardMaterial color={accent} roughness={0.7} />
-      </mesh>
+          {/* Scarf */}
+          <mesh position={[0, 0.72, 0]}>
+            <torusGeometry args={[0.34, 0.08, 12, 24]} />
+            <meshStandardMaterial color={accent} roughness={0.7} />
+          </mesh>
+        </>
+      )}
 
       {/* Head group */}
-      <group ref={head} position={[0, 1.05, 0]}>
+      <group ref={head} position={[0, headOnly ? 0 : 1.05, 0]}>
         <mesh castShadow>
           <sphereGeometry args={[0.48, 28, 28]} />
           <meshStandardMaterial color={fur} roughness={0.85} />
