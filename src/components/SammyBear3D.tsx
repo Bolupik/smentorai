@@ -160,49 +160,51 @@ const SammyBear3D = ({ action = "idle", accent = "#F97316", headOnly = false, re
         </mesh>
       </group>
 
-      {/* Left arm */}
-      <group ref={leftArm} position={[-0.5, 0.55, 0]}>
-        <mesh position={[-0.12, -0.25, 0]} castShadow>
-          <capsuleGeometry args={[0.13, 0.42, 8, 12]} />
-          <meshStandardMaterial color={fur} roughness={0.85} />
-        </mesh>
-        {/* paw */}
-        <mesh position={[-0.18, -0.52, 0.05]}>
-          <sphereGeometry args={[0.13, 14, 14]} />
-          <meshStandardMaterial color={cream} roughness={0.9} />
-        </mesh>
-      </group>
+      {!headOnly && (
+        <>
+          {/* Left arm */}
+          <group ref={leftArm} position={[-0.5, 0.55, 0]}>
+            <mesh position={[-0.12, -0.25, 0]} castShadow>
+              <capsuleGeometry args={[0.13, 0.42, 8, 12]} />
+              <meshStandardMaterial color={fur} roughness={0.85} />
+            </mesh>
+            <mesh position={[-0.18, -0.52, 0.05]}>
+              <sphereGeometry args={[0.13, 14, 14]} />
+              <meshStandardMaterial color={cream} roughness={0.9} />
+            </mesh>
+          </group>
 
-      {/* Right arm (waves / points) */}
-      <group ref={rightArm} position={[0.5, 0.55, 0]}>
-        <mesh position={[0.12, -0.25, 0]} castShadow>
-          <capsuleGeometry args={[0.13, 0.42, 8, 12]} />
-          <meshStandardMaterial color={fur} roughness={0.85} />
-        </mesh>
-        <mesh position={[0.18, -0.52, 0.05]}>
-          <sphereGeometry args={[0.13, 14, 14]} />
-          <meshStandardMaterial color={cream} roughness={0.9} />
-        </mesh>
-      </group>
+          {/* Right arm */}
+          <group ref={rightArm} position={[0.5, 0.55, 0]}>
+            <mesh position={[0.12, -0.25, 0]} castShadow>
+              <capsuleGeometry args={[0.13, 0.42, 8, 12]} />
+              <meshStandardMaterial color={fur} roughness={0.85} />
+            </mesh>
+            <mesh position={[0.18, -0.52, 0.05]}>
+              <sphereGeometry args={[0.13, 14, 14]} />
+              <meshStandardMaterial color={cream} roughness={0.9} />
+            </mesh>
+          </group>
 
-      {/* Legs */}
-      <mesh position={[-0.22, -0.25, 0.05]} castShadow>
-        <capsuleGeometry args={[0.16, 0.3, 8, 12]} />
-        <meshStandardMaterial color={fur} roughness={0.85} />
-      </mesh>
-      <mesh position={[0.22, -0.25, 0.05]} castShadow>
-        <capsuleGeometry args={[0.16, 0.3, 8, 12]} />
-        <meshStandardMaterial color={fur} roughness={0.85} />
-      </mesh>
-      {/* Feet pads */}
-      <mesh position={[-0.22, -0.45, 0.18]}>
-        <sphereGeometry args={[0.13, 14, 14]} />
-        <meshStandardMaterial color={cream} roughness={0.9} />
-      </mesh>
-      <mesh position={[0.22, -0.45, 0.18]}>
-        <sphereGeometry args={[0.13, 14, 14]} />
-        <meshStandardMaterial color={cream} roughness={0.9} />
-      </mesh>
+          {/* Legs */}
+          <mesh position={[-0.22, -0.25, 0.05]} castShadow>
+            <capsuleGeometry args={[0.16, 0.3, 8, 12]} />
+            <meshStandardMaterial color={fur} roughness={0.85} />
+          </mesh>
+          <mesh position={[0.22, -0.25, 0.05]} castShadow>
+            <capsuleGeometry args={[0.16, 0.3, 8, 12]} />
+            <meshStandardMaterial color={fur} roughness={0.85} />
+          </mesh>
+          <mesh position={[-0.22, -0.45, 0.18]}>
+            <sphereGeometry args={[0.13, 14, 14]} />
+            <meshStandardMaterial color={cream} roughness={0.9} />
+          </mesh>
+          <mesh position={[0.22, -0.45, 0.18]}>
+            <sphereGeometry args={[0.13, 14, 14]} />
+            <meshStandardMaterial color={cream} roughness={0.9} />
+          </mesh>
+        </>
+      )}
     </group>
   );
 };
