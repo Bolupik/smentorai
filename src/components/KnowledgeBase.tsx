@@ -20,6 +20,8 @@ import {
   ExternalLink,
   Search,
   Tag as TagIcon,
+  Bookmark,
+  BookmarkCheck,
 } from "lucide-react";
 import KnowledgeComments from "./KnowledgeComments";
 import ContributorBadge from "./ContributorBadge";
@@ -88,12 +90,15 @@ const KnowledgeBase = () => {
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [search, setSearch] = useState("");
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [bookmarks, setBookmarks] = useState<Set<string>>(new Set());
+  const [showBookmarksOnly, setShowBookmarksOnly] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchEntries();
     if (user) {
       fetchUserVotes();
+      fetchBookmarks();
     }
   }, [user]);
 
@@ -140,6 +145,55 @@ const KnowledgeBase = () => {
       setUserVotes((data || []) as UserVote[]);
     } catch (error) {
       console.error('Error fetching votes:', error);
+    }
+  };
+
+  const fetchBookmarks = async () => {
+    if (!user) return;
+    try {
+      const { data, error } = await (supabase as any)
+        .from('knowledge_bookmarks')
+        .select('entry_id')
+        .eq('user_id', user.id);
+      if (error) throw error;
+      setBookmarks(new Set((data || []).map((b: any) => b.entry_id)));
+    } catch (error) {
+      console.error('Error fetching bookmarks:', error);
+    }
+  };
+
+  const toggleBookmark = async (entryId: string) => {
+    if (!user || isGuest) {
+      toast.error("Create an account to save bookmarks");
+      return;
+    }
+    const isBookmarked = bookmarks.has(entryId);
+    const next = new Set(bookmarks);
+    try {
+      if (isBookmarked) {
+        next.delete(entryId);
+        setBookmarks(next);
+        const { error } = await (supabase as any)
+          .from('knowledge_bookmarks')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('entry_id', entryId);
+        if (error) throw error;
+        toast.success("Removed from saved");
+      } else {
+        next.add(entryId);
+        setBookmarks(next);
+        const { error } = await (supabase as any)
+          .from('knowledge_bookmarks')
+          .insert({ user_id: user.id, entry_id: entryId });
+        if (error) throw error;
+        toast.success("Saved for later");
+      }
+    } catch (error) {
+      console.error('Bookmark error:', error);
+      // revert
+      setBookmarks(bookmarks);
+      toast.error("Failed to update bookmark");
     }
   };
 
@@ -376,6 +430,7 @@ const KnowledgeBase = () => {
 
   const normalizedQuery = search.trim().toLowerCase();
   const filteredEntries = entries.filter((e) => {
+    if (showBookmarksOnly && !bookmarks.has(e.id)) return false;
     if (filterCategory !== "all" && e.category !== filterCategory) return false;
     if (activeTag && !(e.tags ?? []).some((t) => t.toLowerCase() === activeTag.toLowerCase())) return false;
     if (normalizedQuery) {
@@ -679,6 +734,20 @@ const KnowledgeBase = () => {
               {cat.label}
             </button>
           ))}
+          {user && !isGuest && (
+            <button
+              onClick={() => setShowBookmarksOnly((v) => !v)}
+              className={`text-xs px-2.5 py-1 rounded-full border transition-colors inline-flex items-center gap-1 ml-auto ${
+                showBookmarksOnly
+                  ? "bg-accent text-accent-foreground border-accent"
+                  : "bg-background border-border text-muted-foreground hover:border-primary/50 hover:text-foreground"
+              }`}
+              title="Show only saved entries"
+            >
+              {showBookmarksOnly ? <BookmarkCheck className="w-3 h-3" /> : <Bookmark className="w-3 h-3" />}
+              Saved {bookmarks.size > 0 && `(${bookmarks.size})`}
+            </button>
+          )}
         </div>
 
         {/* Tag chips (top tags in the loaded set) */}
@@ -724,7 +793,9 @@ const KnowledgeBase = () => {
             <SammyNarrator
               height={180}
               message={
-                search || activeTag || filterCategory !== "all"
+                showBookmarksOnly
+                  ? `You haven't saved anything yet. Tap the bookmark icon on any entry to keep it here.`
+                  : search || activeTag || filterCategory !== "all"
                   ? `Hmm, I couldn't find anything matching that. Try clearing filters or searching a broader term.`
                   : `The Repository is empty — be the first to teach me something new about Stacks!`
               }
@@ -779,7 +850,27 @@ const KnowledgeBase = () => {
                         <span className="text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary">
                           {getCategoryLabel(entry.category)}
                         </span>
-                        <ContributorBadge userId={entry.user_id} />
+                        <div className="flex items-center gap-2">
+                          <ContributorBadge userId={entry.user_id} />
+                          {user && !isGuest && (
+                            <button
+                              onClick={() => toggleBookmark(entry.id)}
+                              className={`p-1 rounded transition-colors ${
+                                bookmarks.has(entry.id)
+                                  ? "text-primary hover:text-primary/80"
+                                  : "text-muted-foreground hover:text-primary"
+                              }`}
+                              title={bookmarks.has(entry.id) ? "Remove bookmark" : "Save for later"}
+                              aria-label={bookmarks.has(entry.id) ? "Remove bookmark" : "Save for later"}
+                            >
+                              {bookmarks.has(entry.id) ? (
+                                <BookmarkCheck className="w-4 h-4 fill-current" />
+                              ) : (
+                                <Bookmark className="w-4 h-4" />
+                              )}
+                            </button>
+                          )}
+                        </div>
                       </div>
                       <h4 className="font-medium text-foreground">{entry.topic}</h4>
                       <p className="text-sm text-muted-foreground mt-1">
