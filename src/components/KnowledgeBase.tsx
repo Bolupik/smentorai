@@ -20,6 +20,8 @@ import {
   ExternalLink,
   Search,
   Tag as TagIcon,
+  Bookmark,
+  BookmarkCheck,
 } from "lucide-react";
 import KnowledgeComments from "./KnowledgeComments";
 import ContributorBadge from "./ContributorBadge";
