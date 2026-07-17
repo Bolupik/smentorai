@@ -848,7 +848,27 @@ const KnowledgeBase = () => {
                         <span className="text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary">
                           {getCategoryLabel(entry.category)}
                         </span>
-                        <ContributorBadge userId={entry.user_id} />
+                        <div className="flex items-center gap-2">
+                          <ContributorBadge userId={entry.user_id} />
+                          {user && !isGuest && (
+                            <button
+                              onClick={() => toggleBookmark(entry.id)}
+                              className={`p-1 rounded transition-colors ${
+                                bookmarks.has(entry.id)
+                                  ? "text-primary hover:text-primary/80"
+                                  : "text-muted-foreground hover:text-primary"
+                              }`}
+                              title={bookmarks.has(entry.id) ? "Remove bookmark" : "Save for later"}
+                              aria-label={bookmarks.has(entry.id) ? "Remove bookmark" : "Save for later"}
+                            >
+                              {bookmarks.has(entry.id) ? (
+                                <BookmarkCheck className="w-4 h-4 fill-current" />
+                              ) : (
+                                <Bookmark className="w-4 h-4" />
+                              )}
+                            </button>
+                          )}
+                        </div>
                       </div>
                       <h4 className="font-medium text-foreground">{entry.topic}</h4>
                       <p className="text-sm text-muted-foreground mt-1">
