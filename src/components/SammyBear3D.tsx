@@ -8,13 +8,17 @@ interface Props {
   action?: BearAction;
   /** Wardrobe accent — brand color of the scarf/beanie */
   accent?: string;
+  /** Render just the head (smaller footprint for corner/companion use) */
+  headOnly?: boolean;
+  /** Skip idle bob/blink loops for prefers-reduced-motion users */
+  reducedMotion?: boolean;
 }
 
 /**
  * Procedural low-poly bear narrator built from Three.js primitives.
  * No external GLB required — everything is generated at runtime.
  */
-const SammyBear3D = ({ action = "idle", accent = "#F97316" }: Props) => {
+const SammyBear3D = ({ action = "idle", accent = "#F97316", headOnly = false, reducedMotion = false }: Props) => {
   const group = useRef<THREE.Group>(null);
   const rightArm = useRef<THREE.Group>(null);
   const leftArm = useRef<THREE.Group>(null);
