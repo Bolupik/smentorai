@@ -430,6 +430,7 @@ const KnowledgeBase = () => {
 
   const normalizedQuery = search.trim().toLowerCase();
   const filteredEntries = entries.filter((e) => {
+    if (showBookmarksOnly && !bookmarks.has(e.id)) return false;
     if (filterCategory !== "all" && e.category !== filterCategory) return false;
     if (activeTag && !(e.tags ?? []).some((t) => t.toLowerCase() === activeTag.toLowerCase())) return false;
     if (normalizedQuery) {
