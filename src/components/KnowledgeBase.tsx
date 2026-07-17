@@ -734,6 +734,20 @@ const KnowledgeBase = () => {
               {cat.label}
             </button>
           ))}
+          {user && !isGuest && (
+            <button
+              onClick={() => setShowBookmarksOnly((v) => !v)}
+              className={`text-xs px-2.5 py-1 rounded-full border transition-colors inline-flex items-center gap-1 ml-auto ${
+                showBookmarksOnly
+                  ? "bg-accent text-accent-foreground border-accent"
+                  : "bg-background border-border text-muted-foreground hover:border-primary/50 hover:text-foreground"
+              }`}
+              title="Show only saved entries"
+            >
+              {showBookmarksOnly ? <BookmarkCheck className="w-3 h-3" /> : <Bookmark className="w-3 h-3" />}
+              Saved {bookmarks.size > 0 && `(${bookmarks.size})`}
+            </button>
+          )}
         </div>
 
         {/* Tag chips (top tags in the loaded set) */}
