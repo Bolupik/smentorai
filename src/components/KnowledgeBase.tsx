@@ -90,12 +90,15 @@ const KnowledgeBase = () => {
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [search, setSearch] = useState("");
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [bookmarks, setBookmarks] = useState<Set<string>>(new Set());
+  const [showBookmarksOnly, setShowBookmarksOnly] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchEntries();
     if (user) {
       fetchUserVotes();
+      fetchBookmarks();
     }
   }, [user]);
 
