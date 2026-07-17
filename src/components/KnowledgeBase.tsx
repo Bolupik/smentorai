@@ -148,6 +148,55 @@ const KnowledgeBase = () => {
     }
   };
 
+  const fetchBookmarks = async () => {
+    if (!user) return;
+    try {
+      const { data, error } = await (supabase as any)
+        .from('knowledge_bookmarks')
+        .select('entry_id')
+        .eq('user_id', user.id);
+      if (error) throw error;
+      setBookmarks(new Set((data || []).map((b: any) => b.entry_id)));
+    } catch (error) {
+      console.error('Error fetching bookmarks:', error);
+    }
+  };
+
+  const toggleBookmark = async (entryId: string) => {
+    if (!user || isGuest) {
+      toast.error("Create an account to save bookmarks");
+      return;
+    }
+    const isBookmarked = bookmarks.has(entryId);
+    const next = new Set(bookmarks);
+    try {
+      if (isBookmarked) {
+        next.delete(entryId);
+        setBookmarks(next);
+        const { error } = await (supabase as any)
+          .from('knowledge_bookmarks')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('entry_id', entryId);
+        if (error) throw error;
+        toast.success("Removed from saved");
+      } else {
+        next.add(entryId);
+        setBookmarks(next);
+        const { error } = await (supabase as any)
+          .from('knowledge_bookmarks')
+          .insert({ user_id: user.id, entry_id: entryId });
+        if (error) throw error;
+        toast.success("Saved for later");
+      }
+    } catch (error) {
+      console.error('Bookmark error:', error);
+      // revert
+      setBookmarks(bookmarks);
+      toast.error("Failed to update bookmark");
+    }
+  };
+
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
