@@ -793,7 +793,9 @@ const KnowledgeBase = () => {
             <SammyNarrator
               height={180}
               message={
-                search || activeTag || filterCategory !== "all"
+                showBookmarksOnly
+                  ? `You haven't saved anything yet. Tap the bookmark icon on any entry to keep it here.`
+                  : search || activeTag || filterCategory !== "all"
                   ? `Hmm, I couldn't find anything matching that. Try clearing filters or searching a broader term.`
                   : `The Repository is empty — be the first to teach me something new about Stacks!`
               }
