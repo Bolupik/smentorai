@@ -19,51 +19,17 @@ interface NFTExplorerProps {
   onClose: () => void;
 }
 
-// Static data from Gamma - in production this would be fetched via an API
-const featuredCollections: Collection[] = [
+// Fallback collections used if the live fetch fails
+const fallbackCollections: Collection[] = [
   {
     name: "The Guests",
-    floor: "99.1K STX",
-    image: "https://stxnft.mypinata.cloud/ipfs/QmXbsvpfhCKFSVdE1m31p7rhWYDTA6P81f3NT3n5aVc6A7/images/322.png",
+    floor: "View on Gamma",
+    image: "https://images.gamma.io/cdn-cgi/image/quality=80,width=600,height=600/https://stxnft.mypinata.cloud/ipfs/QmXbsvpfhCKFSVdE1m31p7rhWYDTA6P81f3NT3n5aVc6A7/images/78.png",
     url: "https://stacks.gamma.io/collections/the-guests",
-    category: "Collectibles"
+    category: "Collectibles",
   },
-  {
-    name: "SpaghettiPunk Club",
-    floor: "2.5K STX",
-    image: "https://stxnft.mypinata.cloud/ipfs/QmUDBKgiCDW8J8db3bFBhnnVLHwguspGQLZ3zZ6t76ne45",
-    url: "https://stacks.gamma.io/collections/spaghettipunk-club",
-    category: "Collectibles"
-  },
-  {
-    name: "Leo Cats",
-    floor: "850 STX",
-    image: "https://images.gamma.io/cdn-cgi/image/quality=100,width=600,height=600/https://stxnft.mypinata.cloud/ipfs/QmXbsvpfhCKFSVdE1m31p7rhWYDTA6P81f3NT3n5aVc6A7/images/62.png",
-    url: "https://stacks.gamma.io/collections/leo-cats",
-    category: "Collectibles"
-  },
-  {
-    name: "Megapont Ape Club",
-    floor: "1.2K STX",
-    image: "https://images.gamma.io/cdn-cgi/image/quality=100,width=600,height=600/https://stxnft.mypinata.cloud/ipfs/QmZJvnVzM9o3mUdCiPrN6F5YEZwLMJ5n5k8SL2H8E9Z3aM",
-    url: "https://stacks.gamma.io/collections/megapont-ape-club",
-    category: "Collectibles"
-  },
-  {
-    name: "BNS: Bitcoin Name System",
-    floor: "Minting",
-    image: "https://images.gamma.io/cdn-cgi/image/quality=100,width=600,height=600/https://stxnft.mypinata.cloud/ipfs/QmUDBKgiCDW8J8db3bFBhnnVLHwguspGQLZ3zZ6t76ne45",
-    url: "https://stacks.gamma.io/collections/bns",
-    category: "Utility"
-  },
-  {
-    name: "Stacks Parrots",
-    floor: "320 STX",
-    image: "https://stxnft.mypinata.cloud/ipfs/QmXbsvpfhCKFSVdE1m31p7rhWYDTA6P81f3NT3n5aVc6A7/images/100.png",
-    url: "https://stacks.gamma.io/collections/stacks-parrots",
-    category: "Collectibles"
-  }
 ];
+
 
 const categories = [
   { name: "All", icon: TrendingUp },
