@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, TrendingUp, Image, Music, Camera, Palette, Loader2, RefreshCw, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+
 
 interface Collection {
   name: string;
@@ -17,51 +19,17 @@ interface NFTExplorerProps {
   onClose: () => void;
 }
 
-// Static data from Gamma - in production this would be fetched via an API
-const featuredCollections: Collection[] = [
+// Fallback collections used if the live fetch fails
+const fallbackCollections: Collection[] = [
   {
     name: "The Guests",
-    floor: "99.1K STX",
-    image: "https://stxnft.mypinata.cloud/ipfs/QmXbsvpfhCKFSVdE1m31p7rhWYDTA6P81f3NT3n5aVc6A7/images/322.png",
+    floor: "View on Gamma",
+    image: "https://images.gamma.io/cdn-cgi/image/quality=80,width=600,height=600/https://stxnft.mypinata.cloud/ipfs/QmXbsvpfhCKFSVdE1m31p7rhWYDTA6P81f3NT3n5aVc6A7/images/78.png",
     url: "https://stacks.gamma.io/collections/the-guests",
-    category: "Collectibles"
+    category: "Collectibles",
   },
-  {
-    name: "SpaghettiPunk Club",
-    floor: "2.5K STX",
-    image: "https://stxnft.mypinata.cloud/ipfs/QmUDBKgiCDW8J8db3bFBhnnVLHwguspGQLZ3zZ6t76ne45",
-    url: "https://stacks.gamma.io/collections/spaghettipunk-club",
-    category: "Collectibles"
-  },
-  {
-    name: "Leo Cats",
-    floor: "850 STX",
-    image: "https://images.gamma.io/cdn-cgi/image/quality=100,width=600,height=600/https://stxnft.mypinata.cloud/ipfs/QmXbsvpfhCKFSVdE1m31p7rhWYDTA6P81f3NT3n5aVc6A7/images/62.png",
-    url: "https://stacks.gamma.io/collections/leo-cats",
-    category: "Collectibles"
-  },
-  {
-    name: "Megapont Ape Club",
-    floor: "1.2K STX",
-    image: "https://images.gamma.io/cdn-cgi/image/quality=100,width=600,height=600/https://stxnft.mypinata.cloud/ipfs/QmZJvnVzM9o3mUdCiPrN6F5YEZwLMJ5n5k8SL2H8E9Z3aM",
-    url: "https://stacks.gamma.io/collections/megapont-ape-club",
-    category: "Collectibles"
-  },
-  {
-    name: "BNS: Bitcoin Name System",
-    floor: "Minting",
-    image: "https://images.gamma.io/cdn-cgi/image/quality=100,width=600,height=600/https://stxnft.mypinata.cloud/ipfs/QmUDBKgiCDW8J8db3bFBhnnVLHwguspGQLZ3zZ6t76ne45",
-    url: "https://stacks.gamma.io/collections/bns",
-    category: "Utility"
-  },
-  {
-    name: "Stacks Parrots",
-    floor: "320 STX",
-    image: "https://stxnft.mypinata.cloud/ipfs/QmXbsvpfhCKFSVdE1m31p7rhWYDTA6P81f3NT3n5aVc6A7/images/100.png",
-    url: "https://stacks.gamma.io/collections/stacks-parrots",
-    category: "Collectibles"
-  }
 ];
+
 
 const categories = [
   { name: "All", icon: TrendingUp },
@@ -76,29 +44,39 @@ const NFTExplorer = ({ isVisible, onClose }: NFTExplorerProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [collections, setCollections] = useState<Collection[]>([]);
 
-  useEffect(() => {
-    if (isVisible) {
-      setIsLoading(true);
-      // Simulate loading from API
-      const timer = setTimeout(() => {
-        setCollections(featuredCollections);
-        setIsLoading(false);
-      }, 800);
-      return () => clearTimeout(timer);
+  const loadCollections = async () => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("gamma-collections", {
+        body: {},
+      });
+      if (error) throw error;
+      const live: Collection[] = (data?.collections ?? []).map((c: any) => ({
+        name: c.name,
+        floor: c.floor,
+        image: c.image,
+        url: c.url,
+        category: c.category ?? "Collectibles",
+      }));
+      setCollections(live.length ? live : fallbackCollections);
+    } catch (e) {
+      console.error("Failed to fetch Gamma collections", e);
+      setCollections(fallbackCollections);
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  useEffect(() => {
+    if (isVisible) loadCollections();
   }, [isVisible]);
 
-  const filteredCollections = selectedCategory === "All" 
-    ? collections 
+  const filteredCollections = selectedCategory === "All"
+    ? collections
     : collections.filter(c => c.category === selectedCategory);
 
-  const handleRefresh = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setCollections(featuredCollections);
-      setIsLoading(false);
-    }, 800);
-  };
+  const handleRefresh = () => loadCollections();
+
 
   if (!isVisible) return null;
 
