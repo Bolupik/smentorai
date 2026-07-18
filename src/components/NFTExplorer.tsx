@@ -214,8 +214,19 @@ const NFTExplorer = ({ isVisible, onClose }: NFTExplorerProps) => {
           <div className="flex items-center justify-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
+        ) : filteredCollections.length === 0 ? (
+          <div className="text-center py-10 text-sm text-muted-foreground">
+            No collections match your search.{" "}
+            <button
+              className="text-primary hover:underline"
+              onClick={() => { setQuery(""); setSelectedTag(null); setSelectedCategory("All"); }}
+            >
+              Reset filters
+            </button>
+          </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+
             {filteredCollections.map((collection, idx) => (
               <motion.a
                 key={collection.name}
