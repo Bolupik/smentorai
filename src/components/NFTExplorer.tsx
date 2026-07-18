@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, TrendingUp, Image, Music, Camera, Palette, Loader2, RefreshCw, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+
 
 interface Collection {
   name: string;
