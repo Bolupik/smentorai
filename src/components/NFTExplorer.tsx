@@ -44,29 +44,39 @@ const NFTExplorer = ({ isVisible, onClose }: NFTExplorerProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [collections, setCollections] = useState<Collection[]>([]);
 
-  useEffect(() => {
-    if (isVisible) {
-      setIsLoading(true);
-      // Simulate loading from API
-      const timer = setTimeout(() => {
-        setCollections(featuredCollections);
-        setIsLoading(false);
-      }, 800);
-      return () => clearTimeout(timer);
+  const loadCollections = async () => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("gamma-collections", {
+        body: {},
+      });
+      if (error) throw error;
+      const live: Collection[] = (data?.collections ?? []).map((c: any) => ({
+        name: c.name,
+        floor: c.floor,
+        image: c.image,
+        url: c.url,
+        category: c.category ?? "Collectibles",
+      }));
+      setCollections(live.length ? live : fallbackCollections);
+    } catch (e) {
+      console.error("Failed to fetch Gamma collections", e);
+      setCollections(fallbackCollections);
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  useEffect(() => {
+    if (isVisible) loadCollections();
   }, [isVisible]);
 
-  const filteredCollections = selectedCategory === "All" 
-    ? collections 
+  const filteredCollections = selectedCategory === "All"
+    ? collections
     : collections.filter(c => c.category === selectedCategory);
 
-  const handleRefresh = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setCollections(featuredCollections);
-      setIsLoading(false);
-    }, 800);
-  };
+  const handleRefresh = () => loadCollections();
+
 
   if (!isVisible) return null;
 
