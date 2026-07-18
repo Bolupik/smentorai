@@ -1,17 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, TrendingUp, Image, Music, Camera, Palette, Loader2, RefreshCw, X } from "lucide-react";
+import { ExternalLink, TrendingUp, Image, Music, Camera, Palette, Loader2, RefreshCw, X, Search } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import { Input } from "./ui/input";
 import { supabase } from "@/integrations/supabase/client";
-
 
 interface Collection {
   name: string;
   floor: string;
   image: string;
   url: string;
-  category?: string;
+  category: string;
+  tags: string[];
 }
 
 interface NFTExplorerProps {
@@ -19,7 +20,6 @@ interface NFTExplorerProps {
   onClose: () => void;
 }
 
-// Fallback collections used if the live fetch fails
 const fallbackCollections: Collection[] = [
   {
     name: "The Guests",
@@ -27,9 +27,9 @@ const fallbackCollections: Collection[] = [
     image: "https://images.gamma.io/cdn-cgi/image/quality=80,width=600,height=600/https://stxnft.mypinata.cloud/ipfs/QmXbsvpfhCKFSVdE1m31p7rhWYDTA6P81f3NT3n5aVc6A7/images/78.png",
     url: "https://stacks.gamma.io/collections/the-guests",
     category: "Collectibles",
+    tags: ["pfp", "blue-chip"],
   },
 ];
-
 
 const categories = [
   { name: "All", icon: TrendingUp },
@@ -37,19 +37,21 @@ const categories = [
   { name: "Fine Art", icon: Palette },
   { name: "Photography", icon: Camera },
   { name: "Music", icon: Music },
+  { name: "Utility", icon: TrendingUp },
+  { name: "Gaming", icon: TrendingUp },
 ];
 
 const NFTExplorer = ({ isVisible, onClose }: NFTExplorerProps) => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
   const [collections, setCollections] = useState<Collection[]>([]);
+  const [query, setQuery] = useState("");
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   const loadCollections = async () => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("gamma-collections", {
-        body: {},
-      });
+      const { data, error } = await supabase.functions.invoke("gamma-collections", { body: {} });
       if (error) throw error;
       const live: Collection[] = (data?.collections ?? []).map((c: any) => ({
         name: c.name,
@@ -57,6 +59,7 @@ const NFTExplorer = ({ isVisible, onClose }: NFTExplorerProps) => {
         image: c.image,
         url: c.url,
         category: c.category ?? "Collectibles",
+        tags: Array.isArray(c.tags) ? c.tags : [],
       }));
       setCollections(live.length ? live : fallbackCollections);
     } catch (e) {
@@ -71,11 +74,28 @@ const NFTExplorer = ({ isVisible, onClose }: NFTExplorerProps) => {
     if (isVisible) loadCollections();
   }, [isVisible]);
 
-  const filteredCollections = selectedCategory === "All"
-    ? collections
-    : collections.filter(c => c.category === selectedCategory);
+  const allTags = useMemo(() => {
+    const s = new Set<string>();
+    collections.forEach((c) => c.tags.forEach((t) => s.add(t)));
+    return Array.from(s).sort();
+  }, [collections]);
+
+  const filteredCollections = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return collections.filter((c) => {
+      if (selectedCategory !== "All" && c.category !== selectedCategory) return false;
+      if (selectedTag && !c.tags.includes(selectedTag)) return false;
+      if (q) {
+        const hay = `${c.name} ${c.category} ${c.tags.join(" ")}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }, [collections, selectedCategory, selectedTag, query]);
 
   const handleRefresh = () => loadCollections();
+
+
 
 
   if (!isVisible) return null;
