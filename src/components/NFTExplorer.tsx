@@ -1,17 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, TrendingUp, Image, Music, Camera, Palette, Loader2, RefreshCw, X } from "lucide-react";
+import { ExternalLink, TrendingUp, Image, Music, Camera, Palette, Loader2, RefreshCw, X, Search } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import { Input } from "./ui/input";
 import { supabase } from "@/integrations/supabase/client";
-
 
 interface Collection {
   name: string;
   floor: string;
   image: string;
   url: string;
-  category?: string;
+  category: string;
+  tags: string[];
 }
 
 interface NFTExplorerProps {
@@ -19,7 +20,6 @@ interface NFTExplorerProps {
   onClose: () => void;
 }
 
-// Fallback collections used if the live fetch fails
 const fallbackCollections: Collection[] = [
   {
     name: "The Guests",
@@ -27,9 +27,9 @@ const fallbackCollections: Collection[] = [
     image: "https://images.gamma.io/cdn-cgi/image/quality=80,width=600,height=600/https://stxnft.mypinata.cloud/ipfs/QmXbsvpfhCKFSVdE1m31p7rhWYDTA6P81f3NT3n5aVc6A7/images/78.png",
     url: "https://stacks.gamma.io/collections/the-guests",
     category: "Collectibles",
+    tags: ["pfp", "blue-chip"],
   },
 ];
-
 
 const categories = [
   { name: "All", icon: TrendingUp },
@@ -37,19 +37,21 @@ const categories = [
   { name: "Fine Art", icon: Palette },
   { name: "Photography", icon: Camera },
   { name: "Music", icon: Music },
+  { name: "Utility", icon: TrendingUp },
+  { name: "Gaming", icon: TrendingUp },
 ];
 
 const NFTExplorer = ({ isVisible, onClose }: NFTExplorerProps) => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
   const [collections, setCollections] = useState<Collection[]>([]);
+  const [query, setQuery] = useState("");
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   const loadCollections = async () => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("gamma-collections", {
-        body: {},
-      });
+      const { data, error } = await supabase.functions.invoke("gamma-collections", { body: {} });
       if (error) throw error;
       const live: Collection[] = (data?.collections ?? []).map((c: any) => ({
         name: c.name,
@@ -57,6 +59,7 @@ const NFTExplorer = ({ isVisible, onClose }: NFTExplorerProps) => {
         image: c.image,
         url: c.url,
         category: c.category ?? "Collectibles",
+        tags: Array.isArray(c.tags) ? c.tags : [],
       }));
       setCollections(live.length ? live : fallbackCollections);
     } catch (e) {
@@ -71,11 +74,28 @@ const NFTExplorer = ({ isVisible, onClose }: NFTExplorerProps) => {
     if (isVisible) loadCollections();
   }, [isVisible]);
 
-  const filteredCollections = selectedCategory === "All"
-    ? collections
-    : collections.filter(c => c.category === selectedCategory);
+  const allTags = useMemo(() => {
+    const s = new Set<string>();
+    collections.forEach((c) => c.tags.forEach((t) => s.add(t)));
+    return Array.from(s).sort();
+  }, [collections]);
+
+  const filteredCollections = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return collections.filter((c) => {
+      if (selectedCategory !== "All" && c.category !== selectedCategory) return false;
+      if (selectedTag && !c.tags.includes(selectedTag)) return false;
+      if (q) {
+        const hay = `${c.name} ${c.category} ${c.tags.join(" ")}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }, [collections, selectedCategory, selectedTag, query]);
 
   const handleRefresh = () => loadCollections();
+
+
 
 
   if (!isVisible) return null;
@@ -120,8 +140,19 @@ const NFTExplorer = ({ isVisible, onClose }: NFTExplorerProps) => {
           </div>
         </div>
 
+        {/* Search */}
+        <div className="relative mb-3">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search collections by name or tag…"
+            className="pl-9 h-9 bg-muted/40 border-border/50"
+          />
+        </div>
+
         {/* Category Filters */}
-        <div className="flex gap-2 mb-4 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex gap-2 mb-3 overflow-x-auto pb-2 scrollbar-hide">
           {categories.map((cat) => {
             const Icon = cat.icon;
             return (
@@ -131,8 +162,8 @@ const NFTExplorer = ({ isVisible, onClose }: NFTExplorerProps) => {
                 size="sm"
                 onClick={() => setSelectedCategory(cat.name)}
                 className={`flex items-center gap-1.5 shrink-0 ${
-                  selectedCategory === cat.name 
-                    ? "bg-primary text-primary-foreground" 
+                  selectedCategory === cat.name
+                    ? "bg-primary text-primary-foreground"
                     : "bg-muted/50 border-border/50 hover:bg-muted"
                 }`}
               >
@@ -143,13 +174,59 @@ const NFTExplorer = ({ isVisible, onClose }: NFTExplorerProps) => {
           })}
         </div>
 
+        {/* Tag filters */}
+        {allTags.length > 0 && (
+          <div className="flex gap-1.5 mb-4 overflow-x-auto pb-2 scrollbar-hide">
+            <button
+              onClick={() => setSelectedTag(null)}
+              className={`text-[11px] px-2 py-1 rounded-full border shrink-0 transition ${
+                selectedTag === null
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-muted/40 border-border/50 text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              All tags
+            </button>
+            {allTags.map((t) => (
+              <button
+                key={t}
+                onClick={() => setSelectedTag(selectedTag === t ? null : t)}
+                className={`text-[11px] px-2 py-1 rounded-full border shrink-0 transition ${
+                  selectedTag === t
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-muted/40 border-border/50 text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                #{t}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Result count */}
+        <div className="text-[11px] text-muted-foreground mb-2">
+          {isLoading ? "Loading…" : `${filteredCollections.length} of ${collections.length} collections`}
+        </div>
+
+
         {/* Collections Grid */}
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
+        ) : filteredCollections.length === 0 ? (
+          <div className="text-center py-10 text-sm text-muted-foreground">
+            No collections match your search.{" "}
+            <button
+              className="text-primary hover:underline"
+              onClick={() => { setQuery(""); setSelectedTag(null); setSelectedCategory("All"); }}
+            >
+              Reset filters
+            </button>
+          </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+
             {filteredCollections.map((collection, idx) => (
               <motion.a
                 key={collection.name}
