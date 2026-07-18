@@ -140,8 +140,19 @@ const NFTExplorer = ({ isVisible, onClose }: NFTExplorerProps) => {
           </div>
         </div>
 
+        {/* Search */}
+        <div className="relative mb-3">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search collections by name or tag…"
+            className="pl-9 h-9 bg-muted/40 border-border/50"
+          />
+        </div>
+
         {/* Category Filters */}
-        <div className="flex gap-2 mb-4 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex gap-2 mb-3 overflow-x-auto pb-2 scrollbar-hide">
           {categories.map((cat) => {
             const Icon = cat.icon;
             return (
@@ -151,8 +162,8 @@ const NFTExplorer = ({ isVisible, onClose }: NFTExplorerProps) => {
                 size="sm"
                 onClick={() => setSelectedCategory(cat.name)}
                 className={`flex items-center gap-1.5 shrink-0 ${
-                  selectedCategory === cat.name 
-                    ? "bg-primary text-primary-foreground" 
+                  selectedCategory === cat.name
+                    ? "bg-primary text-primary-foreground"
                     : "bg-muted/50 border-border/50 hover:bg-muted"
                 }`}
               >
@@ -162,6 +173,41 @@ const NFTExplorer = ({ isVisible, onClose }: NFTExplorerProps) => {
             );
           })}
         </div>
+
+        {/* Tag filters */}
+        {allTags.length > 0 && (
+          <div className="flex gap-1.5 mb-4 overflow-x-auto pb-2 scrollbar-hide">
+            <button
+              onClick={() => setSelectedTag(null)}
+              className={`text-[11px] px-2 py-1 rounded-full border shrink-0 transition ${
+                selectedTag === null
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-muted/40 border-border/50 text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              All tags
+            </button>
+            {allTags.map((t) => (
+              <button
+                key={t}
+                onClick={() => setSelectedTag(selectedTag === t ? null : t)}
+                className={`text-[11px] px-2 py-1 rounded-full border shrink-0 transition ${
+                  selectedTag === t
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-muted/40 border-border/50 text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                #{t}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Result count */}
+        <div className="text-[11px] text-muted-foreground mb-2">
+          {isLoading ? "Loading…" : `${filteredCollections.length} of ${collections.length} collections`}
+        </div>
+
 
         {/* Collections Grid */}
         {isLoading ? (
