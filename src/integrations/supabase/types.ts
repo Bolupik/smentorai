@@ -148,12 +148,43 @@ export type Database = {
           },
         ]
       }
+      knowledge_comment_votes: {
+        Row: {
+          comment_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          comment_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          comment_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_comment_votes_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       knowledge_comments: {
         Row: {
           content: string
           created_at: string
           entry_id: string
           id: string
+          parent_id: string | null
+          upvotes: number
           user_id: string
         }
         Insert: {
@@ -161,6 +192,8 @@ export type Database = {
           created_at?: string
           entry_id: string
           id?: string
+          parent_id?: string | null
+          upvotes?: number
           user_id: string
         }
         Update: {
@@ -168,6 +201,8 @@ export type Database = {
           created_at?: string
           entry_id?: string
           id?: string
+          parent_id?: string | null
+          upvotes?: number
           user_id?: string
         }
         Relationships: [
@@ -176,6 +211,13 @@ export type Database = {
             columns: ["entry_id"]
             isOneToOne: false
             referencedRelation: "knowledge_base"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_comments_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_comments"
             referencedColumns: ["id"]
           },
         ]
