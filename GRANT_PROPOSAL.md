@@ -3,7 +3,7 @@
 ## Stacks Ecosystem Educational AI Platform
 
 **Project Name:** SMentor
-**Date:** March 2026
+**Date:** July 2026
 **Grant Category:** Education, Developer Onboarding, Community Growth & DeFi Innovation
 **Live Demo:** [https://smentorai.lovable.app](https://smentorai.lovable.app)
 **Status:** Live in production
@@ -472,7 +472,7 @@ All core features live in production:
 | Metric | Target |
 |--------|--------|
 | MAU | 500 |
-| Monthly AI Conversations | 10,000 |
+| Monthly AI Conversations | 5,000 |
 | Knowledge Base Entries | 200+ |
 | Partner Integrations | 5+ |
 
@@ -489,8 +489,8 @@ All core features live in production:
 
 | Metric | Target |
 |--------|--------|
-| MAU | 1,000+ |
-| Total Installs | 3,000+ |
+| MAU | 250+ |
+| Total Installs | 750+ |
 | On-chain Certifications | 500+ |
 | DAO Governance Live | ✅ |
 
@@ -498,7 +498,7 @@ All core features live in production:
 
 ## 11. Budget Breakdown
 
-*8000 USD *
+*5000 USD *
 
 | Category | Q1 | Q2 | Q3 | Q4 | Total |
 |----------|:--:|:--:|:--:|:--:|:-----:|
@@ -507,7 +507,7 @@ All core features live in production:
 | Smart contract development + audit 10%  | — | TBD | TBD | — | TBD |
 | Marketing & community 10%| TBD | TBD | TBD | TBD | TBD |
 | Operations & maintenance 10%| TBD | TBD | TBD | TBD | TBD |
-| **Total** | | | | | **8000 USD** |
+| **Total** | | | | | **5000 USD** |
 
 ---
 
@@ -548,4 +548,4 @@ Based on market analysis (adjusted for realistic organic growth, 15% monthly chu
 **AI:** SAMMY THE AI
 **Built on:** [Stacks](https://stacks.org/)
 
-*Last updated: March 2026*
+*Last updated: July 2026*
