@@ -418,6 +418,30 @@ const Auth = () => {
           <Button
             type="button"
             variant="outline"
+            onClick={handlePasskeySignIn}
+            disabled={isPasskeyLoading}
+            className="w-full py-6 text-base font-medium border-border hover:bg-muted/50 mb-3 gap-2"
+          >
+            {isPasskeyLoading ? (
+              <>
+                <motion.span
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  className="w-5 h-5 border-2 border-foreground border-t-transparent rounded-full"
+                />
+                Verifying passkey…
+              </>
+            ) : (
+              <>
+                <Fingerprint className="w-5 h-5" />
+                Sign in with a passkey
+              </>
+            )}
+          </Button>
+
+          <Button
+            type="button"
+            variant="outline"
             onClick={handleGuestLogin}
             disabled={isGuestLoading}
             className="w-full py-6 text-lg font-medium border-border hover:bg-muted/50"

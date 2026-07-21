@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import ProfileAchievements from "./ProfileAchievements";
+import PasskeyManager from "./PasskeyManager";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -529,6 +530,9 @@ const ProfileEditor = () => {
         isWalletOnly={walletOnlyUser}
         truncateAddress={truncateAddress}
       />
+
+      {/* ── Passkeys ── */}
+      <PasskeyManager />
 
       {/* ── Daily Rankings ── */}
       <RankingPlaceholder />
