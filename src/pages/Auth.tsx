@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, User, Mail, CheckCircle, Wallet, ExternalLink, Smartphone } from "lucide-react";
+import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, User, Mail, CheckCircle, Wallet, ExternalLink, Smartphone, Fingerprint } from "lucide-react";
+import { signInWithPasskey, isPasskeySupported } from "@/lib/passkey";
 import aiCharacter from "@/assets/ai-character.png";
 import { z } from "zod";
 import { useStacksAuth } from "@/hooks/useStacksAuth";
@@ -34,6 +35,7 @@ const Auth = () => {
   const [signupComplete, setSignupComplete] = useState(false);
   const [signupEmail, setSignupEmail] = useState("");
   const [isWalletLoading, setIsWalletLoading] = useState(false);
+  const [isPasskeyLoading, setIsPasskeyLoading] = useState(false);
   const [isMobile] = useState(() => isMobileDevice());
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -64,6 +66,29 @@ const Auth = () => {
       window.location.href = `xverse://browser?url=${returnUrl}`;
     } else {
       window.location.href = `leather://browser?url=${returnUrl}`;
+    }
+  };
+
+  const handlePasskeySignIn = async () => {
+    if (!isPasskeySupported()) {
+      toast({ title: "Passkeys unavailable", description: "This browser doesn't support passkeys yet.", variant: "destructive" });
+      return;
+    }
+    setIsPasskeyLoading(true);
+    try {
+      const result = await signInWithPasskey();
+      if (result.needsEmail) {
+        toast({ title: "Wallet account", description: "Reconnect your Stacks wallet to sign in.", variant: "destructive" });
+      } else {
+        toast({ title: "Welcome back", description: "Signed in with your passkey." });
+      }
+    } catch (err) {
+      const msg = (err as Error).message || "Passkey sign-in failed";
+      if (!msg.toLowerCase().includes("cancel") && !msg.toLowerCase().includes("aborted")) {
+        toast({ title: "Passkey failed", description: msg, variant: "destructive" });
+      }
+    } finally {
+      setIsPasskeyLoading(false);
     }
   };
 
