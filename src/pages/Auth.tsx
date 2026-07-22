@@ -211,9 +211,8 @@ const Auth = () => {
       const secret = generateSecretKey();
       const wallet = await generateWallet({ secretKey: secret, password: "" });
       const account = wallet.accounts[0];
-      // Prefer mainnet address (index 0 in accounts) — getStxAddress helper via account
-      const { getStxAddress } = await import("@stacks/wallet-sdk");
-      const address = getStxAddress({ account, network: "mainnet" as any });
+      // Prefer mainnet address
+      const address = getStxAddress({ account, network: "mainnet" });
       setGeneratedSeed(secret);
       setGeneratedAddress(address);
     } catch (err) {
