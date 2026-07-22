@@ -203,7 +203,107 @@ const Auth = () => {
     }
   };
 
-  // ── Email verification pending screen ──────────────────────────────────────
+  // ── Passkey + Stacks wallet setup (post-signup, session present) ───────────
+  const beginPasskeySetup = async () => {
+    setSetupBusy(true);
+    try {
+      // 1. Generate a fresh Stacks wallet
+      const secret = generateSecretKey();
+      const wallet = await generateWallet({ secretKey: secret, password: "" });
+      const account = wallet.accounts[0];
+      // Prefer mainnet address (index 0 in accounts) — getStxAddress helper via account
+      const { getStxAddress } = await import("@stacks/wallet-sdk");
+      const address = getStxAddress({ account, network: "mainnet" as any });
+      setGeneratedSeed(secret);
+      setGeneratedAddress(address);
+    } catch (err) {
+      toast({ title: "Wallet setup failed", description: (err as Error).message, variant: "destructive" });
+    } finally {
+      setSetupBusy(false);
+    }
+  };
+
+  const finalizePasskeySetup = async () => {
+    if (!generatedAddress || !generatedSeed) return;
+    setSetupBusy(true);
+    try {
+      // 1. Register the passkey (biometric prompt)
+      await registerPasskey(`SMentor · ${new Date().toLocaleDateString()}`);
+      // 2. Save the wallet address on the profile
+      const { data: userRes } = await supabase.auth.getUser();
+      if (userRes.user) {
+        await supabase.from("profiles").update({ stacks_address: generatedAddress } as any).eq("user_id", userRes.user.id);
+      }
+      toast({ title: "All set", description: "Passkey saved and Stacks wallet linked." });
+      navigate("/");
+    } catch (err) {
+      if (isPasskeyCancellation(err)) {
+        toast({ title: "Passkey skipped", description: "You can add one later from your profile." });
+      } else {
+        toast({ title: "Setup failed", description: (err as Error).message, variant: "destructive" });
+      }
+    } finally {
+      setSetupBusy(false);
+    }
+  };
+
+  if (passkeySetupOpen) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-6">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
+          <div className="w-16 h-16 rounded-2xl bg-primary/15 flex items-center justify-center mx-auto mb-5">
+            <Shield className="w-8 h-8 text-primary" />
+          </div>
+          <h1 className="text-2xl font-black text-foreground text-center mb-2">Secure your account</h1>
+          <p className="text-sm text-muted-foreground text-center mb-6">
+            Add a passkey (Face ID / Touch ID) and we'll generate a Stacks wallet linked to it.
+          </p>
+
+          {!generatedSeed ? (
+            <Button onClick={beginPasskeySetup} disabled={setupBusy} className="w-full py-6 gap-2">
+              {setupBusy ? "Generating wallet…" : (<><Fingerprint className="w-5 h-5" /> Create passkey + wallet</>)}
+            </Button>
+          ) : (
+            <div className="space-y-4">
+              <div className="rounded-xl border border-border bg-card p-4">
+                <p className="text-xs text-muted-foreground mb-1">Your Stacks address</p>
+                <p className="text-sm font-mono break-all text-foreground">{generatedAddress}</p>
+              </div>
+              <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs font-semibold text-destructive uppercase tracking-wide">Recovery phrase — save it</p>
+                  <button
+                    type="button"
+                    onClick={() => { navigator.clipboard.writeText(generatedSeed); toast({ title: "Copied" }); }}
+                    className="text-xs text-primary flex items-center gap-1 hover:underline"
+                  >
+                    <Copy className="w-3 h-3" /> Copy
+                  </button>
+                </div>
+                <p className="text-sm font-mono text-foreground leading-relaxed">{generatedSeed}</p>
+                <p className="text-[11px] text-muted-foreground mt-3">
+                  This is the only way to recover your wallet. Store it somewhere safe — we can't show it again.
+                </p>
+              </div>
+              <label className="flex items-start gap-2 text-sm text-muted-foreground cursor-pointer">
+                <input type="checkbox" checked={seedConfirmed} onChange={(e) => setSeedConfirmed(e.target.checked)} className="mt-1" />
+                I've saved my recovery phrase.
+              </label>
+              <Button onClick={finalizePasskeySetup} disabled={setupBusy || !seedConfirmed} className="w-full py-6 gap-2">
+                <Fingerprint className="w-5 h-5" />
+                {setupBusy ? "Saving passkey…" : "Save passkey & finish"}
+              </Button>
+              <Button variant="ghost" onClick={() => navigate("/")} className="w-full text-muted-foreground">
+                Skip for now
+              </Button>
+            </div>
+          )}
+        </motion.div>
+      </div>
+    );
+  }
+
+
   if (signupComplete) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-8">
