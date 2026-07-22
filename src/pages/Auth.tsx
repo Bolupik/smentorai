@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, User, Mail, CheckCircle, Wallet, ExternalLink, Smartphone, Fingerprint } from "lucide-react";
-import { signInWithPasskey, registerPasskey, isPasskeySupported, isPasskeyCancellation } from "@/lib/passkey";
+import { signInWithPasskey, registerPasskey, signUpWithPasskeyAndWallet, isPasskeySupported, isPasskeyCancellation } from "@/lib/passkey";
 import { generateSecretKey, generateWallet, getStxAddress } from "@stacks/wallet-sdk";
 import { Copy, Shield } from "lucide-react";
 import aiCharacter from "@/assets/ai-character.png";
@@ -37,6 +37,7 @@ const Auth = () => {
   const [signupComplete, setSignupComplete] = useState(false);
   const [signupEmail, setSignupEmail] = useState("");
   const [passkeySetupOpen, setPasskeySetupOpen] = useState(false);
+  const [passkeySetupMode, setPasskeySetupMode] = useState<"email" | "passkey">("email");
   const [generatedSeed, setGeneratedSeed] = useState<string | null>(null);
   const [generatedAddress, setGeneratedAddress] = useState<string | null>(null);
   const [setupBusy, setSetupBusy] = useState(false);
@@ -98,6 +99,18 @@ const Auth = () => {
     } finally {
       setIsPasskeyLoading(false);
     }
+  };
+
+  const handlePasskeySignUp = () => {
+    if (!isPasskeySupported()) {
+      toast({ title: "Passkeys unavailable", description: "This browser doesn't support passkeys yet.", variant: "destructive" });
+      return;
+    }
+    setGeneratedSeed(null);
+    setGeneratedAddress(null);
+    setSeedConfirmed(false);
+    setPasskeySetupMode("passkey");
+    setPasskeySetupOpen(true);
   };
 
   const handleGuestLogin = async () => {
@@ -191,6 +204,7 @@ const Auth = () => {
         setSignupEmail(email);
         // If email confirmation is off, we have a session — offer passkey + wallet setup right now.
         if (signUpData.session && isPasskeySupported()) {
+          setPasskeySetupMode("email");
           setPasskeySetupOpen(true);
         } else {
           setSignupComplete(true);
@@ -226,12 +240,26 @@ const Auth = () => {
     if (!generatedAddress || !generatedSeed) return;
     setSetupBusy(true);
     try {
-      // 1. Register the passkey (biometric prompt)
-      await registerPasskey(`SMentor · ${new Date().toLocaleDateString()}`);
-      // 2. Save the wallet address on the profile
-      const { data: userRes } = await supabase.auth.getUser();
-      if (userRes.user) {
-        await supabase.from("profiles").update({ stacks_address: generatedAddress } as any).eq("user_id", userRes.user.id);
+      const displayName = username.trim() || generatedAddress.slice(0, 12);
+
+      if (passkeySetupMode === "passkey") {
+        await signUpWithPasskeyAndWallet({
+          username: displayName,
+          stacksAddress: generatedAddress,
+        });
+      } else {
+        // 1. Register the passkey (biometric prompt)
+        await registerPasskey(`SMentor · ${new Date().toLocaleDateString()}`);
+        // 2. Save the wallet address on the profile
+        const { data: userRes } = await supabase.auth.getUser();
+        if (userRes.user) {
+          await supabase.from("profiles").upsert({
+            user_id: userRes.user.id,
+            username: displayName,
+            stacks_address: generatedAddress,
+            web3_onboarded: true,
+          }, { onConflict: "user_id" });
+        }
       }
       toast({ title: "All set", description: "Passkey saved and Stacks wallet linked." });
       navigate("/");
@@ -255,12 +283,12 @@ const Auth = () => {
           </div>
           <h1 className="text-2xl font-black text-foreground text-center mb-2">Secure your account</h1>
           <p className="text-sm text-muted-foreground text-center mb-6">
-            Add a passkey (Face ID / Touch ID) and we'll generate a Stacks wallet linked to it.
+            Create a Stacks wallet, save the recovery phrase, then lock the account behind your passkey.
           </p>
 
           {!generatedSeed ? (
             <Button onClick={beginPasskeySetup} disabled={setupBusy} className="w-full py-6 gap-2">
-              {setupBusy ? "Generating wallet…" : (<><Fingerprint className="w-5 h-5" /> Create passkey + wallet</>)}
+              {setupBusy ? "Generating wallet…" : (<><Wallet className="w-5 h-5" /> Create Stacks wallet</>)}
             </Button>
           ) : (
             <div className="space-y-4">
@@ -290,7 +318,7 @@ const Auth = () => {
               </label>
               <Button onClick={finalizePasskeySetup} disabled={setupBusy || !seedConfirmed} className="w-full py-6 gap-2">
                 <Fingerprint className="w-5 h-5" />
-                {setupBusy ? "Saving passkey…" : "Save passkey & finish"}
+                {setupBusy ? "Saving passkey…" : "Create passkey & finish"}
               </Button>
               <Button variant="ghost" onClick={() => navigate("/")} className="w-full text-muted-foreground">
                 Skip for now
@@ -555,7 +583,7 @@ const Auth = () => {
           <Button
             type="button"
             variant="outline"
-            onClick={handlePasskeySignIn}
+            onClick={isLogin ? handlePasskeySignIn : handlePasskeySignUp}
             disabled={isPasskeyLoading}
             className="w-full py-6 text-base font-medium border-border hover:bg-muted/50 mb-3 gap-2"
           >
@@ -566,12 +594,12 @@ const Auth = () => {
                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                   className="w-5 h-5 border-2 border-foreground border-t-transparent rounded-full"
                 />
-                Verifying passkey…
+                {isLogin ? "Verifying passkey…" : "Preparing passkey…"}
               </>
             ) : (
               <>
                 <Fingerprint className="w-5 h-5" />
-                Sign in with a passkey
+                {isLogin ? "Sign in with a passkey" : "Create account with a passkey"}
               </>
             )}
           </Button>
