@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { Fingerprint, Loader2, Trash2, KeyRound } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { registerPasskey, isPasskeySupported } from "@/lib/passkey";
+import { registerPasskey, isPasskeySupported, isPasskeyCancellation } from "@/lib/passkey";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 
@@ -48,10 +48,8 @@ const PasskeyManager = () => {
       toast.success("Passkey added — use it to sign in next time.");
       await load();
     } catch (err) {
-      const msg = (err as Error).message;
-      if (!msg.toLowerCase().includes("cancel")) {
-        toast.error(msg || "Could not register passkey");
-      }
+      if (isPasskeyCancellation(err)) return; // silent — user dismissed sheet
+      toast.error((err as Error).message || "Could not register passkey");
     } finally {
       setRegistering(false);
     }

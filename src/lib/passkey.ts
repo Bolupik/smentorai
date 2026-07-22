@@ -4,6 +4,32 @@ import {
 } from "@simplewebauthn/browser";
 import { supabase } from "@/integrations/supabase/client";
 
+export class PasskeyCancelledError extends Error {
+  constructor(message = "Passkey prompt cancelled") {
+    super(message);
+    this.name = "PasskeyCancelledError";
+  }
+}
+
+/** True when the WebAuthn ceremony was dismissed, timed out, or no credential exists. */
+export function isPasskeyCancellation(err: unknown): boolean {
+  if (!err) return false;
+  if (err instanceof PasskeyCancelledError) return true;
+  const anyErr = err as { name?: string; message?: string };
+  const name = (anyErr.name || "").toLowerCase();
+  const msg = (anyErr.message || "").toLowerCase();
+  if (["notallowederror", "aborterror", "invalidstateerror"].includes(name)) return true;
+  return (
+    msg.includes("cancel") ||
+    msg.includes("aborted") ||
+    msg.includes("not allowed") ||
+    msg.includes("timed out") ||
+    msg.includes("no available") ||
+    msg.includes("no credentials") ||
+    msg.includes("unknown passkey")
+  );
+}
+
 async function callPasskey(action: string, body: Record<string, unknown> = {}) {
   const { data, error } = await supabase.functions.invoke("passkey-auth", {
     body: { action, ...body },
@@ -22,7 +48,13 @@ export function isPasskeySupported() {
 
 export async function registerPasskey(label?: string) {
   const { options, sessionKey } = await callPasskey("register-options");
-  const attResp = await startRegistration({ optionsJSON: options });
+  let attResp;
+  try {
+    attResp = await startRegistration({ optionsJSON: options });
+  } catch (err) {
+    if (isPasskeyCancellation(err)) throw new PasskeyCancelledError();
+    throw err;
+  }
   await callPasskey("register-verify", {
     sessionKey,
     response: attResp,
@@ -37,7 +69,13 @@ export async function registerPasskey(label?: string) {
  */
 export async function signInWithPasskey() {
   const { options, sessionKey } = await callPasskey("auth-options");
-  const asseResp = await startAuthentication({ optionsJSON: options });
+  let asseResp;
+  try {
+    asseResp = await startAuthentication({ optionsJSON: options });
+  } catch (err) {
+    if (isPasskeyCancellation(err)) throw new PasskeyCancelledError();
+    throw err;
+  }
   const result = await callPasskey("auth-verify", {
     sessionKey,
     response: asseResp,
