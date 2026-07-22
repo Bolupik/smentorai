@@ -80,15 +80,16 @@ const Auth = () => {
     try {
       const result = await signInWithPasskey();
       if (result.needsEmail) {
-        toast({ title: "Wallet account", description: "Reconnect your Stacks wallet to sign in.", variant: "destructive" });
+        toast({ title: "Wallet account", description: "Reconnect your Stacks wallet to sign in." });
       } else {
         toast({ title: "Welcome back", description: "Signed in with your passkey." });
       }
     } catch (err) {
-      const msg = (err as Error).message || "Passkey sign-in failed";
-      if (!msg.toLowerCase().includes("cancel") && !msg.toLowerCase().includes("aborted")) {
-        toast({ title: "Passkey failed", description: msg, variant: "destructive" });
+      if (isPasskeyCancellation(err)) {
+        // Silent — user dismissed the sheet or has no passkey yet on this device
+        return;
       }
+      toast({ title: "Passkey failed", description: (err as Error).message || "Passkey sign-in failed", variant: "destructive" });
     } finally {
       setIsPasskeyLoading(false);
     }
