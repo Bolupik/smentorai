@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { Fingerprint, Loader2, Trash2, KeyRound } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { registerPasskey, isPasskeySupported } from "@/lib/passkey";
+import { registerPasskey, isPasskeySupported, isPasskeyCancellation } from "@/lib/passkey";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 
