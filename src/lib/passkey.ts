@@ -22,11 +22,14 @@ export function isPasskeyCancellation(err: unknown): boolean {
   return (
     msg.includes("cancel") ||
     msg.includes("aborted") ||
+    msg.includes("abort") ||
     msg.includes("not allowed") ||
     msg.includes("timed out") ||
     msg.includes("no available") ||
     msg.includes("no credentials") ||
-    msg.includes("unknown passkey")
+    msg.includes("unknown passkey") ||
+    msg.includes("credential manager") ||
+    msg.includes("no passkey")
   );
 }
 
@@ -61,6 +64,38 @@ export async function registerPasskey(label?: string) {
     label,
   });
   return true;
+}
+
+export async function signUpWithPasskeyAndWallet({
+  username,
+  stacksAddress,
+}: {
+  username: string;
+  stacksAddress: string;
+}) {
+  const { options, sessionKey } = await callPasskey("signup-options", { username });
+  let attResp;
+  try {
+    attResp = await startRegistration({ optionsJSON: options });
+  } catch (err) {
+    if (isPasskeyCancellation(err)) throw new PasskeyCancelledError();
+    throw err;
+  }
+
+  const result = await callPasskey("signup-verify", {
+    sessionKey,
+    response: attResp,
+    username,
+    stacksAddress,
+  });
+
+  if (!result.token_hash) throw new Error("No session token returned");
+  const { error } = await supabase.auth.verifyOtp({
+    token_hash: result.token_hash,
+    type: "magiclink",
+  });
+  if (error) throw error;
+  return { verified: true };
 }
 
 /**

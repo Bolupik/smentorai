@@ -41,6 +41,36 @@ function randomKey() {
   return crypto.randomUUID() + "-" + crypto.randomUUID();
 }
 
+function safeText(value: unknown, fallback: string, max = 80) {
+  if (typeof value !== "string") return fallback;
+  const cleaned = value.trim().replace(/\s+/g, " ").slice(0, max);
+  return cleaned || fallback;
+}
+
+function safeStacksAddress(value: unknown) {
+  if (typeof value !== "string") return null;
+  const address = value.trim();
+  if (!/^[A-Za-z0-9]{20,80}$/.test(address)) return null;
+  return address;
+}
+
+function randomPassword() {
+  const bytes = new Uint8Array(48);
+  crypto.getRandomValues(bytes);
+  return isoBase64URL.fromBuffer(bytes);
+}
+
+async function issueSessionToken(email: string) {
+  const { data: link, error: linkErr } = await admin.auth.admin.generateLink({
+    type: "magiclink",
+    email,
+  });
+  if (linkErr || !link.properties?.hashed_token) {
+    return { tokenHash: null, error: linkErr?.message ?? "Could not issue session" };
+  }
+  return { tokenHash: link.properties.hashed_token, error: null };
+}
+
 async function getUserFromAuthHeader(req: Request) {
   const authHeader = req.headers.get("Authorization");
   if (!authHeader) return null;
@@ -64,6 +94,109 @@ Deno.serve(async (req) => {
 
     const body = await req.json().catch(() => ({}));
     const action = String(body.action || "");
+
+    // ─────────────── PASSKEY-FIRST SIGNUP: OPTIONS ───────────────
+    if (action === "signup-options") {
+      const username = safeText(body.username, "SMentor learner", 64);
+      const sessionKey = randomKey();
+      const provisionalUserId = crypto.randomUUID();
+
+      const options = await generateRegistrationOptions({
+        rpName: "SMentor",
+        rpID,
+        userID: isoUint8Array.fromUTF8String(provisionalUserId),
+        userName: username,
+        userDisplayName: username,
+        attestationType: "none",
+        authenticatorSelection: {
+          residentKey: "preferred",
+          userVerification: "preferred",
+        },
+      });
+
+      await admin.from("webauthn_challenges").insert({
+        session_key: sessionKey,
+        challenge: options.challenge,
+        kind: "register",
+      });
+
+      return json({ options, sessionKey });
+    }
+
+    // ─────────────── PASSKEY-FIRST SIGNUP: VERIFY ───────────────
+    if (action === "signup-verify") {
+      const { sessionKey, response } = body;
+      const username = safeText(body.username, "SMentor learner", 64);
+      const stacksAddress = safeStacksAddress(body.stacksAddress);
+      if (!sessionKey || !response) return json({ error: "Missing params" }, 400);
+      if (!stacksAddress) return json({ error: "Missing Stacks wallet address" }, 400);
+
+      const { data: chal } = await admin
+        .from("webauthn_challenges")
+        .select("*")
+        .eq("session_key", sessionKey)
+        .eq("kind", "register")
+        .is("user_id", null)
+        .maybeSingle();
+      if (!chal) return json({ error: "Challenge expired" }, 400);
+      if (new Date(chal.expires_at) < new Date()) return json({ error: "Challenge expired" }, 400);
+
+      const verification = await verifyRegistrationResponse({
+        response,
+        expectedChallenge: chal.challenge,
+        expectedOrigin,
+        expectedRPID: rpID,
+      });
+
+      if (!verification.verified || !verification.registrationInfo) {
+        return json({ error: "Verification failed" }, 400);
+      }
+
+      const syntheticEmail = `passkey-${crypto.randomUUID()}@accounts.smentor.local`;
+      const { data: created, error: createErr } = await admin.auth.admin.createUser({
+        email: syntheticEmail,
+        password: randomPassword(),
+        email_confirm: true,
+        user_metadata: {
+          username,
+          display_name: username,
+          stacks_address: stacksAddress,
+          auth_method: "passkey_wallet",
+        },
+      });
+      if (createErr || !created.user) {
+        return json({ error: createErr?.message ?? "Could not create account" }, 400);
+      }
+
+      const { credential } = verification.registrationInfo;
+      const { error: credErr } = await admin.from("passkey_credentials").insert({
+        user_id: created.user.id,
+        credential_id: credential.id,
+        public_key: isoBase64URL.fromBuffer(credential.publicKey),
+        counter: credential.counter,
+        transports: credential.transports ?? [],
+        label: "Primary passkey",
+      });
+      if (credErr) return json({ error: credErr.message }, 400);
+
+      await admin.from("profiles").upsert(
+        {
+          user_id: created.user.id,
+          username,
+          display_name: username,
+          stacks_address: stacksAddress,
+          web3_onboarded: true,
+        },
+        { onConflict: "user_id" },
+      );
+
+      await admin.from("webauthn_challenges").delete().eq("session_key", sessionKey);
+
+      const { tokenHash, error: tokenErr } = await issueSessionToken(syntheticEmail);
+      if (!tokenHash) return json({ error: tokenErr }, 500);
+
+      return json({ verified: true, token_hash: tokenHash });
+    }
 
     // ─────────────── REGISTER: OPTIONS ───────────────
     if (action === "register-options") {
@@ -225,17 +358,12 @@ Deno.serve(async (req) => {
         );
       }
 
-      const { data: link, error: linkErr } = await admin.auth.admin.generateLink({
-        type: "magiclink",
-        email,
-      });
-      if (linkErr || !link.properties?.hashed_token) {
-        return json({ error: "Could not issue session" }, 500);
-      }
+      const { tokenHash, error: tokenErr } = await issueSessionToken(email);
+      if (!tokenHash) return json({ error: tokenErr }, 500);
 
       return json({
         verified: true,
-        token_hash: link.properties.hashed_token,
+        token_hash: tokenHash,
         email,
       });
     }
