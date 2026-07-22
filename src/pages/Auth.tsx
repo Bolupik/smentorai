@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, User, Mail, CheckCircle, Wallet, ExternalLink, Smartphone, Fingerprint } from "lucide-react";
 import { signInWithPasskey, registerPasskey, isPasskeySupported, isPasskeyCancellation } from "@/lib/passkey";
-import { generateSecretKey, generateWallet } from "@stacks/wallet-sdk";
+import { generateSecretKey, generateWallet, getStxAddress } from "@stacks/wallet-sdk";
 import { Copy, Shield } from "lucide-react";
 import aiCharacter from "@/assets/ai-character.png";
 import { z } from "zod";
