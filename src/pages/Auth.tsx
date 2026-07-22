@@ -52,8 +52,8 @@ const Auth = () => {
 
   // If already authenticated, redirect to home
   useEffect(() => {
-    if (isAuthenticated) navigate("/");
-  }, [isAuthenticated, navigate]);
+    if (isAuthenticated && !passkeySetupOpen) navigate("/");
+  }, [isAuthenticated, navigate, passkeySetupOpen]);
 
   const handleWalletConnect = async () => {
     setIsWalletLoading(true);
