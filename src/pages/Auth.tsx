@@ -36,6 +36,11 @@ const Auth = () => {
   const [isGuestLoading, setIsGuestLoading] = useState(false);
   const [signupComplete, setSignupComplete] = useState(false);
   const [signupEmail, setSignupEmail] = useState("");
+  const [passkeySetupOpen, setPasskeySetupOpen] = useState(false);
+  const [generatedSeed, setGeneratedSeed] = useState<string | null>(null);
+  const [generatedAddress, setGeneratedAddress] = useState<string | null>(null);
+  const [setupBusy, setSetupBusy] = useState(false);
+  const [seedConfirmed, setSeedConfirmed] = useState(false);
   const [isWalletLoading, setIsWalletLoading] = useState(false);
   const [isPasskeyLoading, setIsPasskeyLoading] = useState(false);
   const [isMobile] = useState(() => isMobileDevice());
