@@ -189,7 +189,12 @@ const Auth = () => {
         }
 
         setSignupEmail(email);
-        setSignupComplete(true);
+        // If email confirmation is off, we have a session — offer passkey + wallet setup right now.
+        if (signUpData.session && isPasskeySupported()) {
+          setPasskeySetupOpen(true);
+        } else {
+          setSignupComplete(true);
+        }
       }
     } catch {
       toast({ title: "Error", description: "An unexpected error occurred. Please try again.", variant: "destructive" });
