@@ -127,6 +127,7 @@ export function CommunitySentiment() {
   const [newsLoading, setNewsLoading] = useState(false);
   const [newsRefreshing, setNewsRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState("trending");
+  const [chartAsset, setChartAsset] = useState<"stx" | "btc" | null>(null);
   const { toast } = useToast();
 
   // ── Fetch helpers ───────────────────────────────────────────────────────────
@@ -579,6 +580,9 @@ export function CommunitySentiment() {
         </TabsContent>
 
       </Tabs>
+
+      <PriceChartDialog asset={chartAsset} onOpenChange={(o) => !o && setChartAsset(null)} />
+
     </div>
   );
 }
