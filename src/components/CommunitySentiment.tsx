@@ -4,7 +4,7 @@ import {
   TrendingUp, MessageCircle, BarChart3, Flame, Users, Zap,
   ExternalLink, RefreshCw, ArrowUpRight, ArrowDownRight, Activity,
   Bitcoin, Layers, Shield, Rocket, DollarSign, Clock, Box,
-  Loader2, AlertCircle, Newspaper, Tag
+  Loader2, AlertCircle, Newspaper, Tag, LineChart
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +13,9 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import ForumPanel from "@/components/ForumPanel";
+import PriceChartDialog from "@/components/PriceChartDialog";
+
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -257,18 +260,28 @@ export function CommunitySentiment() {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center gap-4 flex-wrap px-4 py-2.5 rounded-xl bg-card border border-border/50 text-sm"
         >
-          <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => setChartAsset("stx")}
+            className="flex items-center gap-1.5 rounded-md px-1.5 py-0.5 hover:bg-accent transition-colors"
+            aria-label="View STX price chart"
+          >
             <span className="text-muted-foreground">STX</span>
             <span className="font-bold">${liveMetrics.stxPrice.toFixed(4)}</span>
             <Badge className={`text-[10px] px-1.5 py-0 ${liveMetrics.stxPriceChange24h >= 0 ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>
               {liveMetrics.stxPriceChange24h >= 0 ? "+" : ""}{liveMetrics.stxPriceChange24h.toFixed(2)}%
             </Badge>
-          </div>
+            <LineChart className="h-3 w-3 text-muted-foreground" />
+          </button>
           <div className="w-px h-4 bg-border hidden sm:block" />
-          <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => setChartAsset("btc")}
+            className="flex items-center gap-1.5 rounded-md px-1.5 py-0.5 hover:bg-accent transition-colors"
+            aria-label="View BTC price chart"
+          >
             <Bitcoin className="h-3.5 w-3.5 text-amber-500" />
             <span className="font-semibold">${fmt(liveMetrics.btcPrice)}</span>
-          </div>
+            <LineChart className="h-3 w-3 text-muted-foreground" />
+          </button>
           <div className="w-px h-4 bg-border hidden sm:block" />
           <div className="flex items-center gap-1.5 text-muted-foreground">
             <Box className="h-3 w-3" />
@@ -328,13 +341,12 @@ export function CommunitySentiment() {
 
       {/* ── Tabs ────────────────────────────────────────────────────────────── */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-5 h-auto">
+        <TabsList className="grid w-full grid-cols-4 h-auto">
           {([
             { value: "trending", icon: Flame, label: "Trending" },
             { value: "news",     icon: Newspaper, label: "News" },
             { value: "metrics",  icon: BarChart3,  label: "Metrics" },
-            { value: "discussions", icon: MessageCircle, label: "Discuss" },
-            { value: "hottakes", icon: Zap, label: "Hot Takes" },
+            { value: "forum", icon: MessageCircle, label: "Forum" },
           ] as const).map(({ value, icon: Icon, label }) => (
             <TabsTrigger key={value} value={value}
               className="flex items-center gap-1 py-2 text-xs sm:text-sm">
@@ -561,92 +573,11 @@ export function CommunitySentiment() {
           )}
         </TabsContent>
 
-        {/* ════ DISCUSSIONS ════ */}
-        <TabsContent value="discussions" className="mt-4">
-          {discussions.length > 0 ? (
-            <div className="space-y-3">
-              {discussions.map((discussion, index) => (
-                <motion.div key={discussion.id}
-                  initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}>
-                  <Card className="hover:bg-accent/50 transition-colors">
-                    <CardContent className="py-4">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1 flex-wrap">
-                            <span className="font-semibold">{discussion.topic}</span>
-                            {discussion.category && (
-                              <Badge variant="outline" className={`text-xs ${categoryCls[discussion.category] ?? ""}`}>
-                                {discussion.category}
-                              </Badge>
-                            )}
-                          </div>
-                          <p className="text-sm text-muted-foreground line-clamp-2">{discussion.content}</p>
-                          <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
-                            <span>{new Date(discussion.created_at).toLocaleDateString()}</span>
-                            <span className="flex items-center gap-1">
-                              <ArrowUpRight className="h-3 w-3 text-green-500" />
-                              {discussion.upvotes || 0} upvotes
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          ) : (
-            <Card>
-              <CardContent className="py-12 text-center">
-                <MessageCircle className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
-                <h3 className="font-semibold mb-2">No discussions yet</h3>
-                <p className="text-sm text-muted-foreground">Be the first to contribute knowledge to the community!</p>
-              </CardContent>
-            </Card>
-          )}
+        {/* ════ FORUM ════ */}
+        <TabsContent value="forum" className="mt-4">
+          <ForumPanel />
         </TabsContent>
 
-        {/* ════ HOT TAKES ════ */}
-        <TabsContent value="hottakes" className="mt-4">
-          <div className="space-y-3">
-            {communityHotTakes.map((take, index) => (
-              <motion.div key={index}
-                initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.08 }}>
-                <Card className="bg-gradient-to-r from-orange-500/5 to-transparent border-orange-500/20 hover:border-orange-500/40 transition-colors">
-                  <CardContent className="py-4">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex items-start gap-3">
-                        <div className="text-2xl shrink-0">🟧</div>
-                        <p className="text-sm font-medium">{take.text}</p>
-                      </div>
-                      <div className="flex items-center gap-1 text-orange-400 shrink-0">
-                        <Flame className="h-4 w-4" />
-                        <span className="text-sm font-medium">{take.likes}</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-          <Card className="mt-4 bg-muted/50">
-            <CardContent className="py-4">
-              <div className="flex items-center justify-between flex-wrap gap-2">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span>Hot takes sourced from the Stacks community on</span>
-                  <Badge variant="outline" className="text-xs">X / Twitter</Badge>
-                </div>
-                <Button variant="ghost" size="sm" asChild>
-                  <a href="https://x.com/Stacks" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">
-                    Follow @Stacks <ExternalLink className="h-3 w-3" />
-                  </a>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
       </Tabs>
     </div>
   );
