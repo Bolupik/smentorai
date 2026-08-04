@@ -206,7 +206,7 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
           <Button
             onClick={handleContinue}
             disabled={!selectedLevel || isLoading}
-            className="w-full py-5 text-base font-bold"
+            className="w-full py-4 sm:py-5 text-sm sm:text-base font-bold"
           >
             {isLoading ? (
               <span className="flex items-center gap-2">
