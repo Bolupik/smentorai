@@ -60,6 +60,14 @@ interface OnboardingModalProps {
 
 const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
   const [selectedLevel, setSelectedLevel] = useState<AgeLevel | null>(null);
+  const [isCompact, setIsCompact] = useState(
+    typeof window !== "undefined" ? window.innerHeight < 780 || window.innerWidth < 640 : false
+  );
+  useEffect(() => {
+    const onResize = () => setIsCompact(window.innerHeight < 780 || window.innerWidth < 640);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
