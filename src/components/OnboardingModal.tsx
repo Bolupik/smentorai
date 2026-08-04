@@ -155,15 +155,15 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
             />
           </div>
 
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-black text-foreground mb-1">
+          <div className="text-center mb-4 sm:mb-6">
+            <h2 className="text-xl sm:text-2xl font-black text-foreground mb-1">
               {isWalletFlow ? "Wallet Connected 🎉" : "Email Verified 🎉"}
             </h2>
-            <p className="text-muted-foreground text-sm">One last step — choose your learning level.</p>
+            <p className="text-muted-foreground text-xs sm:text-sm">One last step — choose your learning level.</p>
           </div>
 
           {/* Level grid */}
-          <div className="grid grid-cols-2 gap-3 mb-6">
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-6">
             {ageLevels.map((level, i) => (
               <motion.button
                 key={level.value}
@@ -171,7 +171,7 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.05 * i }}
                 onClick={() => setSelectedLevel(level.value)}
-                className={`relative p-4 rounded-xl border-2 text-left transition-all duration-200 ${
+                className={`relative p-3 sm:p-4 rounded-xl border-2 text-left transition-all duration-200 ${
                   selectedLevel === level.value
                     ? "border-primary bg-primary/15 shadow-lg shadow-primary/20"
                     : `border-border bg-card ${level.color}`
@@ -181,26 +181,27 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full bg-primary flex items-center justify-center"
+                    className="absolute top-2 right-2 w-4 h-4 rounded-full bg-primary flex items-center justify-center"
                   >
                     <CheckCircle className="w-2.5 h-2.5 text-primary-foreground" />
                   </motion.div>
                 )}
-                <div className={`mb-2 ${selectedLevel === level.value ? "text-primary" : ""}`}>{level.icon}</div>
+                <div className={`mb-1.5 sm:mb-2 [&>svg]:w-5 [&>svg]:h-5 sm:[&>svg]:w-6 sm:[&>svg]:h-6 ${selectedLevel === level.value ? "text-primary" : ""}`}>{level.icon}</div>
                 <h3
-                  className={`font-bold text-sm mb-0.5 ${
+                  className={`font-bold text-[13px] sm:text-sm mb-0.5 ${
                     selectedLevel === level.value ? "text-primary" : "text-foreground"
                   }`}
                 >
                   {level.label}
                 </h3>
-                <p className="text-xs text-muted-foreground mb-1">{level.description}</p>
+                <p className="text-[11px] sm:text-xs text-muted-foreground mb-1 leading-snug">{level.description}</p>
                 <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
                   {level.age}
                 </span>
               </motion.button>
             ))}
           </div>
+
 
           <Button
             onClick={handleContinue}
