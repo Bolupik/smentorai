@@ -123,7 +123,7 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
   return (
     <Dialog open={open} onOpenChange={() => {}}>
       <DialogContent
-        className="max-w-lg w-full p-0 overflow-hidden border-border/60 bg-background"
+        className="max-w-lg w-[calc(100vw-1.5rem)] sm:w-full p-0 overflow-hidden border-border/60 bg-background max-h-[92dvh] flex flex-col"
         // Prevent closing by clicking outside
         onInteractOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
@@ -134,11 +134,11 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
           <DialogDescription>Select the learning level that best fits you to personalise your SMentor experience.</DialogDescription>
         </DialogHeader>
 
-        <div className="p-8">
+        <div className="p-4 sm:p-8 overflow-y-auto flex-1">
           {/* 3D Sammy narrator */}
-          <div className="mb-4">
+          <div className="mb-3 sm:mb-4">
             <SammyNarrator
-              height={180}
+              height={isCompact ? 110 : 180}
               message={
                 isWalletFlow
                   ? `Wallet connected${walletData?.bnsName ? `, ${walletData.bnsName}` : ""}! Pick a learning level and I'll tune how I explain everything.`
