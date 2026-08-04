@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -60,6 +60,14 @@ interface OnboardingModalProps {
 
 const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
   const [selectedLevel, setSelectedLevel] = useState<AgeLevel | null>(null);
+  const [isCompact, setIsCompact] = useState(
+    typeof window !== "undefined" ? window.innerHeight < 780 || window.innerWidth < 640 : false
+  );
+  useEffect(() => {
+    const onResize = () => setIsCompact(window.innerHeight < 780 || window.innerWidth < 640);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -123,7 +131,7 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
   return (
     <Dialog open={open} onOpenChange={() => {}}>
       <DialogContent
-        className="max-w-lg w-full p-0 overflow-hidden border-border/60 bg-background"
+        className="max-w-lg w-[calc(100vw-1.5rem)] sm:w-full p-0 overflow-hidden border-border/60 bg-background max-h-[92dvh] flex flex-col"
         // Prevent closing by clicking outside
         onInteractOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
@@ -134,11 +142,11 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
           <DialogDescription>Select the learning level that best fits you to personalise your SMentor experience.</DialogDescription>
         </DialogHeader>
 
-        <div className="p-8">
+        <div className="p-4 sm:p-8 overflow-y-auto flex-1">
           {/* 3D Sammy narrator */}
-          <div className="mb-4">
+          <div className="mb-3 sm:mb-4">
             <SammyNarrator
-              height={180}
+              height={isCompact ? 110 : 180}
               message={
                 isWalletFlow
                   ? `Wallet connected${walletData?.bnsName ? `, ${walletData.bnsName}` : ""}! Pick a learning level and I'll tune how I explain everything.`
@@ -147,15 +155,15 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
             />
           </div>
 
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-black text-foreground mb-1">
+          <div className="text-center mb-4 sm:mb-6">
+            <h2 className="text-xl sm:text-2xl font-black text-foreground mb-1">
               {isWalletFlow ? "Wallet Connected 🎉" : "Email Verified 🎉"}
             </h2>
-            <p className="text-muted-foreground text-sm">One last step — choose your learning level.</p>
+            <p className="text-muted-foreground text-xs sm:text-sm">One last step — choose your learning level.</p>
           </div>
 
           {/* Level grid */}
-          <div className="grid grid-cols-2 gap-3 mb-6">
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-6">
             {ageLevels.map((level, i) => (
               <motion.button
                 key={level.value}
@@ -163,7 +171,7 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.05 * i }}
                 onClick={() => setSelectedLevel(level.value)}
-                className={`relative p-4 rounded-xl border-2 text-left transition-all duration-200 ${
+                className={`relative p-3 sm:p-4 rounded-xl border-2 text-left transition-all duration-200 ${
                   selectedLevel === level.value
                     ? "border-primary bg-primary/15 shadow-lg shadow-primary/20"
                     : `border-border bg-card ${level.color}`
@@ -173,20 +181,20 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full bg-primary flex items-center justify-center"
+                    className="absolute top-2 right-2 w-4 h-4 rounded-full bg-primary flex items-center justify-center"
                   >
                     <CheckCircle className="w-2.5 h-2.5 text-primary-foreground" />
                   </motion.div>
                 )}
-                <div className={`mb-2 ${selectedLevel === level.value ? "text-primary" : ""}`}>{level.icon}</div>
+                <div className={`mb-1.5 sm:mb-2 [&>svg]:w-5 [&>svg]:h-5 sm:[&>svg]:w-6 sm:[&>svg]:h-6 ${selectedLevel === level.value ? "text-primary" : ""}`}>{level.icon}</div>
                 <h3
-                  className={`font-bold text-sm mb-0.5 ${
+                  className={`font-bold text-[13px] sm:text-sm mb-0.5 ${
                     selectedLevel === level.value ? "text-primary" : "text-foreground"
                   }`}
                 >
                   {level.label}
                 </h3>
-                <p className="text-xs text-muted-foreground mb-1">{level.description}</p>
+                <p className="text-[11px] sm:text-xs text-muted-foreground mb-1 leading-snug">{level.description}</p>
                 <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
                   {level.age}
                 </span>
@@ -194,10 +202,11 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
             ))}
           </div>
 
+
           <Button
             onClick={handleContinue}
             disabled={!selectedLevel || isLoading}
-            className="w-full py-5 text-base font-bold"
+            className="w-full py-4 sm:py-5 text-sm sm:text-base font-bold"
           >
             {isLoading ? (
               <span className="flex items-center gap-2">
