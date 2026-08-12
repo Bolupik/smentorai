@@ -575,8 +575,71 @@ export function CommunitySentiment() {
         </TabsContent>
 
         {/* ════ FORUM ════ */}
-        <TabsContent value="forum" className="mt-4">
+        <TabsContent value="forum" className="mt-4 space-y-6">
           <ForumPanel />
+
+          {/* Latest community discussions (Knowledge Base) */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <MessageCircle className="h-4 w-4 text-primary" />
+              <h3 className="font-semibold text-sm">Latest Community Discussions</h3>
+              {isRefreshing && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
+            </div>
+            {discussions.length === 0 ? (
+              <p className="text-xs text-muted-foreground">No approved discussions yet.</p>
+            ) : (
+              <div className="space-y-2">
+                {discussions.map((d, i) => (
+                  <motion.div key={d.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: Math.min(i * 0.03, 0.3) }}>
+                    <Card className="hover:bg-accent/40 transition-colors">
+                      <CardContent className="py-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="font-medium text-sm truncate">{d.topic}</p>
+                            <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{d.content}</p>
+                            <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                              <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${getTagCls(d.category)}`}>
+                                {d.category}
+                              </Badge>
+                              <span className="text-[11px] text-muted-foreground">{timeAgo(d.created_at)}</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-1 shrink-0 text-xs text-muted-foreground">
+                            <ArrowUpRight className="h-3 w-3 text-green-500" />
+                            {d.upvotes}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Community hot takes */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Flame className="h-4 w-4 text-orange-500" />
+              <h3 className="font-semibold text-sm">Community Hot Takes</h3>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {communityHotTakes.map((t, i) => (
+                <motion.div key={t.text} initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: Math.min(i * 0.04, 0.3) }}>
+                  <Card className="h-full hover:bg-accent/40 transition-colors">
+                    <CardContent className="py-3 flex items-start justify-between gap-3">
+                      <p className="text-sm leading-snug">{t.text}</p>
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground shrink-0">
+                        <Zap className="h-3 w-3 text-amber-500" />{t.likes}
+                      </span>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </div>
         </TabsContent>
 
       </Tabs>
