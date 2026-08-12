@@ -12,6 +12,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import ContributorBadge from "@/components/ContributorBadge";
+import ForumComposer from "@/components/ForumComposer";
+import MarkdownContent from "@/components/MarkdownContent";
 import { toast } from "sonner";
 
 interface ForumPost {
@@ -238,28 +240,18 @@ const ForumPanel = () => {
         {composing && (
           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-            <Card>
-              <CardContent className="py-4 space-y-3">
-                <Input placeholder="Post title" value={title} maxLength={140}
-                  onChange={(e) => setTitle(e.target.value)} />
-                <Textarea placeholder="Share your thoughts with the community…" value={body}
-                  onChange={(e) => setBody(e.target.value)} className="min-h-[90px]" />
-                <div className="flex gap-1.5 flex-wrap">
-                  {CATEGORIES.map((c) => (
-                    <button key={c} onClick={() => setCategory(c)}
-                      className={`text-[11px] px-2 py-0.5 rounded-full border transition-colors ${
-                        category === c ? "bg-primary text-primary-foreground border-primary"
-                          : categoryCls[c]}`}>
-                      {c}
-                    </button>
-                  ))}
-                </div>
-                <Button size="sm" onClick={submitPost} disabled={posting || !title.trim() || !body.trim()}>
-                  {posting ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <Send className="h-4 w-4 mr-1" />}
-                  Publish
-                </Button>
-              </CardContent>
-            </Card>
+            <ForumComposer
+              categories={CATEGORIES.map((c) => ({ id: c, label: c, cls: categoryCls[c] }))}
+              category={category}
+              onCategoryChange={setCategory}
+              title={title}
+              onTitleChange={setTitle}
+              body={body}
+              onBodyChange={setBody}
+              posting={posting}
+              onSubmit={submitPost}
+              onCancel={() => setComposing(false)}
+            />
           </motion.div>
         )}
       </AnimatePresence>
@@ -304,9 +296,10 @@ const ForumPanel = () => {
                           </button>
                         )}
                       </div>
-                      <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap line-clamp-3">
-                        {post.content}
-                      </p>
+                      <MarkdownContent
+                        content={post.content}
+                        className={`text-sm text-muted-foreground mt-1 ${openPost === post.id ? "" : "line-clamp-3"}`}
+                      />
                       <div className="flex items-center gap-3 mt-2 flex-wrap">
                         <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${categoryCls[post.category] ?? ""}`}>
                           {post.category}
@@ -420,7 +413,7 @@ const PostThread = ({ postId, votes, onVote, onCountChange }: PostThreadProps) =
   const render = (c: ForumComment, isReply = false) => (
     <div key={c.id} className={`rounded-lg bg-muted/40 p-2.5 ${isReply ? "ml-5 border-l-2 border-border/60" : ""}`}>
       <div className="flex items-start justify-between gap-2">
-        <p className="text-sm whitespace-pre-wrap flex-1">{c.content}</p>
+        <MarkdownContent content={c.content} className="text-sm flex-1" />
         {user?.id === c.user_id && (
           <button onClick={() => removeComment(c.id)} aria-label="Delete comment"
             className="text-muted-foreground hover:text-destructive transition-colors">
