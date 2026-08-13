@@ -78,7 +78,9 @@ const VoteButtons = ({
   );
 };
 
-const ForumPanel = () => {
+export interface ForumSeed { title: string; body: string; category?: string; nonce: number }
+
+const ForumPanel = ({ seed }: { seed?: ForumSeed | null }) => {
   const { user } = useAuth();
   const [posts, setPosts] = useState<ForumPost[]>([]);
   const [votes, setVotes] = useState<VoteMap>({});
