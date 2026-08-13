@@ -13,8 +13,10 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import ForumPanel from "@/components/ForumPanel";
+import ForumPanel, { type ForumSeed } from "@/components/ForumPanel";
 import PriceChartDialog from "@/components/PriceChartDialog";
+import DiscussionCard from "@/components/DiscussionCard";
+import HotTakeCard from "@/components/HotTakeCard";
 
 
 // ── Types ─────────────────────────────────────────────────────────────────────
