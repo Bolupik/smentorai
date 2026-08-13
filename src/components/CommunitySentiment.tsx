@@ -4,7 +4,7 @@ import {
   TrendingUp, MessageCircle, BarChart3, Flame, Users, Zap,
   ExternalLink, RefreshCw, ArrowUpRight, ArrowDownRight, Activity,
   Bitcoin, Layers, Shield, Rocket, DollarSign, Clock, Box,
-  Loader2, AlertCircle, Newspaper, Tag, LineChart
+  Loader2, AlertCircle, Newspaper, Tag, LineChart, MessageSquare
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,8 +13,10 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import ForumPanel from "@/components/ForumPanel";
+import ForumPanel, { type ForumSeed } from "@/components/ForumPanel";
 import PriceChartDialog from "@/components/PriceChartDialog";
+import DiscussionCard from "@/components/DiscussionCard";
+import HotTakeCard from "@/components/HotTakeCard";
 
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -128,6 +130,7 @@ export function CommunitySentiment() {
   const [newsRefreshing, setNewsRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState("trending");
   const [chartAsset, setChartAsset] = useState<"stx" | "btc" | null>(null);
+  const [forumSeed, setForumSeed] = useState<ForumSeed | null>(null);
   const { toast } = useToast();
 
   // ── Fetch helpers ───────────────────────────────────────────────────────────
@@ -575,72 +578,80 @@ export function CommunitySentiment() {
         </TabsContent>
 
         {/* ════ FORUM ════ */}
-        <TabsContent value="forum" className="mt-4 space-y-6">
-          <ForumPanel />
+        <TabsContent value="forum" className="mt-4">
+          <div className="rounded-2xl border border-border/60 bg-card/40 divide-y divide-border/60">
 
-          {/* Latest community discussions (Knowledge Base) */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <MessageCircle className="h-4 w-4 text-primary" />
-              <h3 className="font-semibold text-sm">Latest Community Discussions</h3>
-              {isRefreshing && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
-            </div>
-            {discussions.length === 0 ? (
-              <p className="text-xs text-muted-foreground">No approved discussions yet.</p>
-            ) : (
-              <div className="space-y-2">
-                {discussions.map((d, i) => (
-                  <motion.div key={d.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: Math.min(i * 0.03, 0.3) }}>
-                    <Card className="hover:bg-accent/40 transition-colors">
-                      <CardContent className="py-3">
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="min-w-0">
-                            <p className="font-medium text-sm truncate">{d.topic}</p>
-                            <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{d.content}</p>
-                            <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                              <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${getTagCls(d.category)}`}>
-                                {d.category}
-                              </Badge>
-                              <span className="text-[11px] text-muted-foreground">{timeAgo(d.created_at)}</span>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-1 shrink-0 text-xs text-muted-foreground">
-                            <ArrowUpRight className="h-3 w-3 text-green-500" />
-                            {d.upvotes}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+            {/* Section: Forum posts */}
+            <section id="forum-top" className="p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <MessageSquare className="h-4 w-4 text-primary" />
+                <h3 className="font-semibold text-sm">Community Forum</h3>
+                <Badge variant="outline" className="text-[10px] px-1.5 py-0">Posts</Badge>
+              </div>
+              <ForumPanel seed={forumSeed} />
+            </section>
+
+            {/* Section: Latest community discussions (Knowledge Base) */}
+            <section className="p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <MessageCircle className="h-4 w-4 text-primary" />
+                <h3 className="font-semibold text-sm">Latest Community Discussions</h3>
+                {isRefreshing && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
+              </div>
+              {discussions.length === 0 ? (
+                <p className="text-xs text-muted-foreground">No approved discussions yet.</p>
+              ) : (
+                <div className="space-y-3">
+                  {discussions.map((d, i) => (
+                    <motion.div key={d.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: Math.min(i * 0.03, 0.3) }}>
+                      <DiscussionCard
+                        id={d.id}
+                        topic={d.topic}
+                        content={d.content}
+                        category={d.category}
+                        upvotes={d.upvotes}
+                        createdAt={d.created_at}
+                        categoryCls={getTagCls(d.category)}
+                        timeAgo={timeAgo}
+                      />
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </section>
+
+            {/* Section: Community hot takes */}
+            <section className="p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <Flame className="h-4 w-4 text-orange-500" />
+                <h3 className="font-semibold text-sm">Community Hot Takes</h3>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {communityHotTakes.map((t, i) => (
+                  <motion.div key={t.text} initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: Math.min(i * 0.04, 0.3) }}>
+                    <HotTakeCard
+                      text={t.text}
+                      likes={t.likes}
+                      onDiscuss={() => {
+                        setForumSeed({
+                          title: t.text.slice(0, 90),
+                          body: `> ${t.text}\n\n`,
+                          category: "general",
+                          nonce: Date.now(),
+                        });
+                        document.getElementById("forum-top")?.scrollIntoView({ behavior: "smooth" });
+                      }}
+                    />
                   </motion.div>
                 ))}
               </div>
-            )}
-          </div>
+            </section>
 
-          {/* Community hot takes */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <Flame className="h-4 w-4 text-orange-500" />
-              <h3 className="font-semibold text-sm">Community Hot Takes</h3>
-            </div>
-            <div className="grid gap-2 sm:grid-cols-2">
-              {communityHotTakes.map((t, i) => (
-                <motion.div key={t.text} initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: Math.min(i * 0.04, 0.3) }}>
-                  <Card className="h-full hover:bg-accent/40 transition-colors">
-                    <CardContent className="py-3 flex items-start justify-between gap-3">
-                      <p className="text-sm leading-snug">{t.text}</p>
-                      <span className="flex items-center gap-1 text-xs text-muted-foreground shrink-0">
-                        <Zap className="h-3 w-3 text-amber-500" />{t.likes}
-                      </span>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
           </div>
         </TabsContent>
+
 
       </Tabs>
 

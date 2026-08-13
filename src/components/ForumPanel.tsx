@@ -78,7 +78,9 @@ const VoteButtons = ({
   );
 };
 
-const ForumPanel = () => {
+export interface ForumSeed { title: string; body: string; category?: string; nonce: number }
+
+const ForumPanel = ({ seed }: { seed?: ForumSeed | null }) => {
   const { user } = useAuth();
   const [posts, setPosts] = useState<ForumPost[]>([]);
   const [votes, setVotes] = useState<VoteMap>({});
@@ -126,6 +128,15 @@ const ForumPanel = () => {
 
   useEffect(() => { fetchPosts(); }, [fetchPosts]);
   useEffect(() => { fetchVotes(); }, [fetchVotes]);
+
+  useEffect(() => {
+    if (!seed) return;
+    setTitle(seed.title);
+    setBody(seed.body);
+    if (seed.category) setCategory(seed.category);
+    setComposing(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seed?.nonce]);
 
   const castVote = async (
     targetType: "post" | "comment",
