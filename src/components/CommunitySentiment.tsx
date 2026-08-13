@@ -4,7 +4,7 @@ import {
   TrendingUp, MessageCircle, BarChart3, Flame, Users, Zap,
   ExternalLink, RefreshCw, ArrowUpRight, ArrowDownRight, Activity,
   Bitcoin, Layers, Shield, Rocket, DollarSign, Clock, Box,
-  Loader2, AlertCircle, Newspaper, Tag, LineChart
+  Loader2, AlertCircle, Newspaper, Tag, LineChart, MessageSquare
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
