@@ -582,7 +582,7 @@ export function CommunitySentiment() {
           <div className="rounded-2xl border border-border/60 bg-card/40 divide-y divide-border/60">
 
             {/* Section: Forum posts */}
-            <section className="p-4 space-y-3">
+            <section id="forum-top" className="p-4 space-y-3">
               <div className="flex items-center gap-2">
                 <MessageSquare className="h-4 w-4 text-primary" />
                 <h3 className="font-semibold text-sm">Community Forum</h3>
