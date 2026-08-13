@@ -129,6 +129,15 @@ const ForumPanel = ({ seed }: { seed?: ForumSeed | null }) => {
   useEffect(() => { fetchPosts(); }, [fetchPosts]);
   useEffect(() => { fetchVotes(); }, [fetchVotes]);
 
+  useEffect(() => {
+    if (!seed) return;
+    setTitle(seed.title);
+    setBody(seed.body);
+    if (seed.category) setCategory(seed.category);
+    setComposing(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seed?.nonce]);
+
   const castVote = async (
     targetType: "post" | "comment",
     targetId: string,
