@@ -130,6 +130,7 @@ export function CommunitySentiment() {
   const [newsRefreshing, setNewsRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState("trending");
   const [chartAsset, setChartAsset] = useState<"stx" | "btc" | null>(null);
+  const [forumSeed, setForumSeed] = useState<ForumSeed | null>(null);
   const { toast } = useToast();
 
   // ── Fetch helpers ───────────────────────────────────────────────────────────
