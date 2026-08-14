@@ -29,3 +29,6 @@ verify_jwt = false
 
 [functions.ingest-gamma-nfts]
 verify_jwt = false
+
+[functions.ingest-zest-docs]
+verify_jwt = false
