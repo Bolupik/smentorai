@@ -130,14 +130,14 @@ const GROUPS: Group[] = [
   },
   {
     topic: "Zest Stacks Market V1: Legacy User Guide & Protocol Design",
-    sections: [45, 46, 47, 48, 49, 50, 51, 52],
+    sections: [45, 46, 47, 48, 49, 50, 51, 52, 53],
     category: "defi",
     link_url: "https://docs.zestprotocol.com/start/borrow-1/stacks-market-v1-user-guide",
     tags: ["zest", "v1", "legacy", "borrow", "e-mode"],
   },
   {
     topic: "Zest Stacks Market V1: Smart Contracts Overview",
-    sections: [53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63],
+    sections: [54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64],
     category: "clarity",
     link_url:
       "https://docs.zestprotocol.com/start/borrow-1/stacks-market-v1-smart-contracts-overview",
