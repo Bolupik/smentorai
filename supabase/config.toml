@@ -32,3 +32,6 @@ verify_jwt = false
 
 [functions.ingest-zest-docs]
 verify_jwt = false
+
+[functions.ingest-stackingdao-docs]
+verify_jwt = false
