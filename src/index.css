@@ -317,3 +317,129 @@ All colors MUST be HSL.
     scrollbar-width: none;
   }
 }
+/* ============================================
+   Cyber-Tactical layer — SMentor hero system
+   ============================================ */
+@layer utilities {
+  .font-display {
+    font-family: "Archivo Black", "Inter", sans-serif;
+  }
+
+  .font-tactical {
+    font-family: "Space Mono", ui-monospace, monospace;
+  }
+
+  /* Animated CRT scanlines */
+  .tactical-scanlines {
+    background-image:
+      linear-gradient(hsl(0 0% 7% / 0) 50%, hsl(0 0% 0% / 0.25) 50%),
+      linear-gradient(90deg, hsl(0 85% 50% / 0.06), hsl(140 80% 50% / 0.02), hsl(220 85% 55% / 0.06));
+    background-size: 100% 2px, 3px 100%;
+    animation: scanline-drift 8s linear infinite;
+  }
+
+  @keyframes scanline-drift {
+    0% { background-position: 0 0, 0 0; }
+    100% { background-position: 0 200px, 0 0; }
+  }
+
+  /* Red / cyan split-shadow glitch on display type */
+  .glitch-text {
+    position: relative;
+    animation: glitch-shadow 4s infinite steps(1);
+  }
+
+  @keyframes glitch-shadow {
+    0%, 92%, 100% {
+      text-shadow: 0 0 22px hsl(var(--primary) / 0.45);
+      transform: translate(0, 0);
+    }
+    93% {
+      text-shadow: -3px 0 hsl(var(--primary)), 3px 0 hsl(185 100% 55%);
+      transform: translate(1px, -1px);
+    }
+    95% {
+      text-shadow: 3px 0 hsl(var(--primary)), -3px 0 hsl(185 100% 55%);
+      transform: translate(-1px, 1px);
+    }
+    97% {
+      text-shadow: -2px 0 hsl(185 100% 55%), 2px 0 hsl(var(--primary));
+      transform: translate(1px, 0);
+    }
+  }
+
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px hsl(var(--foreground) / 0.22);
+  }
+
+  /* Tactical HUD grid backdrop */
+  .tactical-grid {
+    background-image:
+      linear-gradient(hsl(var(--foreground) / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--foreground) / 0.05) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent 80%);
+  }
+
+  .tactical-panel {
+    background: hsl(var(--foreground) / 0.04);
+    border: 1px solid hsl(var(--foreground) / 0.10);
+    backdrop-filter: blur(12px);
+  }
+
+  .tactical-panel:hover {
+    background: hsl(var(--foreground) / 0.08);
+    border-color: hsl(var(--primary) / 0.45);
+  }
+
+  /* Corner brackets */
+  .tactical-corners {
+    position: relative;
+  }
+  .tactical-corners::before,
+  .tactical-corners::after {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-color: hsl(var(--primary) / 0.7);
+    pointer-events: none;
+  }
+  .tactical-corners::before {
+    top: -1px; left: -1px;
+    border-top: 2px solid; border-left: 2px solid;
+  }
+  .tactical-corners::after {
+    bottom: -1px; right: -1px;
+    border-bottom: 2px solid; border-right: 2px solid;
+  }
+
+  .cta-sheen {
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 -60%;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, hsl(0 0% 100% / 0.28), transparent);
+    transform: skewX(-20deg);
+    animation: cta-sweep 4.5s ease-in-out infinite;
+  }
+
+  @keyframes cta-sweep {
+    0%, 65% { left: -60%; }
+    88%, 100% { left: 130%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tactical-scanlines,
+    .glitch-text,
+    .cta-sheen::after {
+      animation: none !important;
+    }
+  }
+}
