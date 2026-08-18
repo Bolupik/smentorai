@@ -1,5 +1,5 @@
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import aiCharacter from "@/assets/ai-character.png";
 import ChatInterface from "@/components/ChatInterface";
@@ -41,15 +41,11 @@ const pageTransition = {
 
 const Dashboard = () => {
   const [showChat, setShowChat] = useState(false);
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress: heroScroll } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-  const heroImageY = useTransform(heroScroll, [0, 1], ["0%", "18%"]);
-  const heroImageScale = useTransform(heroScroll, [0, 1], [1, 1.12]);
-  const heroContentY = useTransform(heroScroll, [0, 1], [0, -70]);
-  const heroContentOpacity = useTransform(heroScroll, [0, 0.7], [1, 0]);
+  const { scrollY: heroScrollY } = useScroll();
+  const heroImageY = useTransform(heroScrollY, [0, 900], ["0%", "16%"]);
+  const heroImageScale = useTransform(heroScrollY, [0, 900], [1, 1.12]);
+  const heroContentY = useTransform(heroScrollY, [0, 900], [0, -70]);
+  const heroContentOpacity = useTransform(heroScrollY, [0, 650], [1, 0]);
   const [showPreview, setShowPreview] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
   const [showKnowledge, setShowKnowledge] = useState(false);
@@ -377,7 +373,6 @@ const Dashboard = () => {
             animate="animate"
             exit="exit"
             transition={pageTransition}
-            ref={heroRef}
             className="flex-1 flex flex-col relative"
           >
             {/* Full Screen Hero Background */}
