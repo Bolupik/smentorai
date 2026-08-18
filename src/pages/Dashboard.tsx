@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import aiCharacter from "@/assets/ai-character.png";
@@ -41,6 +41,11 @@ const pageTransition = {
 
 const Dashboard = () => {
   const [showChat, setShowChat] = useState(false);
+  const { scrollY: heroScrollY } = useScroll();
+  const heroImageY = useTransform(heroScrollY, [0, 900], ["0%", "16%"]);
+  const heroImageScale = useTransform(heroScrollY, [0, 900], [1, 1.12]);
+  const heroContentY = useTransform(heroScrollY, [0, 900], [0, -70]);
+  const heroContentOpacity = useTransform(heroScrollY, [0, 650], [1, 0]);
   const [showPreview, setShowPreview] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
   const [showKnowledge, setShowKnowledge] = useState(false);
@@ -373,23 +378,25 @@ const Dashboard = () => {
             {/* Full Screen Hero Background */}
             <div className="absolute inset-0 z-0">
               <motion.div
-                initial={{ scale: 1.1 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 20, ease: "linear" }}
+                style={{ y: heroImageY, scale: heroImageScale }}
                 className="absolute inset-0"
               >
                 <img 
                   src={aiCharacter} 
                   alt="Sammy" 
-                  className="w-full h-full object-cover object-top"
+                  className="w-full h-full object-cover object-top opacity-70"
                 />
               </motion.div>
               
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-              <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background/80" />
+              <div className="absolute inset-0 tactical-grid opacity-60" />
               <div className="absolute inset-0 netflix-vignette" />
               <div className="absolute bottom-0 left-0 right-0 h-1/3 netflix-hero-glow" />
             </div>
+
+            {/* Animated scanline overlay */}
+            <div className="pointer-events-none absolute inset-0 z-30 tactical-scanlines opacity-[0.05]" />
 
             {/* Navigation - Mobile optimized */}
             <motion.header
@@ -400,39 +407,31 @@ const Dashboard = () => {
             >
               <div className="flex items-center justify-between">
                 <motion.div 
-                  className="text-xl sm:text-3xl font-bold tracking-tighter text-primary"
+                  className="flex items-center gap-2 sm:gap-3 group cursor-default"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  <span className="hidden sm:inline">SAMMY THE AI</span>
-                  <span className="sm:hidden">SAMMY</span>
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 border-2 border-primary rotate-45 flex items-center justify-center transition-colors duration-300 group-hover:bg-primary">
+                    <div className="w-1.5 h-1.5 bg-foreground -rotate-45" />
+                  </div>
+                  <span className="font-display text-base sm:text-2xl tracking-tighter uppercase text-foreground">
+                    <span className="hidden sm:inline">SAMMY THE AI</span>
+                    <span className="sm:hidden">SAMMY</span>
+                  </span>
                 </motion.div>
                 <div className="flex items-center gap-2 sm:gap-6">
-                  <motion.span 
-                    className="text-xs sm:text-sm font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors hidden lg:inline"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.6 }}
-                  >
-                    Protocols
-                  </motion.span>
-                  <motion.span 
-                    className="text-xs sm:text-sm font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors hidden lg:inline"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.7 }}
-                  >
-                    Architecture
-                  </motion.span>
-                  <motion.span 
-                    className="text-xs sm:text-sm font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors hidden xl:inline"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.8 }}
-                  >
-                    Clarity
-                  </motion.span>
+                  {["Protocols", "Architecture", "Clarity"].map((label, i) => (
+                    <motion.span
+                      key={label}
+                      className={`font-tactical text-[10px] tracking-[0.2em] uppercase text-muted-foreground hover:text-primary cursor-pointer transition-colors ${i === 2 ? "hidden xl:inline" : "hidden lg:inline"}`}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.6 + i * 0.1 }}
+                    >
+                      {label}
+                    </motion.span>
+                  ))}
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -453,151 +452,146 @@ const Dashboard = () => {
             </motion.header>
 
             {/* Hero Content - Mobile optimized */}
-            <main className="relative z-10 flex-1 flex flex-col justify-end px-4 sm:px-8 pb-48 sm:pb-56 md:pb-64">
+            <motion.main
+              style={{ y: heroContentY, opacity: heroContentOpacity }}
+              className="relative z-10 flex-1 flex flex-col justify-end px-4 sm:px-8 pb-48 sm:pb-56 md:pb-64"
+            >
               <div className="max-w-2xl">
-                {/* Series badge */}
+                {/* System status badge */}
                 <motion.div
                   initial={{ opacity: 0, x: -30 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
-                  className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4"
+                  className="flex items-center gap-3 mb-4 sm:mb-6"
                 >
-                  <motion.span 
-                    className="text-primary font-bold text-base sm:text-lg tracking-wider"
-                    animate={{ rotate: [0, 5, -5, 0], scale: [1, 1.1, 1] }}
-                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 4 }}
-                  >
-                    ◆
-                  </motion.span>
-                  <span className="text-[10px] sm:text-xs tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground uppercase">Masterclass</span>
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+                  </span>
+                  <span className="font-tactical text-[9px] sm:text-[10px] tracking-[0.3em] uppercase font-bold text-primary">
+                    AI Module: Active
+                  </span>
                 </motion.div>
 
-                {/* Title - Responsive sizing */}
-                <motion.h1
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.5 }}
-                  className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-foreground mb-4 sm:mb-6 leading-none"
-                >
-                  {"SAMMY THE AI".split("").map((char, index) => (
-                    <motion.span
-                      key={index}
-                      initial={{ opacity: 0, y: 20, rotateX: -90 }}
-                      animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                      transition={{
-                        delay: 0.7 + index * 0.04,
-                        duration: 0.5,
-                        ease: [0.6, -0.05, 0.01, 0.99],
-                      }}
-                      className="inline-block hover:text-primary transition-colors duration-200"
-                      style={{ minWidth: char === " " ? "0.25em" : "auto" }}
-                    >
-                      {char}
-                    </motion.span>
-                  ))}
-                </motion.h1>
+                {/* Title - stacked outline / glitch red */}
+                <div className="mb-4 sm:mb-6">
+                  <motion.h2
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.7, delay: 0.5 }}
+                    className="font-display text-5xl sm:text-7xl md:text-8xl leading-[0.8] tracking-tighter uppercase italic text-outline"
+                  >
+                    SAMMY
+                  </motion.h2>
+                  <motion.h1
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.7, delay: 0.65 }}
+                    className="font-display text-5xl sm:text-7xl md:text-8xl leading-[0.8] tracking-tighter uppercase italic text-primary glitch-text"
+                  >
+                    THE AI
+                  </motion.h1>
+                </div>
 
-                {/* Description - Mobile optimized */}
+                {/* Description */}
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 1.2 }}
-                  className="text-sm sm:text-lg md:text-xl text-foreground/80 mb-6 sm:mb-8 leading-relaxed max-w-xl font-light"
+                  transition={{ duration: 0.6, delay: 0.9 }}
+                  className="text-sm sm:text-lg text-foreground/60 mb-6 sm:mb-8 leading-relaxed max-w-md font-medium italic border-l-2 border-primary pl-4"
                 >
-                  A comprehensive discourse on the Stacks paradigm. Master decentralized finance, Bitcoin's programmable layer, and the elegance of Clarity.
+                  The premier intelligent layer for the Bitcoin ecosystem. Master decentralized finance, Bitcoin's programmable layer, and the elegance of Clarity.
                 </motion.p>
 
-                {/* Buttons - Mobile responsive grid */}
+                {/* CTA cluster */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 1.4 }}
-                  className="flex flex-wrap gap-2 sm:gap-3 md:gap-4"
+                  transition={{ duration: 0.6, delay: 1.05 }}
+                  className="flex flex-col gap-3 max-w-xl"
                 >
                   <motion.button
                     onClick={() => setShowChat(true)}
-                    className="group flex items-center gap-2 sm:gap-3 px-4 sm:px-8 py-3 sm:py-4 bg-foreground text-background font-semibold text-sm sm:text-lg rounded-sm hover:bg-foreground/90 transition-all duration-300 shadow-lg hover:shadow-xl"
-                    whileHover={{ scale: 1.05 }}
+                    className="cta-sheen w-full py-4 sm:py-5 bg-primary text-primary-foreground font-display text-base sm:text-lg tracking-widest uppercase flex items-center justify-center gap-3 shadow-[0_0_30px_hsl(var(--primary)/0.3)] hover:brightness-110 transition-all"
+                    whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <Play className="w-4 h-4 sm:w-6 sm:h-6 fill-current" />
-                    <span>Begin</span>
+                    <Play className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
+                    <span>Begin Mission</span>
                   </motion.button>
-                  <motion.button
-                    onClick={() => setShowQuiz(true)}
-                    className="group flex items-center gap-2 px-4 sm:px-8 py-3 sm:py-4 bg-primary/20 text-primary border border-primary/50 font-semibold text-sm sm:text-lg rounded-sm hover:bg-primary/30 transition-all duration-300"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="hidden sm:inline">Assessment</span>
-                    <span className="sm:hidden">Quiz</span>
-                  </motion.button>
-                  <motion.button
-                    onClick={() => setShowKnowledge(true)}
-                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-muted/60 text-foreground/80 font-medium text-sm sm:text-lg rounded-sm hover:bg-muted transition-all duration-300 backdrop-blur-sm"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Library className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="hidden sm:inline">Contribute</span>
-                  </motion.button>
-                  <motion.button
-                    onClick={() => setShowSentiment(true)}
-                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-orange-500/20 text-orange-400 border border-orange-500/50 font-semibold text-sm sm:text-lg rounded-sm hover:bg-orange-500/30 transition-all duration-300"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Activity className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="hidden sm:inline">Pulse</span>
-                  </motion.button>
-                  <motion.button 
-                    onClick={() => setShowPreview(true)}
-                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-muted/80 text-foreground font-semibold text-sm sm:text-lg rounded-sm hover:bg-muted transition-all duration-300 backdrop-blur-sm"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Info className="w-4 h-4 sm:w-6 sm:h-6" />
-                    <span className="hidden sm:inline">Overview</span>
-                  </motion.button>
-                  <motion.button
-                    onClick={() => setShowGuide(true)}
-                    className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-muted/60 text-foreground/70 font-medium text-sm sm:text-lg rounded-sm hover:bg-muted hover:text-foreground transition-all duration-300 backdrop-blur-sm border border-border/40"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="hidden sm:inline">Guide</span>
-                  </motion.button>
-                  {isAdmin && (
-                    <motion.button
-                      onClick={() => setShowAdmin(true)}
-                      className="group flex items-center gap-2 px-3 sm:px-6 py-3 sm:py-4 bg-destructive/20 text-destructive border border-destructive/50 font-semibold text-sm sm:text-lg rounded-sm hover:bg-destructive/30 transition-all duration-300"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
-                      <span className="hidden sm:inline">Admin</span>
-                    </motion.button>
-                  )}
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
+                    {[
+                      { label: "Assessment", icon: BookOpen, onClick: () => setShowQuiz(true) },
+                      { label: "Pulse.net", icon: Activity, onClick: () => setShowSentiment(true) },
+                      { label: "Contribute", icon: Library, onClick: () => setShowKnowledge(true) },
+                      { label: "Overview", icon: Info, onClick: () => setShowPreview(true) },
+                      { label: "Guide", icon: HelpCircle, onClick: () => setShowGuide(true) },
+                      ...(isAdmin ? [{ label: "Admin", icon: Shield, onClick: () => setShowAdmin(true) }] : []),
+                    ].map(({ label, icon: Icon, onClick }, i) => (
+                      <motion.button
+                        key={label}
+                        onClick={onClick}
+                        className="tactical-corners tactical-panel py-3 sm:py-4 px-2 flex items-center justify-center gap-2 font-tactical text-[9px] sm:text-[10px] tracking-widest uppercase text-foreground/80 hover:text-foreground transition-colors"
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.15 + i * 0.06 }}
+                        whileHover={{ y: -2 }}
+                        whileTap={{ scale: 0.97 }}
+                      >
+                        <Icon className="w-3.5 h-3.5 text-primary" />
+                        <span>{label}</span>
+                      </motion.button>
+                    ))}
+                  </div>
                 </motion.div>
 
-                {/* Badge - Mobile optimized */}
+                {/* Telemetry strip — network / assets / access */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 1.6 }}
-                  className="flex flex-wrap items-center gap-2 sm:gap-4 mt-6 sm:mt-8"
+                  transition={{ duration: 0.6, delay: 1.5 }}
+                  className="mt-8 sm:mt-10 pt-5 border-t border-foreground/10 flex items-end justify-between gap-4 max-w-xl"
                 >
-                  <span className="px-2 py-1 border border-muted-foreground/50 text-[10px] sm:text-xs text-muted-foreground">
-                    BITCOIN L2
-                  </span>
-                  <span className="text-xs sm:text-sm text-muted-foreground font-light">
-                    2025 • Technical Mastery
-                  </span>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[8px] font-bold text-primary tracking-widest uppercase">Network</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-tactical text-[10px] sm:text-xs text-foreground">STX-L2</span>
+                      <span className="flex -space-x-1.5">
+                        {["STX", "BTC", "AI"].map((t) => (
+                          <span
+                            key={t}
+                            className="w-6 h-6 rounded-full border border-foreground/15 bg-muted flex items-center justify-center text-[7px] font-bold text-foreground/70"
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="hidden sm:flex flex-col items-center gap-1">
+                    <span className="text-[8px] font-bold text-primary tracking-widest uppercase">Protocol</span>
+                    <span className="font-tactical text-[10px] sm:text-xs text-foreground">BITCOIN L2</span>
+                  </div>
+                  <div className="flex flex-col items-end gap-1">
+                    <span className="text-[8px] font-bold text-primary tracking-widest uppercase">Access</span>
+                    <span className="font-tactical text-[10px] sm:text-xs font-bold text-foreground">ENCRYPTED</span>
+                  </div>
                 </motion.div>
               </div>
-            </main>
+            </motion.main>
+
+            {/* Bottom decorative telemetry bar */}
+            <div className="relative z-40 h-1 w-full flex">
+              <motion.div
+                className="h-full bg-primary"
+                initial={{ width: "0%" }}
+                animate={{ width: "100%" }}
+                transition={{ duration: 1.6, delay: 0.6, ease: "easeOut" }}
+              />
+              <div className="h-full w-24 bg-foreground/20" />
+            </div>
+
             
             {/* Dapp Showcase - Fixed at very bottom */}
             <div className="relative z-40">
